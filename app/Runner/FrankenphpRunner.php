@@ -12,14 +12,13 @@ final class FrankenphpRunner
     {
         ignore_user_abort(true);
 
-		$handler = static function (): void {
-			// needed to reset state between requests, specially for Tracy
-			$configurator = Bootstrap::boot();
+		$container = new Bootstrap();
 
+		$handler = static function () use ($container): void {
 			// initialized container & application
-			$application = $configurator->createContainer()
+			$application = $container
+				->bootWebApplication()
 				->getByType(Application::class)
-			;
 
 			$application->onError[] = function (Application $application, \Throwable $e): void {
 				// needed to render correct error pages
