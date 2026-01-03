@@ -58,51 +58,105 @@ List of URL's:
 - [http://localhost:8080/api](http://localhost:8000/api)
 - [http://localhost:8080/api/phpinfo](http://localhost:8000/api/phpinfo)
 
-## Benchmark
+## Benchmark (with [hey](https://github.com/rakyll/hey))
 
+### FrankenPHP (no-debug mode)
 ```
-➜ hey -n 200 -c 100 http://localhost:8080/
+➜  bin/dev -f --port=443 -d -p // frankenphp on 443 to solve tls issues
+➜  bin/hey -n 1000 -c 100 https://localhost
 
 Summary:
-  Total:	0.0526 secs
-  Slowest:	0.0512 secs
-  Fastest:	0.0010 secs
-  Average:	0.0228 secs
-  Requests/sec:	3804.3427
-
+  Total:        0.6831 secs
+  Slowest:      0.1237 secs
+  Fastest:      0.0184 secs
+  Average:      0.0633 secs
+  Requests/sec: 1463.9128
+  
+  Total data:   982000 bytes
+  Size/request: 982 bytes
 
 Response time histogram:
-  0.001 [1]	|■
-  0.006 [69]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.011 [26]	|■■■■■■■■■■■■■■■
-  0.016 [4]	|■■
-  0.021 [0]	|
-  0.026 [0]	|
-  0.031 [0]	|
-  0.036 [16]	|■■■■■■■■■
-  0.041 [43]	|■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.046 [14]	|■■■■■■■■
-  0.051 [27]	|■■■■■■■■■■■■■■■■
+  0.018 [1]     |
+  0.029 [4]     |■
+  0.039 [36]    |■■■■■
+  0.050 [98]    |■■■■■■■■■■■■
+  0.061 [320]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.071 [274]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.082 [164]   |■■■■■■■■■■■■■■■■■■■■■
+  0.092 [69]    |■■■■■■■■■
+  0.103 [22]    |■■■
+  0.113 [11]    |■
+  0.124 [1]     |
 
 
 Latency distribution:
-  10% in 0.0016 secs
-  25% in 0.0030 secs
-  50% in 0.0346 secs
-  75% in 0.0386 secs
-  90% in 0.0485 secs
-  95% in 0.0493 secs
-  99% in 0.0509 secs
+  10% in 0.0481 secs
+  25% in 0.0541 secs
+  50% in 0.0619 secs
+  75% in 0.0720 secs
+  90% in 0.0817 secs
+  95% in 0.0900 secs
+  99% in 0.1056 secs
 
 Details (average, fastest, slowest):
-  DNS+dialup:	0.0069 secs, 0.0010 secs, 0.0512 secs
-  DNS-lookup:	0.0020 secs, 0.0000 secs, 0.0054 secs
-  req write:	0.0001 secs, 0.0000 secs, 0.0033 secs
-  resp wait:	0.0157 secs, 0.0009 secs, 0.0365 secs
-  resp read:	0.0001 secs, 0.0000 secs, 0.0013 secs
+  DNS+dialup:   0.0009 secs, 0.0184 secs, 0.1237 secs
+  DNS-lookup:   0.0004 secs, 0.0000 secs, 0.0403 secs
+  req write:    0.0003 secs, 0.0000 secs, 0.0164 secs
+  resp wait:    0.0588 secs, 0.0091 secs, 0.0906 secs
+  resp read:    0.0003 secs, 0.0000 secs, 0.0225 secs
 
 Status code distribution:
-  [500]	200 responses
+  [200] 1000 responses
+
+
+```
+
+### Built-in PHP server (no-debug mode)
+```
+➜  bin/dev -d -p // default
+➜  bin/hey -n 1000 -c 100 http://localhost:8080
+
+Summary:
+  Total:        0.7937 secs
+  Slowest:      0.0973 secs
+  Fastest:      0.0157 secs
+  Average:      0.0751 secs
+  Requests/sec: 1259.9747
+  
+
+Response time histogram:
+  0.016 [1]     |
+  0.024 [21]    |■■
+  0.032 [11]    |■
+  0.040 [11]    |■
+  0.048 [15]    |■
+  0.056 [18]    |■
+  0.065 [8]     |■
+  0.073 [86]    |■■■■■■
+  0.081 [541]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.089 [277]   |■■■■■■■■■■■■■■■■■■■■
+  0.097 [11]    |■
+
+
+Latency distribution:
+  10% in 0.0674 secs
+  25% in 0.0744 secs
+  50% in 0.0789 secs
+  75% in 0.0815 secs
+  90% in 0.0832 secs
+  95% in 0.0853 secs
+  99% in 0.0901 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:   0.0008 secs, 0.0157 secs, 0.0973 secs
+  DNS-lookup:   0.0007 secs, 0.0000 secs, 0.0153 secs
+  req write:    0.0000 secs, 0.0000 secs, 0.0007 secs
+  resp wait:    0.0742 secs, 0.0146 secs, 0.0872 secs
+  resp read:    0.0001 secs, 0.0000 secs, 0.0008 secs
+
+Status code distribution:
+  [200] 1000 responses
+
 ```
 
 ## Development

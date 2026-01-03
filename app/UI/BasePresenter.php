@@ -6,5 +6,4 @@ use Contributte\Nella\UI\NellaPresenter;
 
 abstract class BasePresenter extends NellaPresenter
 {
-
 }

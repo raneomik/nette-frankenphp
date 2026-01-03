@@ -9,10 +9,10 @@
   "type": "project",
   "require": {
     "php": ">=8.2",
-    "contributte/nella": "^0.3.0"
+    "contributte/nella": "^0.3"
   },
   "require-dev": {
-    "contributte/dev": "^0.4",
+    "contributte/dev": "^0.5",
     "symfony/thanks": "^1.4.0"
   },
   "autoload": {

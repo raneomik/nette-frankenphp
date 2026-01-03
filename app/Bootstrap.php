@@ -2,27 +2,17 @@
 
 namespace App;
 
+use App\Boot\LocalPreset;
 use Contributte\Bootstrap\ExtraConfigurator;
 use Contributte\Nella\Boot\Bootloader;
-use Contributte\Nella\Boot\Preset\NellaPreset;
-use Nette\Application\Application;
 
 final class Bootstrap
 {
-
 	public static function boot(): ExtraConfigurator
 	{
 		return Bootloader::create()
-			->use(NellaPreset::create(__DIR__))
-			->boot();
+			->use(LocalPreset::create(dirname(__DIR__)))
+			->boot()
+		;
 	}
-
-	public static function run(): void
-	{
-		self::boot()
-			->createContainer()
-			->getByType(Application::class)
-			->run();
-	}
-
 }

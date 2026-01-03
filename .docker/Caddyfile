@@ -16,7 +16,7 @@
 	{$CADDY_SERVER_EXTRA_DIRECTIVES}
 
 	@indexFiles file {
-		try_files {path} worker.php
+		try_files {path} index.php
 		split_path .php
 	}
 	rewrite @indexFiles {http.matchers.file.relative}

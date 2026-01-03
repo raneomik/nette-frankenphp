@@ -1,13 +1,12 @@
 <?php declare(strict_types = 1);
 
-namespace app\UI\Api;
+namespace App\UI\Api;
 
 use App\UI\BasePresenter;
 use Nette\Application\Responses\TextResponse;
 
 class ApiPresenter extends BasePresenter
 {
-
 	public function actionDefault(): void
 	{
 		$this->sendResponse(new TextResponse('ping'));
