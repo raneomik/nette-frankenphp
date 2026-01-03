@@ -1,3 +1,154 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
-NETTE_DEBUG=1 php -S 0.0.0.0:8000 -t www
+set -eu
+
+usage() {
+  echo "Usage: $0 [--franken|f] [--prod|p] [--port|o] [--back|d] [--build|b] [stop]"
+  echo ""
+  echo "Options:"
+  echo "  --prod|-p    		Disable debug/dev mode (disabled by default)"
+  echo "  --port=<port>		Specify the port number (default: 8000)"
+  echo "  --franken|-f  	Run in worker mode with FrankenPHP (docker compose. Run in php)"
+  echo "  --restart|-r  	Restart server"
+  echo "  --build|-b 		Build FrankenPHP container"
+  echo "  --back|-d 		Run server in background (detached mode)"
+  echo "  --clear-logs 		Clear log files"
+  echo "  --clear-cache 	Clear cache files"
+  echo "  stop  		Stop server"
+  exit 1
+}
+
+MODE="php"
+PORT="8000"
+PROD=0
+BACKGROUND=0
+BUILD=0
+
+run() {
+  echo "▶ Mode: $MODE"
+  echo "▶ Debug: $((1 - PROD))"
+
+  if [ "$MODE" = "php" ]; then
+	run_php_server
+  else
+	run_frankenphp
+  fi
+}
+
+run_php_server() {
+  if [ "$BACKGROUND" -eq 1 ]; then
+  	echo "▶ Starting PHP built-in server in background on http://localhost:$PORT"
+	NETTE_DEBUG="$((1 - PROD))" nohup php -S localhost:$PORT -t www > var/log/php-server.log 2>&1 &
+	echo $! > var/php-server.pid
+  else
+	NETTE_DEBUG="$((1 - PROD))" php -S localhost:$PORT -t www
+  fi
+}
+
+run_frankenphp() {
+  dc_options=""
+  if [ "$PROD" -eq 0 ]; then
+  	dc_options="$dc_options -f compose.yml -f compose.dev.yml"
+  fi
+
+  up_options="--remove-orphans"
+  if [ "$BUILD" -eq 1 ]; then
+	up_options="$up_options --build"
+  fi
+
+  if [ "$BACKGROUND" -eq 1 ]; then
+	up_options="$up_options -d"
+  fi
+
+  echo "▶ Starting FrankenPHP (Docker) on https://localhost:$PORT"
+  COMPOSE_BAKE=true HTTPS_PORT=${PORT} docker compose $dc_options up $up_options
+}
+
+restart_frankenphp() {
+  echo "▶ Restarting FrankenPHP (Docker)"
+  docker compose restart
+}
+
+stop() {
+  dcps=$(docker compose ps --format json)
+  if [ -n "$dcps" ] ; then
+	echo "▶ Stopping FrankenPHP (Docker)"
+	docker compose down
+  fi
+
+  if [ -f var/php-server.pid ]; then
+	echo "▶ Stopping PHP built-in server"
+	kill -TERM "$(cat var/php-server.pid)" 2>/dev/null || true
+	rm var/php-server.pid
+  fi
+}
+
+restart() {
+  if [ "$MODE" = "php" ]; then
+	stop
+	run_php_server
+  else
+	restart_frankenphp
+  fi
+}
+
+ACTION="run"
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --franken|-f)
+      MODE="franken"
+      ;;
+    --prod|-p)
+      PROD=1
+      ;;
+    --port=*)
+      PORT="${1#*=}"
+      ;;
+    --back|-d)
+      BACKGROUND=1
+      ;;
+    --build|-b)
+      BUILD=1
+      ;;
+    --restart|-r)
+      ACTION="restart"
+	  ;;
+    --clear-logs)
+      ACTION="clear-logs"
+      ;;
+    --clear-cache)
+      ACTION="clear-cache"
+      ;;
+    stop)
+      ACTION="stop"
+      ;;
+    -h|--help)
+      usage
+      ;;
+    *)
+      echo "Unknown option: $1"
+      usage
+      ;;
+  esac
+  shift
+done
+
+case "$ACTION" in
+  restart)
+    restart
+    ;;
+  stop)
+    stop
+    ;;
+  run)
+    run
+    ;;
+  clear-logs)
+    echo "▶ Clearing log files"
+    rm -f var/log/*
+    ;;
+  clear-cache)
+    echo "▶ Clearing cache files"
+    rm -rf var/tmp/cache*
+    ;;
+esac
