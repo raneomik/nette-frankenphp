@@ -28,9 +28,9 @@ class LocalPreset extends BasePreset
 			'appDir' => $this->bootPoint,
 			'wwwDir' => realpath($this->bootPoint . '/www'),
 			'logDir' => realpath($this->bootPoint . '/var/log'),
-			'tempDir' => realpath($this->bootPoint . '/var/tmp'),
 		]);
 
+		$configurator->setTempDirectory($this->bootPoint . '/var/temp');
 		$configurator->addDynamicParameters([
 			'runnerName' => getenv('APP_WORKER_MODE')
 				? 'frankenphp'
