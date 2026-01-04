@@ -3,5 +3,4 @@
 
 # Nette
 /config/local.neon
-/temp
-/log
+/var

@@ -66,44 +66,44 @@ List of URL's:
 ➜  bin/hey -n 1000 -c 100 https://localhost
 
 Summary:
-  Total:        0.6831 secs
-  Slowest:      0.1237 secs
-  Fastest:      0.0184 secs
-  Average:      0.0633 secs
-  Requests/sec: 1463.9128
+  Total:        0.6730 secs
+  Slowest:      0.1338 secs
+  Fastest:      0.0080 secs
+  Average:      0.0631 secs
+  Requests/sec: 1485.8235
   
-  Total data:   982000 bytes
-  Size/request: 982 bytes
+  Total data:   306000 bytes
+  Size/request: 306 bytes
 
 Response time histogram:
-  0.018 [1]     |
-  0.029 [4]     |■
-  0.039 [36]    |■■■■■
-  0.050 [98]    |■■■■■■■■■■■■
-  0.061 [320]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.071 [274]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.082 [164]   |■■■■■■■■■■■■■■■■■■■■■
-  0.092 [69]    |■■■■■■■■■
-  0.103 [22]    |■■■
-  0.113 [11]    |■
-  0.124 [1]     |
+  0.008 [1]     |
+  0.021 [1]     |
+  0.033 [28]    |■■■
+  0.046 [50]    |■■■■■
+  0.058 [413]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.071 [283]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.083 [54]    |■■■■■
+  0.096 [132]   |■■■■■■■■■■■■■
+  0.109 [22]    |■■
+  0.121 [11]    |■
+  0.134 [5]     |
 
 
 Latency distribution:
-  10% in 0.0481 secs
-  25% in 0.0541 secs
-  50% in 0.0619 secs
-  75% in 0.0720 secs
-  90% in 0.0817 secs
-  95% in 0.0900 secs
-  99% in 0.1056 secs
+  10% in 0.0479 secs
+  25% in 0.0535 secs
+  50% in 0.0586 secs
+  75% in 0.0682 secs
+  90% in 0.0907 secs
+  95% in 0.0938 secs
+  99% in 0.1124 secs
 
 Details (average, fastest, slowest):
-  DNS+dialup:   0.0009 secs, 0.0184 secs, 0.1237 secs
-  DNS-lookup:   0.0004 secs, 0.0000 secs, 0.0403 secs
-  req write:    0.0003 secs, 0.0000 secs, 0.0164 secs
-  resp wait:    0.0588 secs, 0.0091 secs, 0.0906 secs
-  resp read:    0.0003 secs, 0.0000 secs, 0.0225 secs
+  DNS+dialup:   0.0013 secs, 0.0080 secs, 0.1338 secs
+  DNS-lookup:   0.0006 secs, 0.0000 secs, 0.0412 secs
+  req write:    0.0003 secs, 0.0000 secs, 0.0246 secs
+  resp wait:    0.0588 secs, 0.0078 secs, 0.1233 secs
+  resp read:    0.0003 secs, 0.0000 secs, 0.0148 secs
 
 Status code distribution:
   [200] 1000 responses
@@ -115,44 +115,43 @@ Status code distribution:
 ```
 ➜  bin/dev -d -p // default
 ➜  bin/hey -n 1000 -c 100 http://localhost:8080
-
 Summary:
-  Total:        0.7937 secs
-  Slowest:      0.0973 secs
-  Fastest:      0.0157 secs
-  Average:      0.0751 secs
-  Requests/sec: 1259.9747
+  Total:        0.8311 secs
+  Slowest:      0.1043 secs
+  Fastest:      0.0137 secs
+  Average:      0.0787 secs
+  Requests/sec: 1203.1921
   
 
 Response time histogram:
-  0.016 [1]     |
-  0.024 [21]    |■■
+  0.014 [1]     |
+  0.023 [19]    |■
   0.032 [11]    |■
-  0.040 [11]    |■
-  0.048 [15]    |■
-  0.056 [18]    |■
-  0.065 [8]     |■
-  0.073 [86]    |■■■■■■
-  0.081 [541]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.089 [277]   |■■■■■■■■■■■■■■■■■■■■
-  0.097 [11]    |■
+  0.041 [11]    |■
+  0.050 [19]    |■
+  0.059 [20]    |■■
+  0.068 [14]    |■
+  0.077 [206]   |■■■■■■■■■■■■■■■■
+  0.086 [507]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.095 [146]   |■■■■■■■■■■■■
+  0.104 [46]    |■■■■
 
 
 Latency distribution:
-  10% in 0.0674 secs
-  25% in 0.0744 secs
-  50% in 0.0789 secs
-  75% in 0.0815 secs
-  90% in 0.0832 secs
-  95% in 0.0853 secs
-  99% in 0.0901 secs
+  10% in 0.0688 secs
+  25% in 0.0767 secs
+  50% in 0.0813 secs
+  75% in 0.0853 secs
+  90% in 0.0918 secs
+  95% in 0.0945 secs
+  99% in 0.1039 secs
 
 Details (average, fastest, slowest):
-  DNS+dialup:   0.0008 secs, 0.0157 secs, 0.0973 secs
-  DNS-lookup:   0.0007 secs, 0.0000 secs, 0.0153 secs
-  req write:    0.0000 secs, 0.0000 secs, 0.0007 secs
-  resp wait:    0.0742 secs, 0.0146 secs, 0.0872 secs
-  resp read:    0.0001 secs, 0.0000 secs, 0.0008 secs
+  DNS+dialup:   0.0004 secs, 0.0137 secs, 0.1043 secs
+  DNS-lookup:   0.0002 secs, 0.0000 secs, 0.0153 secs
+  req write:    0.0001 secs, 0.0000 secs, 0.0131 secs
+  resp wait:    0.0781 secs, 0.0126 secs, 0.1042 secs
+  resp read:    0.0001 secs, 0.0000 secs, 0.0019 secs
 
 Status code distribution:
   [200] 1000 responses

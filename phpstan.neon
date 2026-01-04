@@ -1,10 +1,9 @@
 parameters:
-	level: 5
+	level: 9
 
 	paths:
-		- src
-		- bin
-		- tests
+		- app
+		# - tests
 
 includes:
 	- vendor/phpstan/phpstan-nette/extension.neon

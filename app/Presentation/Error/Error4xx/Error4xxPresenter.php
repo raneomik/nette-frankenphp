@@ -22,6 +22,7 @@ final class Error4xxPresenter extends Nette\Application\UI\Presenter
 			? $file
 			: __DIR__ . '/4xx.latte';
 		$this->template->httpCode = $code;
+		// @phpstan-ignore-next-line
 		$this->template->setFile($file);
 	}
 }

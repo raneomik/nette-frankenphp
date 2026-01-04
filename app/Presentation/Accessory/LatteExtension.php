@@ -8,13 +8,16 @@ use Latte\Extension;
 
 final class LatteExtension extends Extension
 {
-	public function getFilters(): array
-	{
-		return [];
+	public function __construct(
+		private readonly string $runnerName,
+	) {
 	}
 
 	public function getFunctions(): array
 	{
-		return [];
+		return [
+			'runnerName' => fn() => $this->runnerName,
+			'runnerIcon' => fn() => "/{$this->runnerName}.ico",
+		];
 	}
 }

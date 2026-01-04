@@ -9,8 +9,11 @@ final class NetteRunner
 {
     public function run(): void
     {
-		$application = Bootstrap::boot()
-			->createContainer()
+		$bootstrap = new Bootstrap();
+		$bootstrap->initializeEnvironment();
+
+		$application = $bootstrap
+			->bootWebApplication()
 			->getByType(Application::class)
 		;
 

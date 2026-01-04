@@ -6,20 +6,19 @@ namespace App;
 
 use Nette;
 use Nette\Bootstrap\Configurator;
+use Nette\DI\Container;
 
-class Bootstrap
+final readonly class Bootstrap
 {
-	private Configurator $configurator;
 	private string $rootDir;
 
-	public function __construct()
-	{
+	public function __construct(
+		private Configurator $configurator = new Configurator,
+	) {
 		$this->rootDir = dirname(__DIR__);
-		$this->configurator = new Configurator;
-		$this->configurator->setTempDirectory($this->rootDir . '/temp');
 	}
 
-	public function bootWebApplication(): Nette\DI\Container
+	public function bootWebApplication(): Container
 	{
 		$this->initializeEnvironment();
 		$this->setupContainer();
@@ -29,8 +28,13 @@ class Bootstrap
 
 	public function initializeEnvironment(): void
 	{
-		$this->configurator->setDebugMode(true); // enable for your remote IP
-		$this->configurator->enableTracy($this->rootDir . '/log');
+		$this->configurator->setTempDirectory($this->rootDir . '/var/temp');
+
+		$this->configurator->setDebugMode(
+			(bool) getenv('NETTE_DEBUG')
+		); 
+		
+		$this->configurator->enableTracy($this->rootDir . '/var/log');
 
 		$this->configurator->createRobotLoader()
 			->addDirectory(__DIR__)

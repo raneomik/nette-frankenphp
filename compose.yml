@@ -12,8 +12,6 @@ services:
             APP_WORKER_MODE: 1
             FRANKENPHP_CONFIG: "worker /srv/www/index.php"
             SERVER_NAME: localhost
-            # Nette
-            NETTE_DEBUG: "false"
         volumes:
             - ./:/srv
             - .docker/Caddyfile:/etc/frankenphp/Caddyfile

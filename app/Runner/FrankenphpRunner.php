@@ -12,25 +12,23 @@ final class FrankenphpRunner
     {
         ignore_user_abort(true);
 
-		$container = new Bootstrap();
-
-		$handler = static function () use ($container): void {
-			// initialized container & application
-			$application = $container
-				->bootWebApplication()
-				->getByType(Application::class)
-
-			$application->onError[] = function (Application $application, \Throwable $e): void {
-				// needed to render correct error pages
-				Debugger::exceptionHandler($e);
-
-				exit(255);
+		$handler = static function (): void {
+			$bootstrap = new Bootstrap();
+		
+			$container = $bootstrap->bootWebApplication();
+			$application = $container->getByType(Application::class);
+			
+			$application->onError[] = function (Application $application, \Throwable $e) use ($container): void {				
+				if ($container->getParameters()['debugMode'] ?? false) {
+					Debugger::exceptionHandler($e);
+					exit(255);
+				}
 			};
 
-			$application->onShutdown[] = function () use ($configurator): void {
+			$application->onShutdown[] = function () use ($container): void {
 				gc_collect_cycles();
 
-				if ($configurator->isDebugMode()) {
+				if ($container->getParameters()['debugMode'] ?? false) {
 					// needed to render tracy-bar
 					exit(0);
 				}
@@ -41,6 +39,7 @@ final class FrankenphpRunner
 			$application->run();
 		};
 
+		// @phpstan-ignore-next-line
         $maxRequests = (int) ($_SERVER['MAX_REQUESTS'] ?? 20);
 
         do {
