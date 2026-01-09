@@ -8,7 +8,7 @@ use App\Bootstrap;
 use Nette\Application\Application;
 use Tracy\Debugger;
 
-final class FrankenphpRunner
+final readonly class FrankenphpRunner
 {
 	public function run(): void
 	{

@@ -39,44 +39,44 @@ Then visit [https://localhost:8000](http://localhost:8000) in your browser.
 ➜  bin/hey -n 1000 -c 100 https://localhost
 
 Summary:
-  Total:        0.3187 secs
-  Slowest:      0.1038 secs
-  Fastest:      0.0010 secs
-  Average:      0.0292 secs
-  Requests/sec: 3137.8056
+  Total:        0.3111 secs
+  Slowest:      0.0866 secs
+  Fastest:      0.0015 secs
+  Average:      0.0285 secs
+  Requests/sec: 3214.7256
 
   Total data:   316000 bytes
   Size/request: 316 bytes
 
 Response time histogram:
-  0.001 [1]     |
-  0.011 [81]    |■■■■■■■■■
-  0.022 [347]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.032 [360]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.042 [90]    |■■■■■■■■■■
-  0.052 [19]    |■■
-  0.063 [2]     |
-  0.073 [0]     |
-  0.083 [44]    |■■■■■
-  0.094 [15]    |■■
-  0.104 [41]    |■■■■■
+  0.002 [1]     |
+  0.010 [39]    |■■■■■
+  0.019 [187]   |■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.027 [290]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.036 [270]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.044 [96]    |■■■■■■■■■■■■■
+  0.053 [54]    |■■■■■■■
+  0.061 [34]    |■■■■■
+  0.070 [13]    |■■
+  0.078 [9]     |■
+  0.087 [7]     |■
 
 
 Latency distribution:
-  10% in 0.0125 secs
-  25% in 0.0185 secs
-  50% in 0.0230 secs
-  75% in 0.0301 secs
-  90% in 0.0781 secs
-  95% in 0.0852 secs
-  99% in 0.0985 secs
+  10% in 0.0149 secs
+  25% in 0.0196 secs
+  50% in 0.0266 secs
+  75% in 0.0334 secs
+  90% in 0.0463 secs
+  95% in 0.0557 secs
+  99% in 0.0735 secs
 
 Details (average, fastest, slowest):
-  DNS+dialup:   0.0040 secs, 0.0010 secs, 0.1038 secs
-  DNS-lookup:   0.0012 secs, 0.0000 secs, 0.0358 secs
-  req write:    0.0001 secs, 0.0000 secs, 0.0057 secs
-  resp wait:    0.0250 secs, 0.0010 secs, 0.0824 secs
-  resp read:    0.0000 secs, 0.0000 secs, 0.0040 secs
+  DNS+dialup:   0.0006 secs, 0.0015 secs, 0.0866 secs
+  DNS-lookup:   0.0002 secs, 0.0000 secs, 0.0264 secs
+  req write:    0.0001 secs, 0.0000 secs, 0.0208 secs
+  resp wait:    0.0259 secs, 0.0015 secs, 0.0619 secs
+  resp read:    0.0002 secs, 0.0000 secs, 0.0117 secs
 
 Status code distribution:
   [200] 1000 responses

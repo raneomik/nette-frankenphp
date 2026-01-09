@@ -3,6 +3,7 @@ services:
         build:
             context: .
             dockerfile: .docker/frankenphp/Dockerfile
+            target: prod
         ports:
             - ${HTTP_PORT:-88}:80
             - ${HTTPS_PORT:-448}:443
