@@ -16,7 +16,6 @@ final class AdaptermanRunner
 	];
 
 	private const string SERVER_PATH = '/www';
-	private const int MAX_TO_HANDLE = 200;
 
 	private static int $handled = 0;
 
@@ -49,12 +48,6 @@ final class AdaptermanRunner
 			$output = ob_get_clean();
 
 			gc_collect_cycles();
-
-			if (self::$handled >= self::MAX_TO_HANDLE) {
-				echo $output;
-				flush();
-				exit(0);
-			}
 		}
 
 		return $output;
@@ -72,8 +65,8 @@ final class AdaptermanRunner
 		}
 
 		$path = parse_url($path, PHP_URL_PATH);
-		$assetPath = dirname(__DIR__, 2) . self::SERVER_PATH . $path;
-
+		$assetPath = dirname(__DIR__, 3) . self::SERVER_PATH . $path;
+		var_dump($assetPath, file_exists($assetPath));
 		if (false === file_exists($assetPath)) {
 			return false;
 		}
@@ -81,7 +74,7 @@ final class AdaptermanRunner
 		return file_get_contents($assetPath);
 	}
 
-	// TODO: investigate
+	// TODO: investigate - bypass @see Debugger\Helpers::isCli()
 	public static function dumpTracyBar(): string|false
 	{
 		ob_start();

@@ -33,6 +33,58 @@ Then visit [https://localhost:8000](http://localhost:8000) in your browser.
 
 ## Benchmark (with [hey](https://github.com/rakyll/hey) in no-debug mode & without xdebug)
 
+### Adapterman
+```
+➜  bibin/dev --adapterman -p -d
+➜  bin/hey -n 1000 -c 100 http://localhost:8000
+
+Summary:
+  Total:        0.5561 secs
+  Slowest:      0.3559 secs
+  Fastest:      0.0006 secs
+  Average:      0.0355 secs
+  Requests/sec: 1798.2557
+
+  Total data:   205000 bytes
+  Size/request: 205 bytes
+
+Response time histogram:
+  0.001 [1]     |
+  0.036 [723]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.072 [150]   |■■■■■■■■
+  0.107 [34]    |■■
+  0.143 [29]    |■■
+  0.178 [54]    |■■■
+  0.214 [5]     |
+  0.249 [1]     |
+  0.285 [2]     |
+  0.320 [0]     |
+  0.356 [1]     |
+
+
+Latency distribution:
+  10% in 0.0045 secs
+  25% in 0.0100 secs
+  50% in 0.0197 secs
+  75% in 0.0415 secs
+  90% in 0.0987 secs
+  95% in 0.1540 secs
+  99% in 0.1709 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:   0.0006 secs, 0.0006 secs, 0.3559 secs
+  DNS-lookup:   0.0005 secs, 0.0000 secs, 0.0209 secs
+  req write:    0.0000 secs, 0.0000 secs, 0.0183 secs
+  resp wait:    0.0346 secs, 0.0006 secs, 0.3375 secs
+  resp read:    0.0001 secs, 0.0000 secs, 0.0109 secs
+
+Status code distribution:
+  [200] 1000 responses
+
+```
+
+compared to :
+
 ### FrankenPHP
 ```
 ➜  bin/dev -f --port=443 -d -p // frankenphp on 443 to solve tls issues

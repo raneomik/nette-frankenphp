@@ -10,11 +10,13 @@ use Workerman\Timer;
 
 Adapterman::init();
 
-$http_worker = new Worker('http://localhost:8000');
-$http_worker->count = (int)\shell_exec('nproc') * 4;
-$http_worker->name = 'AdapterMan';
+$worker = new Worker('http://localhost:8000');
+$worker->count = (int)\shell_exec('nproc') * 4;
+$worker->name = 'AdapterMan';
+$worker::$pidFile = 'var/adapterman.pid';
+$worker::$logFile = 'var/log/adapterman.log';
 
-$http_worker->onWorkerStart = function (Worker $worker) {
+$worker->onWorkerStart = function (Worker $worker) {
 	if ($worker->id === 0) {
 		Timer::add(600, function () {
 			Http::tryGcSessions();
@@ -22,7 +24,7 @@ $http_worker->onWorkerStart = function (Worker $worker) {
 	}
 };
 
-$http_worker->onMessage = static function ($connection) {
+$worker->onMessage = static function ($connection) {
 	$path = $_SERVER['REQUEST_URI'];
 
 	if (false !== $file = AdaptermanRunner::dumpFile($path)) {

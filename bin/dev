@@ -8,9 +8,8 @@ usage() {
   echo "Options:"
   echo "  --prod|-p    		Disable debug/dev mode (disabled by default)"
   echo "  --port=<port>		Specify the port number (default: 8000)"
-  echo "  --adapterman|-a  	Run in worker mode with Adapterman (php-cli)"
   echo "  --franken|-f  	Run in worker mode with FrankenPHP (docker compose)"
-  echo "  --adapterman|-a  	Run in worker mode with Adapterman"
+  echo "  --adapterman|-a  	Run in worker mode with Adapterman (php-cli)"
   echo "  --restart|-r  	Restart server"
   echo "  --build|-b 		Build FrankenPHP container"
   echo "  --back|-d 		Run server in background (detached mode)"
@@ -78,6 +77,7 @@ run_frankenphp() {
 run_adapterman() {
   xdebug="debug"
   [ "$PROD" = "1" ] && xdebug="off"
+
   if [ "$BACKGROUND" -eq 1 ]; then
   	echo "▶ Starting Adapterman server on http://localhost:$PORT"
 	XDEBUG_MODE=$xdebug NETTE_DEBUG="$((1 - PROD))" php www/adapterman.php start -d
@@ -104,19 +104,27 @@ stop() {
 	rm var/php-server.pid
   fi
 
-  if [ -f www/workerman.adapterman.php.pid ]; then
+  if [ -f var/adapterman.pid ]; then
 	echo "▶ Stopping Adapterman server"
 	php www/adapterman.php stop
   fi
 }
 
 restart() {
-  if [ "$MODE" = "php" ]; then
-	stop
-	run_php_server
-  else
-	restart_frankenphp
-  fi
+
+	case "$MODE" in
+	php)
+		stop
+		run_php_server
+		;;
+	franken)
+		restart_frankenphp
+		;;
+	adapterman)
+		stop
+		run_adapterman
+		;;
+	esac
 }
 
 ACTION="run"
