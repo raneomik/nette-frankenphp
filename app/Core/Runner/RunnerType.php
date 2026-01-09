@@ -7,6 +7,7 @@ namespace App\Core\Runner;
 enum RunnerType: string
 {
 	case Nette = 'nette';
+	case Adapterman = 'adapterman';
 	case Frankenphp = 'frankenphp';
 	case Unknown = 'unknown';
 
@@ -18,6 +19,14 @@ enum RunnerType: string
 	public function imageAsset(): string
 	{
 		return 'img:' . $this->value;
+	}
+
+	public function differTracyBar(): bool
+	{
+		return match ($this) {
+			self::Adapterman => true,
+			self::Nette, self::Frankenphp, self::Unknown => false,
+		};
 	}
 
 	public function supportsHotReload(): bool

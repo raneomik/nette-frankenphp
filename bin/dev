@@ -10,6 +10,7 @@ usage() {
   echo "  --port=<port>		Specify the port number (default: 8000)"
   echo "  --adapterman|-a  	Run in worker mode with Adapterman (php-cli)"
   echo "  --franken|-f  	Run in worker mode with FrankenPHP (docker compose)"
+  echo "  --adapterman|-a  	Run in worker mode with Adapterman"
   echo "  --restart|-r  	Restart server"
   echo "  --build|-b 		Build FrankenPHP container"
   echo "  --back|-d 		Run server in background (detached mode)"
@@ -35,6 +36,9 @@ run() {
 		;;
 	franken)
 		run_frankenphp
+		;;
+	adapterman)
+		run_adapterman
 		;;
 	esac
 }
@@ -71,6 +75,17 @@ run_frankenphp() {
   COMPOSE_BAKE=true HTTPS_PORT=${PORT} docker compose $dc_options up $up_options
 }
 
+run_adapterman() {
+  xdebug="debug"
+  [ "$PROD" = "1" ] && xdebug="off"
+  if [ "$BACKGROUND" -eq 1 ]; then
+  	echo "▶ Starting Adapterman server on http://localhost:$PORT"
+	XDEBUG_MODE=$xdebug NETTE_DEBUG="$((1 - PROD))" php www/adapterman.php start -d
+  else
+	XDEBUG_MODE=$xdebug NETTE_DEBUG="$((1 - PROD))" php www/adapterman.php start
+  fi
+}
+
 restart_frankenphp() {
   echo "▶ Restarting FrankenPHP (Docker)"
   docker compose restart
@@ -88,6 +103,11 @@ stop() {
 	kill -TERM "$(cat var/php-server.pid)" 2>/dev/null || true
 	rm var/php-server.pid
   fi
+
+  if [ -f www/workerman.adapterman.php.pid ]; then
+	echo "▶ Stopping Adapterman server"
+	php www/adapterman.php stop
+  fi
 }
 
 restart() {
@@ -104,6 +124,9 @@ while [ $# -gt 0 ]; do
   case "$1" in
     --franken|-f)
       MODE="franken"
+      ;;
+    --adapterman|-a)
+      MODE="adapterman"
       ;;
     --prod|-p)
       PROD=1
