@@ -8,6 +8,7 @@ usage() {
   echo "Options:"
   echo "  --prod|-p    		Disable debug/dev mode (disabled by default)"
   echo "  --port=<port>		Specify the port number (default: 8000)"
+  echo "  --adapterman|-a  	Run in worker mode with Adapterman (php-cli)"
   echo "  --franken|-f  	Run in worker mode with FrankenPHP (docker compose)"
   echo "  --restart|-r  	Restart server"
   echo "  --build|-b 		Build FrankenPHP container"
