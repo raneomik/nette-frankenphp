@@ -3,11 +3,17 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<link rel="icon" href="{runnerIcon()}">
+	<link rel="icon" n:asset?="runnerIconAsset()" type="image/x-icon">
 
 	<title>{ifset title}{include title|stripHtml} | {/ifset}Nette Web</title>
 
-	{asset? 'main.js'}
+	{if hotReloadUrl()}
+		<meta name="frankenphp-hot-reload:url" content="{hotReloadUrl()}">
+		{* <script src="https://cdn.jsdelivr.net/npm/idiomorph"></script> - removed, no tracy bar otherwise *}
+		<script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
+	{/if}
+
+	{asset? 'main.css'}
 </head>
 
 <body>

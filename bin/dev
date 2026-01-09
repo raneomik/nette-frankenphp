@@ -8,7 +8,7 @@ usage() {
   echo "Options:"
   echo "  --prod|-p    		Disable debug/dev mode (disabled by default)"
   echo "  --port=<port>		Specify the port number (default: 8000)"
-  echo "  --franken|-f  	Run in worker mode with FrankenPHP (docker compose. Run in php)"
+  echo "  --franken|-f  	Run in worker mode with FrankenPHP (docker compose)"
   echo "  --restart|-r  	Restart server"
   echo "  --build|-b 		Build FrankenPHP container"
   echo "  --back|-d 		Run server in background (detached mode)"
@@ -28,20 +28,26 @@ run() {
   echo "▶ Mode: $MODE"
   echo "▶ Debug: $((1 - PROD))"
 
-  if [ "$MODE" = "php" ]; then
-	run_php_server
-  else
-	run_frankenphp
-  fi
+	case "$MODE" in
+	php)
+		run_php_server
+		;;
+	franken)
+		run_frankenphp
+		;;
+	esac
 }
 
 run_php_server() {
+  xdebug="debug"
+  [ "$PROD" = "1" ] && xdebug="off"
+
   if [ "$BACKGROUND" -eq 1 ]; then
   	echo "▶ Starting PHP built-in server in background on http://localhost:$PORT"
-	NETTE_DEBUG="$((1 - PROD))" nohup php -S localhost:$PORT -t www > var/log/php-server.log 2>&1 &
+	XDEBUG_MODE=$xdebug NETTE_DEBUG="$((1 - PROD))" nohup php -S localhost:$PORT -t www > var/log/php-server.log 2>&1 &
 	echo $! > var/php-server.pid
   else
-	NETTE_DEBUG="$((1 - PROD))" php -S localhost:$PORT -t www
+	XDEBUG_MODE=$xdebug NETTE_DEBUG="$((1 - PROD))" php -S localhost:$PORT -t www
   fi
 }
 

@@ -1,6 +1,8 @@
-<?php declare(strict_types = 1);
+<?php
 
-namespace App\Runner;
+declare(strict_types=1);
+
+namespace App\Core\Runner;
 
 use App\Bootstrap;
 use Nette\Application\Application;
@@ -8,17 +10,17 @@ use Tracy\Debugger;
 
 final class FrankenphpRunner
 {
-    public function run(): void
-    {
-        ignore_user_abort(true);
+	public function run(): void
+	{
+		ignore_user_abort(true);
 
 		$handler = static function (): void {
 			$bootstrap = new Bootstrap();
-		
+
 			$container = $bootstrap->bootWebApplication();
 			$application = $container->getByType(Application::class);
-			
-			$application->onError[] = function (Application $application, \Throwable $e) use ($container): void {				
+
+			$application->onError[] = function (Application $application, \Throwable $e) use ($container): void {
 				if ($container->getParameters()['debugMode'] ?? false) {
 					Debugger::exceptionHandler($e);
 					exit(255);
@@ -29,7 +31,7 @@ final class FrankenphpRunner
 				gc_collect_cycles();
 
 				if ($container->getParameters()['debugMode'] ?? false) {
-					// needed to render tracy-bar
+					// needed to dump tracy-bar
 					exit(0);
 				}
 
@@ -40,10 +42,10 @@ final class FrankenphpRunner
 		};
 
 		// @phpstan-ignore-next-line
-        $maxRequests = (int) ($_SERVER['MAX_REQUESTS'] ?? 20);
+		$maxRequests = (int) ($_SERVER['MAX_REQUESTS'] ?? 20);
 
-        do {
-            $keepRunning = frankenphp_handle_request($handler);
-        } while ($keepRunning && (-1 === $maxRequests || 0 < --$maxRequests));
-    }
+		do {
+			$keepRunning = frankenphp_handle_request($handler);
+		} while ($keepRunning && (-1 === $maxRequests || 0 < --$maxRequests));
+	}
 }

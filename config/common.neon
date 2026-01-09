@@ -20,7 +20,7 @@ latte:
 	strictTypes: yes
 	strictParsing: yes
 	extensions:
-		- App\Presentation\Accessory\LatteExtension('%runnerName%')
+		- App\Presentation\Accessory\LatteExtension('%runner%', '%hotReloadUrl%')
 
 
 assets:
@@ -29,6 +29,12 @@ assets:
 			path: assets
 			# type: vite  # Uncomment to activate Vite for asset building
 
+		favicon:
+			path: favicon
+			extension: ico
+		img:
+			path: img
+			extension: [png, jpg, jpeg, gif, svg, webp]
 di:
 	lazy: yes
 	export:
@@ -38,3 +44,7 @@ di:
 tracy:
 	strictMode: yes
 	dumpTheme: dark
+	bar:
+		- App\Core\Tracy\RunnerPanel('%runner%')
+		- App\Core\Tracy\PhpInfoPanel
+

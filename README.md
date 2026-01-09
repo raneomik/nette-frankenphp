@@ -1,30 +1,3 @@
-![](https://heatbadger.now.sh/github/readme/contributte/demo-frankenphp/)
-
-<p align=center>
-  <a href="https://github.com/contributte/demo-frankenphp/actions"><img src="https://badgen.net/github/checks/contributte/demo-frankenphp/master"></a>
-  <a href="https://coveralls.io/r/contributte/demo-frankenphp"><img src="https://badgen.net/coveralls/c/github/contributte/demo-frankenphp"></a>
-  <a href="https://packagist.org/packages/contributte/demo-frankenphp"><img src="https://badgen.net/packagist/dm/contributte/demo-frankenphp"></a>
-  <a href="https://packagist.org/packages/contributte/demo-frankenphp"><img src="https://badgen.net/packagist/v/contributte/demo-frankenphp"></a>
-</p>
-<p align=center>
-  <a href="https://packagist.org/packages/contributte/demo-frankenphp"><img src="https://badgen.net/packagist/php/contributte/demo-frankenphp"></a>
-  <a href="https://github.com/contributte/demo-frankenphp"><img src="https://badgen.net/github/license/contributte/demo-frankenphp"></a>
-  <a href="https://bit.ly/ctteg"><img src="https://badgen.net/badge/support/gitter/cyan"></a>
-  <a href="https://bit.ly/cttfo"><img src="https://badgen.net/badge/support/forum/yellow"></a>
-  <a href="https://contributte.org/partners.html"><img src="https://badgen.net/badge/sponsor/donations/F96854"></a>
-</p>
-
-<p align=center>
-Website 🚀 <a href="https://contributte.org">contributte.org</a> | Contact 👨🏻‍💻 <a href="https://f3l1x.io">f3l1x.io</a> | Twitter 🐦 <a href="https://twitter.com/contributte">@contributte</a>
-</p>
-
-----
-
-![](.docs/phpinfo.png)
-
-![](.docs/terminal.png)
-
------
 
 ## Goal
 
@@ -32,12 +5,12 @@ Demo of [FrankenPHP](https://github.com/dunglas/frankenphp) with [Nette Framewor
 
 ## Installation
 
-You will need `PHP 8.2+` and [Composer](https://getcomposer.org/).
+You will need docker, docker compose, `PHP 8.2+` and [Composer](https://getcomposer.org/).
 
 Create project using composer.
 
 ```bash
-composer create-project -s dev contributte/demo-frankenphp acme
+git clone https://github.com/raneomik/nette-frankenphp --branch plain-nette frankenette
 ```
 
 Now you have application installed. It's time to run it.
@@ -46,128 +19,116 @@ Now you have application installed. It's time to run it.
 
 Spin up Docker stack. FrankenPHP with Caddyserver.
 
+
 ```bash
-docker compose up
+docker compose up -f compose.yml -f compose.dev.yml
+```
+or
+
+```bash
+bin/dev --franken // bin/dev -h to show available options
 ```
 
-Then visit [http://localhost:8080](http://localhost:8000) in your browser.
+Then visit [https://localhost:8000](http://localhost:8000) in your browser.
 
-List of URL's:
+## Benchmark (with [hey](https://github.com/rakyll/hey) in no-debug mode & without xdebug)
 
-- [http://localhost:8080/](http://localhost:8000)
-- [http://localhost:8080/api](http://localhost:8000/api)
-- [http://localhost:8080/api/phpinfo](http://localhost:8000/api/phpinfo)
-
-## Benchmark (with [hey](https://github.com/rakyll/hey))
-
-### FrankenPHP (no-debug mode)
+### FrankenPHP
 ```
 ➜  bin/dev -f --port=443 -d -p // frankenphp on 443 to solve tls issues
 ➜  bin/hey -n 1000 -c 100 https://localhost
 
 Summary:
-  Total:        0.6730 secs
-  Slowest:      0.1338 secs
-  Fastest:      0.0080 secs
-  Average:      0.0631 secs
-  Requests/sec: 1485.8235
-  
-  Total data:   306000 bytes
-  Size/request: 306 bytes
+  Total:        0.3187 secs
+  Slowest:      0.1038 secs
+  Fastest:      0.0010 secs
+  Average:      0.0292 secs
+  Requests/sec: 3137.8056
+
+  Total data:   316000 bytes
+  Size/request: 316 bytes
 
 Response time histogram:
-  0.008 [1]     |
-  0.021 [1]     |
-  0.033 [28]    |■■■
-  0.046 [50]    |■■■■■
-  0.058 [413]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.071 [283]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.083 [54]    |■■■■■
-  0.096 [132]   |■■■■■■■■■■■■■
-  0.109 [22]    |■■
-  0.121 [11]    |■
-  0.134 [5]     |
+  0.001 [1]     |
+  0.011 [81]    |■■■■■■■■■
+  0.022 [347]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.032 [360]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.042 [90]    |■■■■■■■■■■
+  0.052 [19]    |■■
+  0.063 [2]     |
+  0.073 [0]     |
+  0.083 [44]    |■■■■■
+  0.094 [15]    |■■
+  0.104 [41]    |■■■■■
 
 
 Latency distribution:
-  10% in 0.0479 secs
-  25% in 0.0535 secs
-  50% in 0.0586 secs
-  75% in 0.0682 secs
-  90% in 0.0907 secs
-  95% in 0.0938 secs
-  99% in 0.1124 secs
+  10% in 0.0125 secs
+  25% in 0.0185 secs
+  50% in 0.0230 secs
+  75% in 0.0301 secs
+  90% in 0.0781 secs
+  95% in 0.0852 secs
+  99% in 0.0985 secs
 
 Details (average, fastest, slowest):
-  DNS+dialup:   0.0013 secs, 0.0080 secs, 0.1338 secs
-  DNS-lookup:   0.0006 secs, 0.0000 secs, 0.0412 secs
-  req write:    0.0003 secs, 0.0000 secs, 0.0246 secs
-  resp wait:    0.0588 secs, 0.0078 secs, 0.1233 secs
-  resp read:    0.0003 secs, 0.0000 secs, 0.0148 secs
+  DNS+dialup:   0.0040 secs, 0.0010 secs, 0.1038 secs
+  DNS-lookup:   0.0012 secs, 0.0000 secs, 0.0358 secs
+  req write:    0.0001 secs, 0.0000 secs, 0.0057 secs
+  resp wait:    0.0250 secs, 0.0010 secs, 0.0824 secs
+  resp read:    0.0000 secs, 0.0000 secs, 0.0040 secs
 
 Status code distribution:
   [200] 1000 responses
 
-
 ```
 
-### Built-in PHP server (no-debug mode)
+compared to :
+
+### Built-in PHP server
 ```
 ➜  bin/dev -d -p // default
 ➜  bin/hey -n 1000 -c 100 http://localhost:8080
+
 Summary:
-  Total:        0.8311 secs
-  Slowest:      0.1043 secs
-  Fastest:      0.0137 secs
-  Average:      0.0787 secs
-  Requests/sec: 1203.1921
-  
+  Total:        0.7709 secs
+  Slowest:      0.0955 secs
+  Fastest:      0.0164 secs
+  Average:      0.0723 secs
+  Requests/sec: 1297.2564
+
 
 Response time histogram:
-  0.014 [1]     |
-  0.023 [19]    |■
-  0.032 [11]    |■
-  0.041 [11]    |■
-  0.050 [19]    |■
-  0.059 [20]    |■■
-  0.068 [14]    |■
-  0.077 [206]   |■■■■■■■■■■■■■■■■
-  0.086 [507]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.095 [146]   |■■■■■■■■■■■■
-  0.104 [46]    |■■■■
+  0.016 [1]     |
+  0.024 [24]    |■
+  0.032 [13]    |■
+  0.040 [21]    |■
+  0.048 [17]    |■
+  0.056 [8]     |
+  0.064 [17]    |■
+  0.072 [73]    |■■■■
+  0.080 [718]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.088 [104]   |■■■■■■
+  0.095 [4]     |
 
 
 Latency distribution:
-  10% in 0.0688 secs
-  25% in 0.0767 secs
-  50% in 0.0813 secs
-  75% in 0.0853 secs
-  90% in 0.0918 secs
-  95% in 0.0945 secs
-  99% in 0.1039 secs
+  10% in 0.0637 secs
+  25% in 0.0741 secs
+  50% in 0.0758 secs
+  75% in 0.0773 secs
+  90% in 0.0803 secs
+  95% in 0.0820 secs
+  99% in 0.0825 secs
 
 Details (average, fastest, slowest):
-  DNS+dialup:   0.0004 secs, 0.0137 secs, 0.1043 secs
-  DNS-lookup:   0.0002 secs, 0.0000 secs, 0.0153 secs
-  req write:    0.0001 secs, 0.0000 secs, 0.0131 secs
-  resp wait:    0.0781 secs, 0.0126 secs, 0.1042 secs
-  resp read:    0.0001 secs, 0.0000 secs, 0.0019 secs
+  DNS+dialup:   0.0003 secs, 0.0164 secs, 0.0955 secs
+  DNS-lookup:   0.0001 secs, 0.0000 secs, 0.0173 secs
+  req write:    0.0001 secs, 0.0000 secs, 0.0007 secs
+  resp wait:    0.0718 secs, 0.0145 secs, 0.0826 secs
+  resp read:    0.0001 secs, 0.0000 secs, 0.0059 secs
 
 Status code distribution:
   [200] 1000 responses
 
 ```
-
-## Development
-
-See [how to contribute](https://contributte.org/contributing.html) to this package.
-
-This package is currently maintaining by these authors.
-
-<a href="https://github.com/f3l1x">
-    <img width="80" height="80" src="https://avatars2.githubusercontent.com/u/538058?v=3&s=80">
-</a>
-
------
-
-Consider to [support](https://contributte.org/partners.html) **contributte** development team. Also thank you for using this project.

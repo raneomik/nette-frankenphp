@@ -2,16 +2,20 @@ services:
     app:
         build:
             context: .
-            dockerfile: .docker/Dockerfile
+            dockerfile: .docker/frankenphp/Dockerfile
         ports:
             - ${HTTP_PORT:-88}:80
             - ${HTTPS_PORT:-448}:443
             - ${XDEBUG_PORT:-9003}:9003
             - 9000:9000
         environment:
-            APP_WORKER_MODE: 1
-            FRANKENPHP_CONFIG: "worker /srv/www/index.php"
+            APP_RUNNER: "frankenphp"
+            FRANKENPHP_CONFIG: |
+                {
+                    worker /srv/www/index.php
+                }
             SERVER_NAME: localhost
+            XDEBUG_MODE: "off"
         volumes:
             - ./:/srv
-            - .docker/Caddyfile:/etc/frankenphp/Caddyfile
+            - .docker/frankenphp/Caddyfile:/etc/frankenphp/Caddyfile

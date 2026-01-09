@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App;
 
-use Nette;
+use App\Core\Runner\RunnerType;
 use Nette\Bootstrap\Configurator;
 use Nette\DI\Container;
 
@@ -32,8 +32,8 @@ final readonly class Bootstrap
 
 		$this->configurator->setDebugMode(
 			(bool) getenv('NETTE_DEBUG')
-		); 
-		
+		);
+
 		$this->configurator->enableTracy($this->rootDir . '/var/log');
 
 		$this->configurator->createRobotLoader()
@@ -46,12 +46,10 @@ final readonly class Bootstrap
 		$configDir = $this->rootDir . '/config';
 		$this->configurator->addConfig($configDir . '/common.neon');
 		$this->configurator->addConfig($configDir . '/services.neon');
-		
-		$this->configurator->addDynamicParameters([
-			'runnerName' => getenv('APP_WORKER_MODE')
-				? 'frankenphp'
-				: 'nette',
-		]);
 
+		$this->configurator->addDynamicParameters([
+			'runner' => RunnerType::tryFrom(getenv('APP_RUNNER') ?: 'nette'),
+			'hotReloadUrl' => $_SERVER['FRANKENPHP_HOT_RELOAD'] ?? null,
+		]);
 	}
 }
