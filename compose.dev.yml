@@ -2,6 +2,8 @@ services:
     app:
         build:
             target: dev
+        ports:
+            - ${XDEBUG_PORT:-9003}:9003
         environment:
             CADDY_DEBUG: "debug"
             # Xdebug
@@ -9,8 +11,17 @@ services:
             XDEBUG_CONFIG: "idekey=docker"
             XDEBUG_MODE: "debug"
             PHP_IDE_CONFIG: "serverName=docker"
+            # Server config with hot reloading
+            FRANKENPHP_CONFIG: |
+                {
+                    hot_reload app/** assets/** www/** config/**
+                    worker {
+                        file /srv/www/index.php
+                        watch
+                    }
+                }
             # Nette
             NETTE_DEBUG: "true"
-        volumes:
-            - ./:/srv
-            - .docker/Caddyfile:/etc/frankenphp/Caddyfile
+        extra_hosts:
+            # Ensure that host.docker.internal is correctly defined on Linux
+            - host.docker.internal:host-gateway

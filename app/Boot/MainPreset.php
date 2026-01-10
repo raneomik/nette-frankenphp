@@ -1,18 +1,20 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Boot;
 
+use App\Core\Runner\RunnerType;
 use Contributte\Bootstrap\ExtraConfigurator;
 use Contributte\Nella\Boot\Preset\BasePreset;
 use Contributte\Nella\DI\NellaExtension;
 use Nette\DI\Compiler;
 
-class LocalPreset extends BasePreset
+final class MainPreset extends BasePreset
 {
 	private function __construct(
 		protected string $bootPoint,
-	) {
-	}
+	) {}
 
 	public static function create(string $bootPoint): self
 	{
@@ -23,21 +25,23 @@ class LocalPreset extends BasePreset
 	{
 		$configurator->setEnvDebugMode();
 
+		$rootDir = dirname($this->bootPoint);
 		$configurator->addStaticParameters([
-			'rootDir' => dirname($this->bootPoint),
-			'appDir' => $this->bootPoint,
-			'wwwDir' => realpath($this->bootPoint . '/www'),
-			'logDir' => realpath($this->bootPoint . '/var/log'),
+			'rootDir' => $rootDir,
+			'appDir' => realpath($rootDir . '/app'),
+			'wwwDir' => realpath($rootDir . '/www'),
+			'logDir' => realpath($rootDir . '/var/log'),
+			'baseUrl' => '/',
 		]);
 
-		$configurator->setTempDirectory($this->bootPoint . '/var/temp');
+		$configurator->setTempDirectory($rootDir . '/var/temp');
+
 		$configurator->addDynamicParameters([
-			'runnerName' => getenv('APP_WORKER_MODE')
-				? 'frankenphp'
-				: 'nette',
+			'runner' => RunnerType::from(getenv('APP_RUNNER') ?: 'contributte'),
+			'hotReloadUrl' => $_SERVER['FRANKENPHP_HOT_RELOAD'] ?? null,
 		]);
 
-		$configurator->enableTracy($this->bootPoint . '/var/log');
+		$configurator->enableTracy($rootDir . '/var/log');
 
 		// extensions
 		$configurator->onCompile[] = static function (ExtraConfigurator $configurator, Compiler $compiler): void {
@@ -49,13 +53,12 @@ class LocalPreset extends BasePreset
 			$compiler->addConfig(['parameters' => $configurator->getEnvironmentParameters()]);
 		};
 
-
 		// config.neon
-		$configurator->addConfig($this->bootPoint . '/config/config.neon');
+		$configurator->addConfig($rootDir . '/config/config.neon');
 
 		// local.neon
-		if (file_exists($this->bootPoint . '/config/local.neon')) {
-			$configurator->addConfig($this->bootPoint . '/config/local.neon');
+		if (file_exists($rootDir . '/config/local.neon')) {
+			$configurator->addConfig($rootDir . '/config/local.neon');
 		}
 	}
 }

@@ -9,7 +9,8 @@
   "type": "project",
   "require": {
     "php": ">=8.2",
-    "contributte/nella": "^0.3"
+    "contributte/nella": "^0.3",
+    "nette/assets": "^1.0"
   },
   "require-dev": {
     "contributte/dev": "^0.5",
