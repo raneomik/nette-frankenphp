@@ -24,6 +24,20 @@ application:
 		*: 'App\UI\*\**Presenter'
 		Nella: 'Contributte\Nella\UI\*Presenter'
 
+assets:
+
+	mapping:
+		default:
+			path: assets
+			# type: vite  # Uncomment to activate Vite for asset building
+
+		favicon:
+			path: favicon
+			extension: ico
+		img:
+			path: img
+			extension: [png, jpg, jpeg, gif, svg, webp]
+
 di:
 	lazy: yes
 	export:
@@ -33,13 +47,13 @@ di:
 http:
 	headers:
 		X-XSS-Protection: '1; mode=block'
-		X-Powered-By: 'contributte'
+		X-Powered-By: 'Contributte'
 
 latte:
 	strictTypes: yes
 	strictParsing: yes
 	extensions:
-		- App\UI\LatteExtension('%runnerName%')
+		- App\UI\LatteExtension('%runner%', '%hotReloadUrl%')
 
 routing:
 	debugger: '%debugMode%'

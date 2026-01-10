@@ -1,18 +1,31 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App;
 
-use App\Boot\LocalPreset;
+use App\Boot\MainPreset;
 use Contributte\Bootstrap\ExtraConfigurator;
 use Contributte\Nella\Boot\Bootloader;
 
-final class Bootstrap
+final readonly class Bootstrap
 {
-	public static function boot(): ExtraConfigurator
+	private Bootloader $bootloader;
+
+	private function __construct()
 	{
-		return Bootloader::create()
-			->use(LocalPreset::create(dirname(__DIR__)))
-			->boot()
+		$this->bootloader = Bootloader::create();
+	}
+
+	public static function load(): Bootloader
+	{
+		return (new self())->bootloader
+			->use(MainPreset::create(__DIR__))
 		;
+	}
+
+	public function boot(): ExtraConfigurator
+	{
+		return $this->bootloader->boot();
 	}
 }

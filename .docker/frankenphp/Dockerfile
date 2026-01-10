@@ -13,4 +13,7 @@ RUN echo "[xdebug]" >> $PHP_INI_DIR/conf.d/991-xdebug.ini && \
     echo "xdebug.client_host=host.docker.internal" >> $PHP_INI_DIR/conf.d/991-xdebug.ini && \
     echo "xdebug.start_with_request=yes" >> $PHP_INI_DIR/conf.d/991-xdebug.ini
 
-CMD [ "frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile", "--watch", "/srv/**/*" ]
+CMD [ "frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile", "--watch" ]
+
+# Prod
+FROM base AS prod
