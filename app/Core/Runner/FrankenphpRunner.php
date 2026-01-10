@@ -10,6 +10,8 @@ use Tracy\Debugger;
 
 final readonly class FrankenphpRunner
 {
+	private const MAX_REQUESTS = 20;
+
 	public function run(): void
 	{
 		ignore_user_abort(true);
@@ -42,7 +44,7 @@ final readonly class FrankenphpRunner
 		};
 
 		// @phpstan-ignore-next-line
-		$maxRequests = (int) ($_SERVER['MAX_REQUESTS'] ?? 20);
+		$maxRequests = (int) ($_SERVER['MAX_REQUESTS'] ?? self::MAX_REQUESTS);
 
 		do {
 			$keepRunning = frankenphp_handle_request($handler);

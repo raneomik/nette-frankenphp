@@ -6,7 +6,7 @@ namespace App\Core\Runner;
 
 final class RunnerFactory
 {
-	public function create(string $workerMode): GenericRunner|FrankenphpRunner
+	public function create(string $workerMode): DefaultRunner|FrankenphpRunner
 	{
 		$type = RunnerType::tryFrom($workerMode);
 
@@ -14,6 +14,6 @@ final class RunnerFactory
 			return new FrankenphpRunner();
 		}
 
-		return new GenericRunner();
+		return new DefaultRunner();
 	}
 }

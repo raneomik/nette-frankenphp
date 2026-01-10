@@ -7,7 +7,7 @@ namespace App\Core\Runner;
 use App\Bootstrap;
 use Nette\Application\Application;
 
-final readonly class GenericRunner
+final readonly class DefaultRunner
 {
 	public function run(): void
 	{
