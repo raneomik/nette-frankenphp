@@ -8,7 +8,7 @@ use App\Bootstrap;
 use Nette\Application\Application;
 use Tracy\Debugger;
 
-final readonly class ContributteRunner
+final readonly class DefaultRunner
 {
 	public function run(): void
 	{
@@ -23,13 +23,13 @@ final readonly class ContributteRunner
 
 		if (false === $configurator->isDebugMode()) {
 			// for benchmarking tool - removes tracy bar in debug mode
-			$this->applyContentLengtHeader($application);
+			$this->applyContentLengthHeader($application);
 		}
 
 		$application->run();
 	}
 
-	private function applyContentLengtHeader(Application $application): void
+	private function applyContentLengthHeader(Application $application): void
 	{
 		$application->onStartup[] = function (): void {
 			ob_start('ob_gzhandler');

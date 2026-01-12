@@ -10,3 +10,8 @@
 # Nette
 /config/local.neon
 /var
+
+# third-party asset deps & builds
+/assets/.build
+/node_modules
+/www/assets/
