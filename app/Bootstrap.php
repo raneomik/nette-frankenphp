@@ -28,11 +28,11 @@ final readonly class Bootstrap
 
 	public function initializeEnvironment(): void
 	{
-		$this->configurator->setTempDirectory($this->rootDir . '/var/temp');
-
 		$this->configurator->setDebugMode(
 			(bool) getenv('NETTE_DEBUG')
 		);
+
+		$this->configurator->setTempDirectory($this->rootDir . '/var/temp');
 
 		$this->configurator->enableTracy($this->rootDir . '/var/log');
 

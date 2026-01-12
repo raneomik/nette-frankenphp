@@ -17,10 +17,19 @@ final readonly class FrankenphpRunner
 		ignore_user_abort(true);
 
 		$handler = static function (): void {
-			$bootstrap = new Bootstrap();
+			try { // handle errors during boot
+				// needed to reset state between requests, specially for Tracy
+				$bootstrap = new Bootstrap();
 
-			$container = $bootstrap->bootWebApplication();
-			$application = $container->getByType(Application::class);
+				$container = $bootstrap->bootWebApplication();
+				$application = $container->getByType(Application::class);
+			} catch (\Throwable $e) {
+				Debugger::exceptionHandler($e);
+
+				frankenphp_finish_request();
+
+				return;
+			}
 
 			$application->onError[] = function (Application $application, \Throwable $e) use ($container): void {
 				if ($container->getParameters()['debugMode'] ?? false) {
