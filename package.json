@@ -1,0 +1,19 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.18",
+    "naja": "^3.3.3",
+    "nette-forms": "^3.5.3",
+    "tailwindcss": "^4.1.18"
+  },
+  "devDependencies": {
+    "@nette/vite-plugin": "^1.0.2",
+    "typescript": "^5.9.3",
+    "vite": "^6.3.9 || ^7.3.1"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "tailwind": "npx @tailwindcss/cli -i assets/app.css -o assets/.build/tailwind.css --minify --optimize"
+  }
+}

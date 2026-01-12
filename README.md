@@ -32,7 +32,7 @@ Demo of [FrankenPHP](https://github.com/dunglas/frankenphp) with [Nette Framewor
 
 ## Installation
 
-You will need `PHP 8.2+` and [Composer](https://getcomposer.org/).
+You will need `PHP 8.2+`, [Composer](https://getcomposer.org/) and [NodeJS](https://nodejs.org/).
 
 Create project using composer.
 
@@ -44,66 +44,98 @@ Now you have application installed. It's time to run it.
 
 ## Startup
 
-Spin up Docker stack. FrankenPHP with Caddyserver.
+### Build dependencies & assets
+
+- Install PHP dependencies.
 
 ```bash
-docker compose up
+composer install
 ```
 
-Then visit [http://localhost:8080](http://localhost:8000) in your browser.
+- Install NodeJS dependencies & build assets.
+
+```bash
+npm install
+npm run tailwind
+npm run build
+```
+
+- Spin up Docker stack. FrankenPHP with Caddyserver.
+
+```bash
+bin/dev --franken -d --port=448 // frankenphp on 448 in detached mode. In https by default under FrankenPHP
+bin/dev --franken -d -b -p --port=888 // needs docker container re-build on port or environnement changes
+```
+
+```
+// to compare with php built-in server
+bin/dev -d // on 8000 by default in detached mode
+
+// stop all
+bin/dev stop
+
+// see usage
+bin/dev --help
+```
+
+
+Then visit [http://localhost:8000](http://localhost:8000) in your browser.
 
 List of URL's:
 
-- [http://localhost:8080/](http://localhost:8000)
-- [http://localhost:8080/api](http://localhost:8000/api)
-- [http://localhost:8080/api/phpinfo](http://localhost:8000/api/phpinfo)
+- [http://localhost:8000/](http://localhost:8000)
+- [http://localhost:8000/api](http://localhost:8000/api)
+- [http://localhost:8000/api/phpinfo](http://localhost:8000/api/phpinfo)
+
 
 ## Benchmark (with [hey](https://github.com/rakyll/hey) - no debug, no xdebug)
 
 ### FrankenPHP
+
 ```
-➜  bin/dev -f --port=443 -d -p // frankenphp on 443 to solve tls issues
+➜ bin/dev -f --port=443 -d -p // frankenphp on 443 to solve tls issues
 ➜ bin/hey -n 1000 -c 100 https://localhost
 
-Summary:
-  Total:        0.3178 secs
-  Slowest:      0.1082 secs
-  Fastest:      0.0009 secs
-  Average:      0.0298 secs
-  Requests/sec: 3146.8328
 
-  Total data:   1049000 bytes
-  Size/request: 1049 bytes
+Summary:
+  Total:        0.3498 secs
+  Slowest:      0.1100 secs
+  Fastest:      0.0034 secs
+  Average:      0.0326 secs
+  Requests/sec: 2858.8650
+
+  Total data:   1155000 bytes
+  Size/request: 1155 bytes
 
 Response time histogram:
-  0.001 [1]     |
-  0.012 [84]    |■■■■■■■■■
-  0.022 [345]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.033 [361]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.044 [104]   |■■■■■■■■■■■■
-  0.055 [5]     |■
-  0.065 [0]     |
-  0.076 [0]     |
-  0.087 [43]    |■■■■■
-  0.097 [20]    |■■
-  0.108 [37]    |■■■■
+  0.003 [1]     |
+  0.014 [60]    |■■■■■■■
+  0.025 [241]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.035 [362]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.046 [199]   |■■■■■■■■■■■■■■■■■■■■■■
+  0.057 [54]    |■■■■■■
+  0.067 [58]    |■■■■■■
+  0.078 [8]     |■
+  0.089 [10]    |■
+  0.099 [4]     |
+  0.110 [3]     |
 
 
 Latency distribution:
-  10% in 0.0127 secs
-  25% in 0.0184 secs
-  50% in 0.0240 secs
-  75% in 0.0309 secs
-  90% in 0.0768 secs
-  95% in 0.0877 secs
-  99% in 0.1009 secs
+  10% in 0.0175 secs
+  25% in 0.0233 secs
+  50% in 0.0297 secs
+  75% in 0.0390 secs
+  90% in 0.0537 secs
+  95% in 0.0616 secs
+  99% in 0.0862 secs
 
 Details (average, fastest, slowest):
-  DNS+dialup:   0.0033 secs, 0.0009 secs, 0.1082 secs
-  DNS-lookup:   0.0001 secs, 0.0000 secs, 0.0172 secs
-  req write:    0.0000 secs, 0.0000 secs, 0.0058 secs
-  resp wait:    0.0264 secs, 0.0009 secs, 0.0763 secs
-  resp read:    0.0000 secs, 0.0000 secs, 0.0015 secs
+  DNS+dialup:   0.0011 secs, 0.0034 secs, 0.1100 secs
+  DNS-lookup:   0.0002 secs, 0.0000 secs, 0.0268 secs
+  req write:    0.0002 secs, 0.0000 secs, 0.0074 secs
+  resp wait:    0.0291 secs, 0.0032 secs, 0.0691 secs
+  resp read:    0.0002 secs, 0.0000 secs, 0.0270 secs
 
 Status code distribution:
   [200] 1000 responses
@@ -111,53 +143,53 @@ Status code distribution:
 ```
 
 ### Built-in PHP server
+
 ```
 ➜  bin/dev -d -p // default
-➜  bin/hey -n 1000 -c 100 http://localhost:8080
+➜  bin/hey -n 1000 -c 100 http://localhost:8000
 
 Summary:
-  Total:        0.9341 secs
-  Slowest:      0.1191 secs
-  Fastest:      0.0175 secs
-  Average:      0.0880 secs
-  Requests/sec: 1070.5212
+  Total:        0.9716 secs
+  Slowest:      0.1152 secs
+  Fastest:      0.0234 secs
+  Average:      0.0914 secs
+  Requests/sec: 1029.2711
 
-  Total data:   1064000 bytes
-  Size/request: 1064 bytes
+  Total data:   1170000 bytes
+  Size/request: 1170 bytes
 
 Response time histogram:
-  0.017 [1]     |
-  0.028 [23]    |■
-  0.038 [10]    |■
-  0.048 [12]    |■
-  0.058 [17]    |■
-  0.068 [12]    |■
-  0.078 [47]    |■■
-  0.089 [32]    |■■
-  0.099 [775]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.109 [61]    |■■■
-  0.119 [10]    |■
+  0.023 [1]     |
+  0.033 [29]    |■■
+  0.042 [20]    |■
+  0.051 [16]    |■
+  0.060 [13]    |■
+  0.069 [8]     |■
+  0.078 [13]    |■
+  0.088 [16]    |■
+  0.097 [557]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.106 [301]   |■■■■■■■■■■■■■■■■■■■■■■
+  0.115 [26]    |■■
 
 
 Latency distribution:
-  10% in 0.0750 secs
-  25% in 0.0892 secs
-  50% in 0.0918 secs
-  75% in 0.0936 secs
-  90% in 0.0982 secs
-  95% in 0.0995 secs
-  99% in 0.1115 secs
+  10% in 0.0786 secs
+  25% in 0.0940 secs
+  50% in 0.0953 secs
+  75% in 0.0990 secs
+  90% in 0.1007 secs
+  95% in 0.1044 secs
+  99% in 0.1064 secs
 
 Details (average, fastest, slowest):
-  DNS+dialup:   0.0004 secs, 0.0175 secs, 0.1191 secs
-  DNS-lookup:   0.0002 secs, 0.0000 secs, 0.0197 secs
-  req write:    0.0001 secs, 0.0000 secs, 0.0034 secs
-  resp wait:    0.0874 secs, 0.0162 secs, 0.1023 secs
-  resp read:    0.0001 secs, 0.0000 secs, 0.0053 secs
+  DNS+dialup:   0.0004 secs, 0.0234 secs, 0.1152 secs
+  DNS-lookup:   0.0002 secs, 0.0000 secs, 0.0233 secs
+  req write:    0.0000 secs, 0.0000 secs, 0.0009 secs
+  resp wait:    0.0910 secs, 0.0222 secs, 0.1064 secs
+  resp read:    0.0000 secs, 0.0000 secs, 0.0005 secs
 
 Status code distribution:
   [200] 1000 responses
-
 
 ```
 

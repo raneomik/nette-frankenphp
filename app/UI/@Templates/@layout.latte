@@ -13,12 +13,13 @@
 		<script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
 	{/if}
 
-	<script src="https://cdn.tailwindcss.com"></script>
+	{asset 'app.js'}
+
 </head>
 <body>
 
 	<div class="antialiased px-6 text-gray-900">
-		<div class="divide-y max-w-xl md:max-w-4xl mx-auto">
+		<div class="divide-y max-w-xl md:max-w-4xl mx-auto divide-black/15">
 			<div class="py-8">
 				<h1 class="font-bold text-3xl">
 					Contributte / FrankenPHP

@@ -2,7 +2,7 @@
 # Config ===============================
 php:
 	date.timezone: Europe/Prague
-	# session.save_path: %tempDir%/session
+	session.save_path: %tempDir%/session
 
 # ======================================
 # Extension ============================
@@ -29,7 +29,7 @@ assets:
 	mapping:
 		default:
 			path: assets
-			# type: vite  # Uncomment to activate Vite for asset building
+			type: vite  # Uncomment to activate Vite for asset building
 
 		favicon:
 			path: favicon
