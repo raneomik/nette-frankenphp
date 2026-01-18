@@ -7,34 +7,44 @@ namespace App;
 use App\Core\Runner\RunnerType;
 use Nette\Bootstrap\Configurator;
 use Nette\DI\Container;
+use Nette\Loaders\RobotLoader;
 
 final readonly class Bootstrap
 {
 	private string $rootDir;
+	private bool $isDebug;
 
 	public function __construct(
 		private Configurator $configurator = new Configurator,
 	) {
 		$this->rootDir = dirname(__DIR__);
+		$this->isDebug = (bool) getenv('NETTE_DEBUG') ?: false;
 	}
 
-	public function bootWebApplication(): Container
+	public function isDebug(): bool
+	{
+		return $this->isDebug;
+	}
+
+	public function bootWebApplication(bool $initializeContainer = true): Container
 	{
 		$this->initializeEnvironment();
 		$this->setupContainer();
 
-		return $this->configurator->createContainer();
+		return $this->configurator->createContainer($initializeContainer);
 	}
 
 	public function initializeEnvironment(): void
 	{
-		$this->configurator->setDebugMode(
-			(bool) getenv('NETTE_DEBUG')
-		);
+		$this->configurator
+			->setDebugMode($this->isDebug)
+			->setTempDirectory($this->rootDir . '/var/temp')
 
-		$this->configurator->setTempDirectory($this->rootDir . '/var/temp');
-
-		$this->configurator->enableTracy($this->rootDir . '/var/log');
+			->addDynamicParameters([
+				'hotReloadUrl' => $_SERVER['FRANKENPHP_HOT_RELOAD'] ?? null,
+			])
+			->enableTracy($this->rootDir . '/var/log')
+		;
 
 		$this->configurator->createRobotLoader()
 			->addDirectory(__DIR__)
@@ -44,12 +54,12 @@ final readonly class Bootstrap
 	private function setupContainer(): void
 	{
 		$configDir = $this->rootDir . '/config';
-		$this->configurator->addConfig($configDir . '/common.neon');
-		$this->configurator->addConfig($configDir . '/services.neon');
 
-		$this->configurator->addDynamicParameters([
-			'runner' => RunnerType::tryFrom(getenv('APP_RUNNER') ?: 'nette'),
-			'hotReloadUrl' => $_SERVER['FRANKENPHP_HOT_RELOAD'] ?? null,
-		]);
+		$this->configurator
+			->addConfig($configDir . '/common.neon')
+			->addConfig($configDir . '/services.neon')
+			->addDynamicParameters([
+				'runner' => RunnerType::from(getenv('APP_RUNNER') ?: 'nette'),
+			]);
 	}
 }

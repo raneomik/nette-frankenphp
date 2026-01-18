@@ -11,7 +11,7 @@ final class LatteExtension extends Extension
 {
 	public function __construct(
 		private readonly RunnerType $runner,
-		private readonly ?string $hotReloadUrl,
+		private readonly ?string $hotReloadUrl = null,
 	) {}
 
 	public function getFunctions(): array
@@ -20,7 +20,6 @@ final class LatteExtension extends Extension
 			'runnerName' => fn(): string => $this->runner->value,
 			'runnerIconAsset' => fn(): string => $this->runner->faviconAsset(),
 			'runnerImageAsset' => fn(): string => $this->runner->imageAsset(),
-			'differTracyBar' => fn(): bool => $this->runner->differTracyBar(),
 			'hotReloadUrl' => fn(): ?string => $this->hotReloadUrl,
 		];
 	}

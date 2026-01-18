@@ -1,4 +1,6 @@
-// Initialize Nette Forms on page load
+import './js/mercure-client.js';
+
+
 import netteForms from 'nette-forms';
 
 netteForms.initOnLoad();

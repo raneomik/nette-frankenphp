@@ -14,7 +14,7 @@ services:
             # Server config with hot reloading
             FRANKENPHP_CONFIG: |
                 {
-                    hot_reload app/** assets/** www/** config/**
+                    hot_reload app/** assets/** www/** config/** libs/**
                     worker {
                         file /srv/www/index.php
                         watch

@@ -155,6 +155,6 @@ case "$ACTION" in
     ;;
   clear-cache)
     echo "▶ Clearing cache files"
-    rm -rf var/temp/cache*
+    rm -rf var/temp/*
     ;;
 esac

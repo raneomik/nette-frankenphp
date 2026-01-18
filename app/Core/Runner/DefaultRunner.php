@@ -13,8 +13,6 @@ final readonly class DefaultRunner
 	public function run(): void
 	{
 		$bootstrap = new Bootstrap();
-		$bootstrap->initializeEnvironment();
-
 		$container = $bootstrap->bootWebApplication();
 		$application = $container->getByType(Application::class);
 

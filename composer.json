@@ -12,6 +12,20 @@
     "GPL-2.0-only",
     "GPL-3.0-only"
   ],
+  "repositories": [
+    {
+      "type": "path",
+      "url": "libs/nette-mercure",
+      "only": [
+        "nette/mercure"
+      ],
+      "options": {
+        "versions": {
+          "nette/mercure": "1.0.0"
+        }
+      }
+    }
+  ],
   "require": {
     "php": ">= 8.2",
     "nette/application": "^3.2.3",
@@ -27,7 +41,9 @@
     "nette/security": "^3.2",
     "nette/utils": "^4.0",
     "latte/latte": "^3.0",
-    "tracy/tracy": "^2.10"
+    "tracy/tracy": "^2.10",
+    "nette/mercure": "^1.0",
+    "lcobucci/jwt": "6.0.x-dev"
   },
   "require-dev": {
     "nette/tester": "^2.5",
@@ -43,7 +59,7 @@
     "phpstan": "phpstan analyse",
     "tester": "tester tests -s"
   },
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "config": {
     "allow-plugins": {
       "symfony/thanks": true

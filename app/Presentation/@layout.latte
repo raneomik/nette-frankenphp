@@ -13,12 +13,14 @@
 		<script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
 	{/if}
 
-	{asset? 'main.css'}
+	{asset? 'main.js'}
 </head>
 
 <body>
 	<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
 
 	{include content}
+
+	<div data-mercure-url="{mercure('test-topic')}" data-mercure="test-topic">Waiting for updates...</div>
 </body>
 </html>

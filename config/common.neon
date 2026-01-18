@@ -1,5 +1,4 @@
 # see https://doc.nette.org/en/configuring
-
 parameters:
 
 
@@ -9,6 +8,12 @@ application:
 		5xx: Error:Error5xx
 	mapping: App\Presentation\*\**Presenter
 
+
+di:
+	lazy: yes
+	export:
+		parameters: yes
+		tags: '%debugMode%'
 
 database:
 	dsn: 'sqlite::memory:'
@@ -20,14 +25,24 @@ latte:
 	strictTypes: yes
 	strictParsing: yes
 	extensions:
-		- App\Presentation\Accessory\LatteExtension('%runner%', '%hotReloadUrl%')
+		- App\Presentation\Accessory\LatteExtension(%runner%, %hotReloadUrl%)
 
+mercure:
+	one:
+		url: '%baseUrl%/.well-known/mercure'
+		jwt:
+			secret: n3tt3-m3rcµr3-fr4nk3nphP-jwT-s3cr3t-k3y
+
+	two:
+		url: '%baseUrl%/.well-known/mercure'
+		jwt:
+			secret: n3tt3-m3rcµr3-fr4nk3nphP-jwT-s3cr3t-k3y
 
 assets:
 	mapping:
 		default:
 			path: assets
-			# type: vite  # Uncomment to activate Vite for asset building
+			type: vite  # Uncomment to activate Vite for asset building
 
 		favicon:
 			path: favicon
@@ -35,11 +50,6 @@ assets:
 		img:
 			path: img
 			extension: [png, jpg, jpeg, gif, svg, webp]
-di:
-	lazy: yes
-	export:
-		parameters: yes
-		tags: '%debugMode%'
 
 tracy:
 	strictMode: yes
@@ -47,4 +57,7 @@ tracy:
 	bar:
 		- App\Core\Tracy\RunnerPanel('%runner%')
 		- App\Core\Tracy\PhpInfoPanel
+
+# extensions:
+# 	mercure: Nette\Mercure\DI\MercureExtension(%debugMode%)  # Uncomment to activate Nette Mercure extension
 
