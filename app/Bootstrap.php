@@ -19,6 +19,7 @@ final readonly class Bootstrap
 		$this->rootDir = dirname(__DIR__);
 	}
 
+
 	public function isDebug(): bool
 	{
 		return $this->isDebug ??= (bool) getenv('NETTE_DEBUG');

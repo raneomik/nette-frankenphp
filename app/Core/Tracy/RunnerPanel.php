@@ -7,6 +7,7 @@ namespace App\Core\Tracy;
 use App\Core\Runner\RunnerType;
 use Nette\Assets\ImageAsset;
 use Nette\Assets\Registry;
+use Tester\Runner\Runner;
 use Tracy;
 
 final readonly class RunnerPanel implements Tracy\IBarPanel
@@ -28,7 +29,16 @@ final readonly class RunnerPanel implements Tracy\IBarPanel
 		$runner = htmlspecialchars($this->runner->value);
 
 		/** @var ImageAsset */
-		$image = $this->assets->tryGetAsset('img:' . $runner);
+		$image = $this->assets->tryGetAsset($this->runner->imageAsset());
+
+		$additionalInfo = '';
+
+		if (RunnerType::Frankenphp === $runner) {
+
+			if (function_exists('frankenphp_get_status')) {
+				$additionalInfo = sprintf('<p>%s</p>', htmlspecialchars(frankenphp_get_status()));
+			}
+		}
 
 		return <<<HTML
 			<div class="tracy-inner">
@@ -39,7 +49,7 @@ final readonly class RunnerPanel implements Tracy\IBarPanel
 						<div style="margin-top: 1rem; max-width: 222px; max-height: 222px;">
 						{$image->getImportElement()}
 						</div>
-					</div>
+						$additionalInfo
 				</div>
 			</div>
 		HTML;
