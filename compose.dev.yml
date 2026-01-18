@@ -20,6 +20,9 @@ services:
                         watch
                     }
                 }
+            MERCURE_EXTRA_DIRECTIVES: |
+                debug
+                ui
             # Nette
             NETTE_DEBUG: "true"
         extra_hosts:

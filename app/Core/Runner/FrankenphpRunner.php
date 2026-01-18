@@ -22,8 +22,6 @@ final readonly class FrankenphpRunner
 				? $this->developmentHandler($bootstrap)
 				: $this->productionHandler($bootstrap);
 		} catch (\Throwable $e) {
-			var_dump($e->getMessage());
-
 			Debugger::exceptionHandler($e);
 			frankenphp_finish_request();
 

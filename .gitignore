@@ -1,6 +1,9 @@
 # Composer
 /vendor
+# assets
+/node_modules
 
 # Nette
 /config/local.neon
 /var
+/libs

@@ -12,6 +12,7 @@
         mercure {
             anonymous
             cors_origins *
+			{$MERCURE_EXTRA_DIRECTIVES}
         }
     }
 
