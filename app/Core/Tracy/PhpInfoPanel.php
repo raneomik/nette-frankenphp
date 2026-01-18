@@ -19,11 +19,10 @@ final readonly class PhpInfoPanel implements Tracy\IBarPanel
 	{
 		$html = <<<'HTML'
             %style%
-            <div class="tracy-inner">
-                <div class="tracy-inner-container phpinfo">
-                    <h1>Php Info</h1>
+            <h1>Php Info</h1>
+            <div class="tracy-inner phpinfo">
+                <div class="tracy-inner-container">
                     %info%
-                </div>
                 </div>
             </div>
         HTML;
@@ -44,27 +43,28 @@ final readonly class PhpInfoPanel implements Tracy\IBarPanel
 
 		$style->nodeValue = $this->transformCss($style->nodeValue ?: '')
 			. <<<'CSS'
-                #tracy-debug .tracy-inner-container.phpinfo {
+                #tracy-debug .tracy-inner.phpinfo {
                     min-width: unset;
                 }
-                .phpinfo hr {
+                .phpinfo .tracy-inner-container hr {
                     width: unset;
                 }
             CSS;
 
+		/** @var \DOMElement $mainDiv */
 		$mainDiv = $dom->getElementsByTagName('div')->item(0);
 
-		foreach ($mainDiv?->getElementsByTagName('h1') ?? [] as $div) {
-			$h2 = $dom->createElement('h2');
-			$h2->nodeValue = $div->nodeValue ?: '';
-			$div->parentElement?->replaceChild($h2, $div);
-		}
+		$phphinfo = str_replace(
+			['h1'],
+			['h2'],
+			$dom->saveHTML($mainDiv) ?: 'no info',
+		);
 
 		return str_replace(
 			['%style%', '%info%'],
 			[
 				$dom->saveHTML($style) ?: '',
-				$dom->saveHTML($mainDiv) ?: 'no info'
+				$phphinfo,
 			],
 			$html
 		);

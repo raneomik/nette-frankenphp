@@ -15,13 +15,13 @@
   "repositories": [
     {
       "type": "path",
-      "url": "libs/nette-mercure",
+      "url": "libs/nette-tracy-dark-mode",
       "only": [
-        "nette/mercure"
+        "nette/tracy-dark-mode"
       ],
       "options": {
         "versions": {
-          "nette/mercure": "1.0.0"
+          "nette/tracy-dark-mode": "1.0.0"
         }
       }
     }
@@ -42,19 +42,22 @@
     "nette/utils": "^4.0",
     "latte/latte": "^3.0",
     "tracy/tracy": "^2.10",
-    "nette/mercure": "^1.0",
-    "lcobucci/jwt": "6.0.x-dev"
+    "lcobucci/jwt": "6.0.x-dev",
+    "raneomik/nette-mercure": "dev-main"
   },
   "require-dev": {
     "nette/tester": "^2.5",
     "phpstan/phpstan-nette": "^2",
-    "symfony/thanks": "^1"
+    "symfony/thanks": "^1",
+    "nette/tracy-dark-mode": "^1",
+    "symplify/easy-coding-standard": "^13.0"
   },
   "autoload": {
     "psr-4": {
       "App\\": "app"
     }
   },
+  "minimum-stability": "dev",
   "scripts": {
     "phpstan": "phpstan analyse",
     "tester": "tester tests -s"

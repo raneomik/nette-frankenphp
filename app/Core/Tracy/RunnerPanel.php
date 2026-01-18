@@ -20,8 +20,8 @@ final readonly class RunnerPanel implements Tracy\IBarPanel
 	public function getTab(): string
 	{
 		return <<<HTML
-			<span title="Runner">🏃‍♂️</span>
-		HTML;
+            <span title="Runner">🏃‍♂️</span>
+        HTML;
 	}
 
 	public function getPanel(): string
@@ -40,18 +40,18 @@ final readonly class RunnerPanel implements Tracy\IBarPanel
 			}
 		}
 
-		return <<<HTML
-			<div class="tracy-inner">
-			<div class="tracy-inner-container">
-					<h1>Runner</h1>
-					<div style="margin-top: 1rem;">
-						<p>Current runner type is <strong>$runner</strong>.</p>
-						<div style="margin-top: 1rem; max-width: 222px; max-height: 222px;">
-						{$image->getImportElement()}
-						</div>
-						$additionalInfo
-				</div>
-			</div>
-		HTML;
+		return <<<HTML;
+            <h1>Runner</h1>
+            <div class="tracy-inner runner">
+                <div class="tracy-inner-container">
+                    <div style="margin-top: 1rem;">
+                        <p>Current runner type is <strong>$runner</strong>.</p>
+                        <div style="margin-top: 1rem; max-width: 222px; max-height: 222px;">
+                        {$image->getImportElement()}
+                        </div>
+                        $additionalInfo
+                </div>
+            </div>
+        HTML;
 	}
 }
