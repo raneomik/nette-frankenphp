@@ -1,0 +1,107 @@
+#!/bin/bash
+
+#
+# Verify if the certificate is installed in local system (linux)
+#
+local_certs_check() {
+	if [ -f /etc/ssl/certs/caddy-local-authority.pem ]; then
+		log "✔️ System certificate present" ${GREEN}
+		local_cert_expiration_check
+	else
+		log "⚠️ The certificate does not appear in /etc/ssl/certs/" ${YELLOW}
+	fi
+}
+
+#
+# Check if certificate FrankenPHP is present in php ini files
+#
+php_certs_check() {
+	PHP_INI=$(php --ini | grep "99-caddy-ssl.ini")
+	has_certs=$(php -i | grep -i "cafile\|capath" | grep -E "ca-certificates.crt|caddy-local-authority.crt")
+
+	if [ -n "$has_certs" ]; then
+		log "✔️ Certificate present in php ini: $PHP_INI" ${GREEN}
+	else
+		log "⚠️ Certificate not installed in php ini" ${YELLOW}
+		PHP_INI="(none)"
+	fi
+}
+
+php_connection_test() {
+	load_frankenphp_dc_name
+
+	port=$(docker port $CONTAINER_NAME 443 2>/dev/null | head -n 1 | grep -oE '[0-9]+$')
+	log "🧪 Testing PHP SSL connection on https://localhost:$port ..." ${BLUE}
+	feedback=$(php -r "
+		\$ch = curl_init('https://localhost:$port');
+		curl_setopt(\$ch, CURLOPT_RETURNTRANSFER, true);
+		\$result = curl_exec(\$ch);
+		\$error = curl_error(\$ch);
+		curl_close(\$ch);
+
+		if (\$error) {
+			echo 1;
+		} else {
+			echo 0;
+		}
+	")
+
+	if [[ $feedback == 1 ]]; then
+		log "❌  SSL connection test failed - needs SSL certificate install." ${RED}
+	else
+		log "✔️ PHP certificate is ok!" ${GREEN}
+	fi
+}
+
+#
+# Verify certificates on wsl host (Windows)
+#
+win_certs_check() {
+	installed_certs=$(powershell.exe -Command "
+			Get-ChildItem Cert:\LocalMachine\Root \
+			| Where-Object { \$_.Subject -like '*Caddy Local Authority*' } \
+			| Measure-Object \
+			| Select-Object -ExpandProperty Count" \
+		| tr -d '\r' | xargs)
+
+	if [ $installed_certs -gt 0 ]; then
+		log "✔️ Certificate is present." ${GREEN}
+	    if [ $installed_certs -gt 1 ]; then
+		    log "⚠️ $installed_certs certs detected. Consider remove & install." ${YELLOW}
+        fi
+	else
+		log "⚠️ No Certificate detected." ${YELLOW}
+	fi
+
+	win_cert_expiration_check
+}
+
+
+certs_check() {
+	case "$MODE" in
+	win)
+		win_certs_check
+		win_certs_change_check
+		;;
+	php)
+		php_certs_check
+		php_connection_test
+		;;
+	local)
+		local_certs_check
+		local_certs_change_check
+		;;
+	all)
+        log "ℹ️ (repetitions may occur. Please, don't mind 'em)" ${BLUE}
+		local_certs_check
+		local_certs_change_check
+		php_certs_check
+		php_connection_test
+		win_certs_check
+		win_certs_change_check
+
+		;;
+	*)
+		log "⚠️ Please specify a mode: --win, --php, or --local" ${YELLOW}
+	esac
+}

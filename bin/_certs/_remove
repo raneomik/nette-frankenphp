@@ -1,0 +1,85 @@
+#!/bin/bash
+
+#
+# Cleanup certificates from local system (linux)
+#
+local_certs_remove() {
+	log "🧹 Starting Certificate cleanup" ${BLUE}
+	if [ -f  $LOCAL_CERT_PATH ]; then
+		sudo rm $LOCAL_CERT_PATH
+		sudo update-ca-certificates --fresh 1> /dev/null 2>&1
+		log "✔️ Removed system certificates. ($LOCAL_CERT_PATH)" ${BLUE}
+	else
+		log "⚠️ Certificate file not found: $LOCAL_CERT_PATH. No cleanup needed" ${YELLOW}
+	fi
+}
+
+#
+# Cleanup php ini files with certificates (linux)
+#
+php_certs_remove() {
+	log "🧹 PHP Certificates cleanup..." ${BLUE}
+	log "ℹ️ Note that this is not needed as it locates system certificate which is the one that may need an update" ${YELLOW}
+	php_ini_dir=$(php --ini | grep "Scan for additional" | cut -d: -f2 | xargs)
+	php_ini="$php_ini_dir/99-caddy-ssl.ini"
+	if [ -f "$php_ini" ]; then
+		sudo rm "$php_ini"
+		log "✔️ Removed PHP configuration: $php_ini" ${GREEN}
+	else
+		log "...PHP configuration file not found: $php_ini. No cleanup needed"
+	fi
+}
+
+#
+# Cleanup windows certificates
+#
+win_certs_remove() {
+	log "🧹 Windows Certificates cleanup...(a prompt may appear and needs to be accepted)" ${BLUE}
+
+    win_certs_check
+
+	if [ $installed_certs -lt 0 ]; then
+        log "ℹ️ No Caddy Local Authority certificates found in Windows. No cleanup needed" ${YELLOW}
+        return
+    fi
+
+	powershell.exe -Command "
+		Start-Process powershell -Verb RunAs -ArgumentList '-Command', '
+			Get-ChildItem Cert:\LocalMachine\Root |
+			Where-Object { \$_.Subject -like ''*Caddy Local Authority*'' } |
+			Remove-Item -Force;
+			Write-Host \"Removing Certificates ...\" -ForegroundColor Green;
+			pause
+		'
+		" 2>/dev/null
+
+	win_cert_dir="/mnt/c/Users/$USER/frankenphp-certs"
+	if [ -d "$win_cert_dir" ]; then
+		rm -rf "$win_cert_dir"
+		log "✔️ Removed certificate directory: $win_cert_dir"
+	fi
+
+	log "✔️ Removed Windows certificates" ${GREEN}
+}
+
+certs_remove() {
+	case "$MODE" in
+	win)
+		win_certs_remove
+		;;
+	php)
+		php_certs_remove
+		;;
+	local)
+		local_certs_remove
+		;;
+	all)
+        log "ℹ️(repetitions may occur. Please, don't mind 'em)" ${BLUE}
+		local_certs_remove
+		php_certs_remove
+		win_certs_remove
+		;;
+	*)
+		log "⚠️ Please specify a mode: --win, --php, --local or --all" ${YELLOW}
+	esac
+}

@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# internal - compare certs dates
+compare_certificates() {
+    local cert1="$1"
+    local cert2="$2"
+
+    if [ ! -f "$cert1" ] || [ ! -f "$cert2" ]; then
+        return 1
+    fi
+
+    local fingerprint1=$(openssl x509 -in "$cert1" -noout -fingerprint -sha256 2>/dev/null | cut -d= -f2)
+    local fingerprint2=$(openssl x509 -in "$cert2" -noout -fingerprint -sha256 2>/dev/null | cut -d= -f2)
+
+    if [ "$fingerprint1" = "$fingerprint2" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+#
+# Check Windows certificate change
+#
+win_certs_change_check() {
+    log "🔍 Checking Caddy/FrankenPHP - Windows certificate change..." ${BLUE}
+    local win_cert_file="/mnt/c/Users/$USER/frankenphp-certs/caddy-root.crt"
+
+	load_frankenphp_dc_name
+	local temp_container_cert="/tmp/caddy-container-current.crt"
+	extract_cert_from_container "$temp_container_cert"
+
+    if [ -f "$win_cert_file" ]; then
+        if compare_certificates "$temp_container_cert" "$win_cert_file"; then
+            log "✔️ Windows certificate matches Caddy/FrankenPHP's" ${GREEN}
+        else
+            log "⚠️ Windows certificate differs from Caddy/FrankenPHP's (rebuild detected)" ${YELLOW}
+        fi
+    else
+        log "⚠️ Windows certificate file not found" ${YELLOW}
+    fi
+
+	sudo rm -f "$temp_container_cert"
+}
+
+#
+# Check System certificate change (Linux)
+#
+local_certs_change_check() {
+    log "🔍 Checking Caddy/FrankenPHP - system certificate change..." ${BLUE}
+
+	load_frankenphp_dc_name
+	local temp_container_cert="/tmp/caddy-container-current.crt"
+ 	extract_cert_from_container "$temp_container_cert"
+
+    if [ -f "$LOCAL_CERT_PATH" ]; then
+        if compare_certificates "$temp_container_cert" "$LOCAL_CERT_PATH"; then
+            log "✔️ System certificate matches Caddy/FrankenPHP's" ${GREEN}
+        else
+            log "⚠️ System certificate differs from Caddy/FrankenPHP's (rebuild detected)" ${YELLOW}
+        fi
+    else
+        log "⚠️ System certificate not found" ${YELLOW}
+    fi
+
+	sudo rm -f "$temp_container_cert"
+}

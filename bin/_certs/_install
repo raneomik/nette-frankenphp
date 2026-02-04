@@ -1,0 +1,128 @@
+#!/bin/bash
+
+#
+# Copy the certificate from FrankenPHP container to local system (linux)
+#
+local_certs_install() {
+	log "🔧 Extracting Caddy/FrankenPHP certificate..." ${BLUE}
+
+	load_frankenphp_dc_name
+	extract_cert_from_container "$LOCAL_CERT_PATH"
+
+	if [ ! -f "$LOCAL_CERT_PATH" ]; then
+		log "⚠️ Cannot copy the certificate automatically ($feedback)" ${YELLOW}
+		exit 1
+	fi
+
+	log "🔄 Updating System Certificates..." ${BLUE}
+
+	sudo update-ca-certificates > /dev/null 2>&1
+
+	log "✔️ Certificate installed" ${GREEN}
+}
+
+#
+# Install certificate in php ini files (linux)
+#
+php_certs_install() {
+	log "🔧 FrankenPHP/Caddy certificates install to php" ${BLUE}
+
+	local_certs_install
+	php_certs_check
+
+	if [ "$PHP_INI" == "(none)" ]; then
+		php_ini_dir=$(php --ini | grep "Scan for additional" | cut -d: -f2 | xargs)
+		PHP_INI="$php_ini_dir/99-caddy-ssl.ini"
+
+		log "📝 Modifying PHP configuration...($PHP_INI)" ${BLUE}
+
+		sudo tee "$PHP_INI" > /dev/null <<EOF
+			; SSL configuration for Caddy Local Authority
+			openssl.cafile=$LOCAL_CERT_PATH
+			curl.cainfo=$LOCAL_CERT_PATH
+EOF
+
+		log "✔️ PHP configuration updated" ${GREEN}
+	else
+		log "...No changes needed. Found: $PHP_INI" ${GREEN}
+	fi
+}
+
+#
+# Install Caddy/FrankenPHP certificates in Windows
+#
+win_certs_install() {
+	log "🔧 Installing FrankenPHP certificate in Windows - Removing first..."
+
+	load_frankenphp_dc_name
+	win_certs_remove
+
+	win_cert_dir="/mnt/c/Users/$USER/frankenphp-certs"
+	mkdir -p "$win_cert_dir"
+
+	log "📋 Copying Caddy/FrankenPHP certificate..." ${BLUE}
+	extract_cert_from_container "$win_cert_dir/caddy-root.crt" 2>/dev/null
+
+	if [ ! -f "$win_cert_dir/caddy-root.crt" ] || [ ! -s "$win_cert_dir/caddy-root.crt" ]; then
+		log "⚠️ Unable to copy the certificate automatically. Manual action requied..." ${YELLOW}
+		log "docker exec $CONTAINER_NAME cat $FRANKEN_CERT_PATH > caddy-root.crt"
+		exit 1
+	fi
+
+	log "✔️ Certificate copied to: $win_cert_dir/caddy-root.crt" ${GREEN}
+
+	win_path=$(wslpath -w "$win_cert_dir/caddy-root.crt")
+
+	log "📦 Installing certificate in Windows..."
+
+	log "Attempting automatic installation..."
+	powershell.exe -Command "Start-Process certutil.exe -ArgumentList '-addstore','Root','$win_path' -Verb RunAs -Wait" 2>/dev/null
+
+	win_certs_check
+
+	if [ $installed_certs -gt 0 ]; then
+		log "✔️ Certificate installed successfully!" ${GREEN}
+		log "ℹ️ Restart your browser(s) completely (close all windows)" ${BLUE}
+	else
+		log "⚠️ Automatic installation failed or was denied" ${YELLOW}
+		log "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+		log "📝 MANUAL installation required:"
+		log "1️⃣ Open Windows Explorer and navigate to:"
+		log "    $(wslpath -w "$win_cert_dir")"
+		log "2️⃣ Double-click on: caddy-root.crt"
+		log "3️⃣ Click on 'Install Certificate...'"
+		log "4️⃣ Select: Local Machine"
+		log "    (If prompted, allow administrator rights)"
+		log "5️⃣ Choose: Place all certificates in the following store"
+		log "6️⃣ Click 'Browse' and select:"
+		log "    Trusted Root Certification Authorities"
+		log "7️⃣ Click: Next → Finish → OK"
+		log "8️⃣ IMPORTANT: Completely close your browser" ${YELLOW}
+		log "    (all windows and tabs) and reopen it."
+		log "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+		explorer.exe "$(wslpath -w "$win_cert_dir")" 2>/dev/null
+	fi
+}
+
+certs_install() {
+	case "$MODE" in
+	win)
+		win_certs_install
+		;;
+	php)
+		php_certs_install
+		;;
+	local)
+		local_certs_install
+		;;
+	all)
+        log "ℹ️(repetitions may occur. Please, don't mind 'em)" ${BLUE}
+		local_certs_install
+		php_certs_install
+		win_certs_install
+		;;
+	*)
+		log "⚠️ Please specify a mode: --win, --php, --local or --all" ${YELLOW}
+		;;
+	esac
+}

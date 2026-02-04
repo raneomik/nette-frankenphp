@@ -10,9 +10,11 @@
 
     handle /.well-known/mercure* {
         mercure {
-            anonymous
-            cors_origins *
 			{$MERCURE_EXTRA_DIRECTIVES}
+            cors_origins * # needed for cross-server communication (dev tests)
+            anonymous # needed for hot-reload
+			publisher_jwt {$MERCURE_JWT_SECRET} {env.MERCURE_PUBLISHER_JWT_ALG}
+			subscriber_jwt {$MERCURE_JWT_SECRET} {env.MERCURE_SUBSCRIBER_JWT_ALG}
         }
     }
 

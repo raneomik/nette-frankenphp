@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Presentation\Home;
 
 use Nette;
-use Nette\Mercure\BroadcasterInterface;
-use Nette\Mercure\Latte\TurboStream\Action;
+use Raneomik\NetteMercure\BroadcasterInterface;
+use Raneomik\NetteMercure\Latte\TurboStream\Action;
 
 final class HomePresenter extends Nette\Application\UI\Presenter
 {

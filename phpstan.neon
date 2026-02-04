@@ -1,9 +1,16 @@
 parameters:
-	level: 9
+    level: 8
 
-	paths:
-		- app
-		# - tests
+    paths:
+        - src
+        - tests
 
-includes:
-	- vendor/phpstan/phpstan-nette/extension.neon
+    ignoreErrors:
+        - identifier: property.uninitializedReadonly
+        - identifier: property.readOnlyAssignNotInConstructor
+
+    type_coverage:
+        return: 50
+        param: 35.5
+        property: 70
+        constant: 85

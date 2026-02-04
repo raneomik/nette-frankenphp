@@ -23,6 +23,7 @@ services:
             MERCURE_EXTRA_DIRECTIVES: |
                 debug
                 ui
+            MERCURE_JWT_SECRET: ${MERCURE_JWT_SECRET}
             # Nette
             NETTE_DEBUG: "true"
         extra_hosts:

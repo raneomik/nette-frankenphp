@@ -18,12 +18,11 @@ final readonly class Bootstrap
 		private Configurator $configurator = new Configurator,
 	) {
 		$this->rootDir = dirname(__DIR__);
-		$this->isDebug = (bool) getenv('NETTE_DEBUG') ?: false;
 	}
 
 	public function isDebug(): bool
 	{
-		return $this->isDebug;
+		return $this->isDebug ??= (bool) getenv('NETTE_DEBUG') ?: false;
 	}
 
 	public function bootWebApplication(bool $initializeContainer = true): Container
@@ -37,7 +36,7 @@ final readonly class Bootstrap
 	public function initializeEnvironment(): void
 	{
 		$this->configurator
-			->setDebugMode($this->isDebug)
+			->setDebugMode($this->isDebug())
 			->setTempDirectory($this->rootDir . '/var/temp')
 
 			->addDynamicParameters([
