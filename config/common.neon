@@ -3,61 +3,58 @@ parameters:
 
 
 application:
-	errorPresenter:
-		4xx: Error:Error4xx
-		5xx: Error:Error5xx
-	mapping: App\Presentation\*\**Presenter
+    errorPresenter:
+        4xx: Error:Error4xx
+        5xx: Error:Error5xx
+    mapping: App\Presentation\*\**Presenter
 
 
 di:
-	lazy: yes
-	export:
-		parameters: yes
-		tags: '%debugMode%'
+    lazy: yes
+    export:
+        parameters: yes
+        tags: '%debugMode%'
 
 database:
-	dsn: 'sqlite::memory:'
-	user:
-	password:
+    dsn: 'sqlite::memory:'
+    user:
+    password:
 
 
 latte:
-	strictTypes: yes
-	strictParsing: yes
-	extensions:
-		- App\Presentation\Accessory\LatteExtension(%runner%, %hotReloadUrl%)
+    strictTypes: yes
+    strictParsing: yes
+    extensions:
+        - App\Presentation\Accessory\LatteExtension(%runner%, %hotReloadUrl%)
 
 mercure:
-	one:
-		url: '%baseUrl%/.well-known/mercure'
-		jwt:
-			secret: n3tt3-m3rcµr3-fr4nk3nphP-jwT-s3cr3t-k3y
+    one:
+        url: '%baseUrl%/.well-known/mercure'
+        jwt:
+            secret: n3tt3-m3rcµr3-fr4nk3nphP-jwT-s3cr3t-k3y
+        disableCookie: true
 
-	two:
-		url: '%baseUrl%/.well-known/mercure'
-		jwt:
-			secret: n3tt3-m3rcµr3-fr4nk3nphP-jwT-s3cr3t-k3y
+    two:
+        url: '%baseUrl%/.well-known/mercure'
+        jwt:
+            secret: n3tt3-m3rcµr3-fr4nk3nphP-jwT-s3cr3t-k3y
 
 assets:
-	mapping:
-		default:
-			path: assets
-			type: vite  # Uncomment to activate Vite for asset building
+    mapping:
+        default:
+            path: assets
+            type: vite  # Uncomment to activate Vite for asset building
 
-		favicon:
-			path: favicon
-			extension: ico
-		img:
-			path: img
-			extension: [png, jpg, jpeg, gif, svg, webp]
+        favicon:
+            path: favicon
+            extension: ico
+        img:
+            path: img
+            extension: [png, jpg, jpeg, gif, svg, webp]
 
 tracy:
-	strictMode: yes
-	dumpTheme: dark
-	bar:
-		- App\Core\Tracy\RunnerPanel('%runner%')
-		- App\Core\Tracy\PhpInfoPanel
-
-# extensions:
-# 	mercure: Nette\Mercure\DI\MercureExtension(%debugMode%)  # Uncomment to activate Nette Mercure extension
-
+    strictMode: yes
+    dumpTheme: dark
+    bar:
+        - App\Core\Tracy\RunnerPanel('%runner%')
+        - App\Core\Tracy\PhpInfoPanel

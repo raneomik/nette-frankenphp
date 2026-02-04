@@ -7,40 +7,37 @@ namespace App\Core\Tracy;
 use App\Core\Runner\RunnerType;
 use Nette\Assets\ImageAsset;
 use Nette\Assets\Registry;
-use Tester\Runner\Runner;
 use Tracy;
 
 final readonly class RunnerPanel implements Tracy\IBarPanel
 {
-	public function __construct(
-		private RunnerType $runner,
-		private Registry $assets,
-	) {}
+    public function __construct(
+        private RunnerType $runner,
+        private Registry $assets,
+    ) {}
 
-	public function getTab(): string
-	{
-		return <<<HTML
+    public function getTab(): string
+    {
+        return <<<HTML
             <span title="Runner">🏃‍♂️</span>
         HTML;
-	}
+    }
 
-	public function getPanel(): string
-	{
-		$runner = htmlspecialchars($this->runner->value);
+    public function getPanel(): string
+    {
+        /** @var ImageAsset */
+        $image = $this->assets->tryGetAsset($this->runner->imageAsset());
 
-		/** @var ImageAsset */
-		$image = $this->assets->tryGetAsset($this->runner->imageAsset());
+        $additionalInfo = '';
 
-		$additionalInfo = '';
+        if (RunnerType::Frankenphp === $this->runner) {
+            if (function_exists('frankenphp_get_status')) {
+                $additionalInfo = sprintf('<p>%s</p>', htmlspecialchars(frankenphp_get_status()));
+            }
+        }
 
-		if (RunnerType::Frankenphp === $runner) {
-
-			if (function_exists('frankenphp_get_status')) {
-				$additionalInfo = sprintf('<p>%s</p>', htmlspecialchars(frankenphp_get_status()));
-			}
-		}
-
-		return <<<HTML;
+        $runner = htmlspecialchars($this->runner->value);
+        return <<<HTML
             <h1>Runner</h1>
             <div class="tracy-inner runner">
                 <div class="tracy-inner-container">
@@ -53,5 +50,5 @@ final readonly class RunnerPanel implements Tracy\IBarPanel
                 </div>
             </div>
         HTML;
-	}
+    }
 }
