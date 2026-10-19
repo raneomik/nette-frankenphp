@@ -1,0 +1,60 @@
+#!/bin/bash
+
+#
+# Verify if the certificate is installed in local system (linux)
+#
+local_certs_check() {
+	if [ -f /etc/ssl/certs/caddy-local-authority.pem ]; then
+		log "✔️ System certificate present" ${GREEN}
+		local_cert_expiration_check
+	else
+		log "⚠️ The certificate does not appear in /etc/ssl/certs/" ${YELLOW}
+	fi
+}
+
+#
+# Verify certificates on wsl host (Windows)
+#
+win_certs_check() {
+	installed_certs=$(powershell.exe -Command "
+			Get-ChildItem Cert:\LocalMachine\Root \
+			| Where-Object { \$_.Subject -like '*Caddy Local Authority*' } \
+			| Measure-Object \
+			| Select-Object -ExpandProperty Count" \
+		| tr -d '\r' | xargs)
+
+	if [ $installed_certs -gt 0 ]; then
+		log "✔️ Certificate is present." ${GREEN}
+	    if [ $installed_certs -gt 1 ]; then
+		    log "⚠️ $installed_certs certs detected. Consider remove & install." ${YELLOW}
+        fi
+	else
+		log "⚠️ No Certificate detected." ${YELLOW}
+	fi
+
+	win_cert_expiration_check
+}
+
+
+certs_check() {
+	case "$MODE" in
+	win)
+		win_certs_check
+		win_certs_change_check
+		;;
+	local)
+		local_certs_check
+		local_certs_change_check
+		;;
+	all)
+        log "ℹ️ (repetitions may occur. Please, don't mind 'em)" ${BLUE}
+		local_certs_check
+		local_certs_change_check
+		win_certs_check
+		win_certs_change_check
+
+		;;
+	*)
+		log "⚠️ Please specify a mode: --win, --local or --all" ${YELLOW}
+	esac
+}

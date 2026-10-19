@@ -12,7 +12,8 @@ final class LatteExtension extends Extension
 	public function __construct(
 		private readonly RunnerType $runner,
 		private readonly ?string $hotReloadUrl,
-	) {}
+	) {
+    }
 
 	public function getFunctions(): array
 	{

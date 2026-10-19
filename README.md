@@ -96,46 +96,43 @@ List of URL's:
 ➜ bin/dev -f --port=443 -d -p // frankenphp on 443 to solve tls issues
 ➜ bin/hey -n 1000 -c 100 https://localhost
 
-
 Summary:
-  Total:        0.3498 secs
-  Slowest:      0.1100 secs
-  Fastest:      0.0034 secs
-  Average:      0.0326 secs
-  Requests/sec: 2858.8650
+  Total:        0.2190 secs
+  Slowest:      0.1247 secs
+  Fastest:      0.0017 secs
+  Average:      0.0204 secs
+  Requests/sec: 4567.2205
 
-  Total data:   1155000 bytes
-  Size/request: 1155 bytes
 
 Response time histogram:
-  0.003 [1]     |
-  0.014 [60]    |■■■■■■■
-  0.025 [241]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.035 [362]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.046 [199]   |■■■■■■■■■■■■■■■■■■■■■■
-  0.057 [54]    |■■■■■■
-  0.067 [58]    |■■■■■■
-  0.078 [8]     |■
-  0.089 [10]    |■
-  0.099 [4]     |
-  0.110 [3]     |
+  0.002 [1]     |
+  0.014 [509]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.026 [341]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.039 [45]    |■■■■
+  0.051 [2]     |
+  0.063 [19]    |■
+  0.076 [13]    |■
+  0.088 [40]    |■■■
+  0.100 [25]    |■■
+  0.112 [1]     |
+  0.125 [4]     |
 
 
 Latency distribution:
-  10% in 0.0175 secs
-  25% in 0.0233 secs
-  50% in 0.0297 secs
-  75% in 0.0390 secs
-  90% in 0.0537 secs
-  95% in 0.0616 secs
-  99% in 0.0862 secs
+  10% in 0.0054 secs
+  25% in 0.0084 secs
+  50% in 0.0138 secs
+  75% in 0.0196 secs
+  90% in 0.0564 secs
+  95% in 0.0867 secs
+  99% in 0.0933 secs
 
 Details (average, fastest, slowest):
-  DNS+dialup:   0.0011 secs, 0.0034 secs, 0.1100 secs
-  DNS-lookup:   0.0002 secs, 0.0000 secs, 0.0268 secs
-  req write:    0.0002 secs, 0.0000 secs, 0.0074 secs
-  resp wait:    0.0291 secs, 0.0032 secs, 0.0691 secs
-  resp read:    0.0002 secs, 0.0000 secs, 0.0270 secs
+  DNS+dialup:   0.0027 secs, 0.0017 secs, 0.1247 secs
+  DNS-lookup:   0.0004 secs, 0.0000 secs, 0.0484 secs
+  req write:    0.0002 secs, 0.0000 secs, 0.0077 secs
+  resp wait:    0.0113 secs, 0.0016 secs, 0.0652 secs
+  resp read:    0.0030 secs, 0.0000 secs, 0.0239 secs
 
 Status code distribution:
   [200] 1000 responses
