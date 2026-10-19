@@ -13,8 +13,6 @@ final readonly class DefaultRunner
 	public function run(): void
 	{
 		$bootstrap = new Bootstrap();
-		$bootstrap->initializeEnvironment();
-
 		$container = $bootstrap->bootWebApplication();
 		$application = $container->getByType(Application::class);
 
@@ -22,7 +20,7 @@ final readonly class DefaultRunner
 			gc_collect_cycles();
 		};
 
-		if (false === $container->getParameters()['debugMode'] ?? false) {
+		if (false === $bootstrap->isDebug()) {
 			// for benchmarking tool - removes tracy bar in debug mode
 			$this->applyContentLengthHeader($application);
 		}

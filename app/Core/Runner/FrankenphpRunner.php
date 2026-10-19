@@ -10,53 +10,73 @@ use Tracy\Debugger;
 
 final readonly class FrankenphpRunner
 {
-	private const MAX_REQUESTS = 20;
+    private const int MAX_REQUESTS = 20;
 
-	public function run(): void
-	{
-		ignore_user_abort(true);
+    public function run(): void
+    {
+        ignore_user_abort(true);
 
-		$handler = static function (): void {
-			try { // handle errors during boot
-				// needed to reset state between requests, specially for Tracy
-				$bootstrap = new Bootstrap();
+        try {
+            $bootstrap = new Bootstrap();
+            $handler = $bootstrap->isDebug()
+                ? $this->developmentHandler($bootstrap)
+                : $this->productionHandler($bootstrap);
+        } catch (\Throwable $e) {
+            Debugger::log($e);
+            Debugger::exceptionHandler($e);
+            frankenphp_finish_request();
 
-				$container = $bootstrap->bootWebApplication();
-				$application = $container->getByType(Application::class);
-			} catch (\Throwable $e) {
-				Debugger::exceptionHandler($e);
+            exit;
+        }
 
-				frankenphp_finish_request();
+        // @phpstan-ignore-next-line
+        $maxRequests = (int) ($_SERVER['MAX_REQUESTS'] ?? self::MAX_REQUESTS);
 
-				return;
-			}
+        do {
+            $keepRunning = frankenphp_handle_request($handler);
+        } while ($keepRunning && (-1 === $maxRequests || 0 < --$maxRequests));
+    }
 
-			$application->onError[] = function (Application $application, \Throwable $e) use ($container): void {
-				if ($container->getParameters()['debugMode'] ?? false) {
-					Debugger::exceptionHandler($e);
-					exit(255);
-				}
-			};
 
-			$application->onShutdown[] = function () use ($container): void {
-				gc_collect_cycles();
+    private function productionHandler(Bootstrap $bootstrap): \Closure
+    {
+        $container = $bootstrap->bootWebApplication(false);
+        return static function () use ($container): void {
 
-				if ($container->getParameters()['debugMode'] ?? false) {
-					// needed to dump tracy-bar
-					exit(0);
-				}
+            $container->initialize();
+            $application = $container->getByType(Application::class);
 
-				frankenphp_finish_request();
-			};
+            $application->onShutdown[] = function (): void {
+                gc_collect_cycles();
+                frankenphp_finish_request();
+            };
 
-			$application->run();
-		};
+            $application->run();
+        };
+    }
 
-		// @phpstan-ignore-next-line
-		$maxRequests = (int) ($_SERVER['MAX_REQUESTS'] ?? self::MAX_REQUESTS);
+    private function developmentHandler(Bootstrap $bootstrap): \Closure
+    {
+        return static function () use ($bootstrap): void {
+            try {
+                $container = $bootstrap->bootWebApplication();
+            } catch (\Throwable $e) {
+                Debugger::exceptionHandler($e);
+                exit(255);
+            }
 
-		do {
-			$keepRunning = frankenphp_handle_request($handler);
-		} while ($keepRunning && (-1 === $maxRequests || 0 < --$maxRequests));
-	}
+            $application = $container->getByType(Application::class);
+            $application->onError[] = function (Application $application, \Throwable $e): void {
+                Debugger::exceptionHandler($e);
+                exit(255);
+            };
+
+            $application->onShutdown[] = function (): void {
+                gc_collect_cycles();
+                exit(0);
+            };
+
+            $application->run();
+        };
+    }
 }

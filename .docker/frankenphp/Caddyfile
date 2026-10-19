@@ -1,33 +1,55 @@
 {
-	{$CADDY_GLOBAL_OPTIONS}
-
-	order php_server before file_server
+    {$CADDY_GLOBAL_OPTIONS}
 }
 
 {$CADDY_EXTRA_CONFIG}
 
 {$SERVER_NAME:localhost} {
-
-    handle /.well-known/mercure* {
-        mercure {
-            anonymous
-            cors_origins *
+    log {
+        {$CADDY_SERVER_LOG_OPTIONS}
+        # Redact the authorization query parameter that can be set by Mercure
+        format filter {
+            request>uri query {
+                replace authorization REDACTED
+            }
         }
     }
 
+    root /srv/www
+    encode zstd br gzip
+
+    mercure {
+        issuer https://{$SERVER_NAME:localhost} {
+            publisher {
+               jwt {env.MERCURE_PUBLISHER_JWT_KEY}
+            }
+
+            subscriber {
+                jwt {env.MERCURE_SUBSCRIBER_JWT_KEY}
+            }
+
+            {$MERCURE_EXTRA_DIRECTIVES}
+        }
+
+        anonymous
+   }
+
+    vulcain
+
 	{$CADDY_SERVER_EXTRA_DIRECTIVES}
 
-	handle {
-		root * /srv/www/
+    @phpRoute {
+        not path /.well-known/mercure*
+        not file {path}
+    }
+    rewrite @phpRoute index.php
 
-		@indexFiles file {
-			try_files {path} index.php
-			split_path .php
-		}
-		rewrite @indexFiles {http.matchers.file.relative}
+    @frontController path index.php
+    php @frontController {
+        {$FRANKENPHP_SITE_CONFIG}
+    }
 
-		encode zstd br gzip
-
-		php_server {$FRANKENPHP_CONFIG}
-	}
+    file_server {
+        hide *.php
+    }
 }
