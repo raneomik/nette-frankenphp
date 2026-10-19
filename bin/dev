@@ -1,40 +1,30 @@
-#!/usr/bin/env sh
+#!/bin/bash
 
-set -eu
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-usage() {
-  echo "Usage: $0 [--franken|f] [--prod|p] [--port|o] [--back|d] [--build|b] [stop]"
-  echo ""
-  echo "Options:"
-  echo "  --prod|-p    		Disable debug/dev mode (disabled by default)"
-  echo "  --port=<port>		Specify the port number (default: 8000)"
-  echo "  --franken|-f  	Run in worker mode with FrankenPHP (docker compose)"
-  echo "  --restart|-r  	Restart server"
-  echo "  --build|-b 		Build FrankenPHP container"
-  echo "  --back|-d 		Run server in background (detached mode)"
-  echo "  --clear-logs 		Clear log files"
-  echo "  --clear-cache 	Clear cache files"
-  echo "  stop  		Stop server"
-  exit 1
-}
+source "$SCRIPT_DIR/_common"
 
-MODE="php"
+MODE=""
 PORT="8000"
 PROD=0
 BACKGROUND=0
 BUILD=0
+DEBUG=0
 
 run() {
-  echo "▶ Mode: $MODE"
-  echo "▶ Debug: $((1 - PROD))"
+    log "▶ Mode: $MODE"  ${BLUE}
+    log "▶ Debug: $((1 - PROD))" ${BLUE}
 
-	case "$MODE" in
+    case "$MODE" in
 	php)
 		run_php_server
 		;;
 	franken)
 		run_frankenphp
 		;;
+    *)
+        log "--php | -f mode required" $YELLOW
+        ;;
 	esac
 }
 
@@ -43,11 +33,12 @@ run_php_server() {
   [ "$PROD" = "1" ] && xdebug="off"
 
   if [ "$BACKGROUND" -eq 1 ]; then
-    echo "▶ xdebug: $xdebug"
-  	echo "▶ Starting PHP built-in server in background on http://localhost:$PORT"
+  	log "▶ Starting PHP built-in server in background on http://localhost:$PORT" ${GREEN}
+    [ "$DEBUG" -eq 1 ] && log "[running] XDEBUG_MODE=$xdebug NETTE_DEBUG="$((1 - PROD))" nohup php -S localhost:$PORT -t www > var/log/php-server.log 2>&1" ${GRAY}
 	XDEBUG_MODE=$xdebug NETTE_DEBUG="$((1 - PROD))" nohup php -S localhost:$PORT -t www > var/log/php-server.log 2>&1 &
 	echo $! > var/php-server.pid
   else
+    [ "$DEBUG" -eq 1 ] && log "[running] XDEBUG_MODE=$xdebug NETTE_DEBUG="$((1 - PROD))" php -S localhost:$PORT -t www" ${GRAY}
 	XDEBUG_MODE=$xdebug NETTE_DEBUG="$((1 - PROD))" php -S localhost:$PORT -t www
   fi
 }
@@ -67,43 +58,86 @@ run_frankenphp() {
 	up_options="$up_options -d"
   fi
 
-  echo "▶ Starting FrankenPHP (Docker) on https://localhost:$PORT"
+  log "▶ Starting FrankenPHP (Docker) on https://localhost:$PORT" ${GREEN}
+  [ "$DEBUG" -eq 1 ] && log "[running] COMPOSE_BAKE=true HTTPS_PORT=${PORT} docker compose $dc_options up $up_options" ${GRAY}
   COMPOSE_BAKE=true HTTPS_PORT=${PORT} docker compose $dc_options up $up_options
 }
 
 restart_frankenphp() {
-  echo "▶ Restarting FrankenPHP (Docker)"
-  docker compose restart
+    log "▶ Restarting FrankenPHP (Docker)" ${INFO}
+    [ "$DEBUG" -eq 1 ] && log "[running] docker compose restart" ${GRAY}
+    docker compose restart
 }
 
 stop() {
-  dcps=$(docker compose ps --format json)
-  if [ -n "$dcps" ] ; then
-	echo "▶ Stopping FrankenPHP (Docker)"
-	docker compose down
-  fi
-
-  if [ -f var/php-server.pid ]; then
-	echo "▶ Stopping PHP built-in server"
-	kill -TERM "$(cat var/php-server.pid)" 2>/dev/null || true
-	rm var/php-server.pid
-  fi
+    case "$MODE" in
+        php)
+            if [ -f var/php-server.pid ]; then
+                echo "▶ Stopping PHP built-in server"
+                [ "$DEBUG" -eq 1 ] && log "[running] kill -TERM "$(cat var/php-server.pid)" 2>/dev/null || true" ${GRAY}
+                kill -TERM "$(cat var/php-server.pid)" 2>/dev/null || true
+                [ "$DEBUG" -eq 1 ] && log "[running] rm var/php-server.pid" ${GRAY}
+                rm var/php-server.pid
+            fi
+            ;;
+        franken)
+            dcps=$(docker compose ps --format json)
+            if [ -n "$dcps" ] ; then
+                log "▶ Stopping FrankenPHP (Docker)"
+                [ "$DEBUG" -eq 1 ] && log "[running] docker compose down" ${GRAY}
+                docker compose down
+            fi
+            ;;
+        *)
+            log "--php | -f mode required" $YELLOW
+            ;;
+    esac
 }
 
 restart() {
-  if [ "$MODE" = "php" ]; then
-	stop
-	run_php_server
-  else
-	restart_frankenphp
-  fi
+	case "$MODE" in
+	php)
+        stop
+        run_php_server
+		;;
+	franken)
+	    restart_frankenphp
+		;;
+    *)
+        log "--php | -f mode required" $YELLOW
+        ;;
+	esac
+}
+
+usage() {
+  log "Usage: $0 [--franken|f | --php] [--prod|p] [--port|o] [--back|d] [--build|b] [stop]" ${GREEN}
+  log "" ${GREEN}
+  log "Options:" ${GREEN}
+  log "  --prod|-p          Disable debug/dev mode (disabled by default)" ${GREEN}
+  log "  --port=<port>      Specify the port number (default: 8000)" ${GREEN}
+  log "  --franken|-f       Run in worker mode with FrankenPHP (docker compose)" ${GREEN}
+  log "  --php              Run in php built-in server mode (default)" ${GREEN}
+  log "  --restart|-r       Restart server" ${GREEN}
+  log "  --build|-b         Build FrankenPHP container" ${GREEN}
+  log "  --back|-d          Run server in background (detached mode)" ${GREEN}
+  log "  --clear-logs       Clear log files" ${GREEN}
+  log "  --clear-cache      Clear cache files" ${GREEN}
+  log "  --verbose|-v       Verbose mode: show executed commands" ${GREEN}
+  log "  stop               Stop server" ${GREEN}
+  exit 1
 }
 
 ACTION="run"
 while [ $# -gt 0 ]; do
   case "$1" in
+    --verbose|-v)
+      DEBUG=1
+      ;;
     --franken|-f)
       MODE="franken"
+      ;;
+    --php)
+      MODE="php"
       ;;
     --prod|-p)
       PROD=1
@@ -117,15 +151,18 @@ while [ $# -gt 0 ]; do
     --build|-b)
       BUILD=1
       ;;
-    --restart|-r)
-      ACTION="restart"
-	  ;;
     --clear-logs)
       ACTION="clear-logs"
       ;;
     --clear-cache)
       ACTION="clear-cache"
       ;;
+    run)
+      ACTION="run"
+	  ;;
+    restart|-r)
+      ACTION="restart"
+	  ;;
     stop)
       ACTION="stop"
       ;;
@@ -133,7 +170,7 @@ while [ $# -gt 0 ]; do
       usage
       ;;
     *)
-      echo "Unknown option: $1"
+      log "Unknown option: $1"
       usage
       ;;
   esac
@@ -151,15 +188,12 @@ case "$ACTION" in
     run
     ;;
   clear-logs)
-    echo "▶ Clearing log files"
+    log "▶ Clearing log files"
     rm -f var/log/*
     ;;
   clear-cache)
-    echo "▶ Clearing cache files"
-    rm -rf var/temp/cache*
-    ;;
-  clear-cache)
-    echo "▶ Clearing cache files"
-    rm -rf var/temp/cache*
+    log "▶ Clearing cache files"
+    rm -rf var/temp/*
     ;;
 esac
+

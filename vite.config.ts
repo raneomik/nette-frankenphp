@@ -7,7 +7,7 @@ export default defineConfig({
 		nette({
 			entry: 'app.js',
 		}),
-		tailwindcss(),
+		// tailwindcss(),
 	],
 
 	build: {

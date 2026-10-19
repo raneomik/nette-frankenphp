@@ -4,17 +4,22 @@ services:
             context: .
             dockerfile: .docker/frankenphp/Dockerfile
             target: prod
+            args:
+                USER_ID: ${USER_ID:-1000}
+                GROUP_ID: ${GROUP_ID:-1000}
         ports:
             - ${HTTP_PORT:-88}:80
             - ${HTTPS_PORT:-448}:443
         environment:
             APP_RUNNER: "frankenphp"
-            FRANKENPHP_CONFIG: |
-                {
-                    worker /srv/www/index.php
+            FRANKENPHP_SITE_CONFIG: |
+                worker {
+                    file ./www/index.php
                 }
             SERVER_NAME: localhost
             XDEBUG_MODE: "off"
+            MERCURE_PUBLISHER_JWT_KEY: ${MERCURE_JWT_SECRET}
+            MERCURE_SUBSCRIBER_JWT_KEY: ${MERCURE_JWT_SECRET}
         volumes:
             - ./:/srv
             - .docker/frankenphp/Caddyfile:/etc/frankenphp/Caddyfile

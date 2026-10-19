@@ -12,16 +12,12 @@ services:
             XDEBUG_MODE: "debug"
             PHP_IDE_CONFIG: "serverName=docker"
             # Server config with hot reloading
-            FRANKENPHP_CONFIG: |
-                {
-                    hot_reload app/** assets/** www/** config/**
-                    worker {
-                        file /srv/www/index.php
-                        watch
-                    }
+            FRANKENPHP_SITE_CONFIG: |
+                hot_reload app/** assets/** www/** config/**
+                worker {
+                    file /srv/www/index.php
+                    watch
                 }
-            # Nette
-            NETTE_DEBUG: "true"
         extra_hosts:
             # Ensure that host.docker.internal is correctly defined on Linux
             - host.docker.internal:host-gateway

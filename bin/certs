@@ -1,0 +1,108 @@
+#!/bin/bash
+
+PHP_INI="(none)"
+CONTAINER_NAME=""
+LOCAL_CERT_PATH="/usr/local/share/ca-certificates/caddy-local-authority.crt"
+FRANKEN_CERT_PATH="/data/caddy/pki/authorities/local/root.crt"
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CERTS_DIR="$SCRIPT_DIR/_certs"
+
+source "$SCRIPT_DIR/_common"
+source "$CERTS_DIR/_check_expired"
+source "$CERTS_DIR/_check_sync"
+source "$CERTS_DIR/_check"
+source "$CERTS_DIR/_install"
+source "$CERTS_DIR/_remove"
+
+# (internal) Get FrankenPHP container name
+load_frankenphp_dc_name() {
+    if [[ -n "$CONTAINER_NAME" ]]; then
+        return
+    fi
+
+	CONTAINER_NAME=$(docker ps --format "{{.Names}}" | grep frankenphp | head -n 1)
+
+	if [ -z "$CONTAINER_NAME" ]; then
+		log "⚠️ FrankenPHP container not running. Please, start it first." ${YELLOW}
+		exit 1
+	fi
+
+	log "📦 Found FrankenPHP docker container: $CONTAINER_NAME"
+	log "⏳ Checking Caddy/FrankenPHP certificate..."
+	for i in {1..10}; do
+		if docker exec $CONTAINER_NAME test -f $FRANKEN_CERT_PATH 2>/dev/null; then
+			log "✔️ Caddy/FrankenPHP certificate is available."
+			break
+		fi
+		sleep 0.5
+		echo -n "."
+	done
+}
+
+extract_cert_from_container () {
+	local cert_path="$1"
+
+	docker exec $CONTAINER_NAME cat $FRANKEN_CERT_PATH | sudo tee "$cert_path" > /dev/null 2>&1
+}
+
+usage() {
+	log "Install FrankenPHP certificates on Linux/WSL for Windows" ${GREEN}
+	log "Usage: $0 {install|remove|check} [--win|--local|--all]" ${GREEN}
+	log "" ${GREEN}
+	log "Actions:" ${GREEN}
+	log "  install      Install certificates" ${GREEN}
+	log "  remove       Remove certificates" ${GREEN}
+	log "  check        Check if certificates are installed" ${GREEN}
+	log "" ${GREEN}
+	log "Modes:" ${GREEN}
+	log "  --local      Operate on local system certificates (Linux)" ${GREEN}
+	log "  --win        Operate on Windows certificates (WSL)" ${GREEN}
+	log "  --all        Operate on all systems linux/wsl and Windows" ${GREEN}
+	log "" ${GREEN}
+	exit 1
+}
+
+ACTION=""
+MODE=""
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    install)
+      ACTION="install"
+      ;;
+    remove)
+      ACTION="remove"
+      ;;
+    check)
+      ACTION="check"
+      ;;
+    --win)
+      MODE="win"
+      ;;
+    --local)
+      MODE="local"
+      ;;
+    --all)
+      MODE="all"
+      ;;
+  esac
+  shift
+done
+
+export MODE
+
+case "$ACTION" in
+	install)
+		certs_install
+		;;
+	remove)
+		certs_remove
+		;;
+	check)
+		certs_check
+		;;
+	*)
+		usage
+		;;
+esac

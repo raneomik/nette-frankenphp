@@ -1,12 +1,12 @@
 {
-  "type": "module",
-  "dependencies": {
-    "@tailwindcss/vite": "^4.1.18",
+	"type": "module",
+	"dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
     "naja": "^3.3.3",
     "nette-forms": "^3.5.3",
-    "tailwindcss": "^4.1.18"
-  },
-  "devDependencies": {
+    "tailwindcss": "^4.3.3"
+	},
+	"devDependencies": {
     "@nette/vite-plugin": "^1.0.2",
     "typescript": "^5.9.3",
     "vite": "^6.3.9 || ^7.3.1"

@@ -1,0 +1,132 @@
+#!/bin/bash
+
+date_to_timestamp() {
+    date -d "$1" +%s 2>/dev/null
+}
+
+#
+# Check certificate expiration (Linux)
+#
+local_cert_expiration_check() {
+    if [ ! -f "$LOCAL_CERT_PATH" ]; then
+        log "❌ Certificate not found: $LOCAL_CERT_PATH" ${YELLOW}
+        return 1
+    fi
+
+    # Extract expiration date
+    local not_after=$(openssl x509 -in "$LOCAL_CERT_PATH" -noout -enddate 2>/dev/null | cut -d= -f2)
+
+    if [ -z "$not_after" ]; then
+        log "⚠️ Unable to read certificate expiration date" ${YELLOW}
+        return 1
+    fi
+
+    # Calculate remaining days
+    local expiry_timestamp=$(date_to_timestamp "$not_after")
+    local current_timestamp=$(date +%s)
+    local days_left=$(( ($expiry_timestamp - $current_timestamp) / 86400 ))
+
+    log "  Expires: $not_after" ${BLUE}
+
+    if [ $days_left -lt 0 ]; then
+        log "❌ EXPIRED since $((0 - $days_left)) days ago!" ${RED}
+        return 1
+    elif [ $days_left -lt 2 ]; then
+        log "⚠️ Expires in $days_left days (renewal recommended)" ${YELLOW}
+        return 1
+    else
+        log "✔️ Valid for $days_left more days" ${GREEN}
+        return 0
+    fi
+}
+
+#
+# Check certificate expiration in Docker container
+#
+container_cert_expiration_check() {
+    load_frankenphp_dc_name
+
+    if [ -z "$CONTAINER_NAME" ]; then
+        log "⚠️ Container not running" ${YELLOW}
+        return 1
+    fi
+
+    log "  Container: $CONTAINER_NAME" ${BLUE}
+
+    if ! docker exec $CONTAINER_NAME test -f $FRANKEN_CERT_PATH 2>/dev/null; then
+        log "❌ Certificate not found in container" ${RED}
+        return 1
+    fi
+
+    local cert_info=$(docker exec $CONTAINER_NAME openssl x509 -in $FRANKEN_CERT_PATH -noout -dates 2>/dev/null)
+    local not_after=$(echo "$cert_info" | grep "notAfter" | cut -d= -f2)
+
+    if [ -z "$not_after" ]; then
+        log "❌ Unable to read certificate expiration date" ${RED}
+        return 1
+    fi
+
+    local expiry_timestamp=$(date_to_timestamp "$not_after")
+    local current_timestamp=$(date +%s)
+    local days_left=$(( ($expiry_timestamp - $current_timestamp) / 86400 ))
+
+    log "  Expires: $not_after" ${BLUE}
+
+    if [ $days_left -lt 0 ]; then
+        log "❌ EXPIRED since $((0 - $days_left)) days ago!" ${RED}
+        return 1
+    elif [ $days_left -lt 3 ]; then
+        log "⚠️ Expires in $days_left days (renewal recommended)" ${YELLOW}
+        return 1
+    else
+        log "✔️ Valid for $days_left more days" ${GREEN}
+        return 0
+    fi
+}
+
+#
+# Check Windows certificate expiration
+#
+win_cert_expiration_check() {
+    local win_cert_info=$(powershell.exe -Command "
+        \$cert = Get-ChildItem Cert:\LocalMachine\Root |
+                 Where-Object { \$_.Subject -like '*Caddy Local Authority*' } |
+                 Select-Object -First 1
+
+        if (\$cert) {
+            @{
+                Found = \$true
+                NotAfter = \$cert.NotAfter.ToString('yyyy-MM-dd HH:mm:ss')
+                DaysLeft = (\$cert.NotAfter - (Get-Date)).Days
+            } | ConvertTo-Json
+        } else {
+            @{Found = \$false} | ConvertTo-Json
+        }
+    " 2>/dev/null | tr -d '\r')
+
+    if ! echo "$win_cert_info" | grep -q '"Found": *true'; then
+        log "❌  Certificate not found in Windows certificate store" ${RED}
+        return 1
+    fi
+
+    local not_after=$(echo "$win_cert_info" | grep -o '"NotAfter": *"[^"]*"' | cut -d'"' -f4)
+    local days_left=$(echo "$win_cert_info" | grep -o '"DaysLeft": *[0-9-]*' | grep -o '[0-9-]*$')
+
+    log "  Expires: $not_after" ${BLUE}
+
+    if [ -z "$days_left" ]; then
+        log "❌ Unable to calculate expiration" ${RED}
+        return 1
+    fi
+
+    if [ "$days_left" -lt 0 ]; then
+        log "❌ EXPIRED since $((0 - $days_left)) days ago!" ${RED}
+        return 1
+    elif [ "$days_left" -lt 30 ]; then
+        log "⚠️ Expires in $days_left days (renewal recommended)" ${YELLOW}
+        return 1
+    else
+        log "✔️ Valid for $days_left more days" ${GREEN}
+        return 0
+    fi
+}

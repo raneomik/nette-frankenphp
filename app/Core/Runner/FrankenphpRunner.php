@@ -25,6 +25,7 @@ final readonly class FrankenphpRunner
 				$application = $configurator->createContainer()
 					->getByType(Application::class);
 			} catch (\Throwable $e) {
+                Debugger::log($e);
 				Debugger::exceptionHandler($e);
 
 				frankenphp_finish_request();
@@ -34,7 +35,6 @@ final readonly class FrankenphpRunner
 
 			$application->onShutdown[] = function (Application $application, ?\Throwable $e = null) use ($configurator): void {
 				gc_collect_cycles();
-
 
 				if ($configurator->isDebugMode()) {
 					if (null !== $e) {
