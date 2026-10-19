@@ -1,3 +1,9 @@
+{contentType $contentType ?? 'text/html'}
+
 {block append}
-	{$data}
+    <turbo-stream action="append" target="{$target ?? 'stream-container'}">
+        <template>
+            {$data}
+        </template>
+    </turbo-stream>
 {/block}

@@ -9,8 +9,7 @@ use Symplify\CodingStandard\Fixer\ArrayNotation\StandaloneLineInMultilineArrayFi
 
 return ECSConfig::configure()
     ->withPaths([
-        __DIR__ . '/src',
-        __DIR__ . '/tests',
+        __DIR__ . '/app',
     ])
 
     /** @phpstan-ignore-next-line */

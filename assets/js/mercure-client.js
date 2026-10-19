@@ -12,7 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	mercureUrl = mercureUrlPlaceholder.dataset.mercureUrl;
 
-	const eventSource = new EventSource(mercureUrl);
+	const eventSource = new EventSource(mercureUrl, {
+        withCredentials: true
+    });
 
 	const placeholders = document.querySelectorAll("[data-mercure]");
 	eventSource.onmessage = event => {

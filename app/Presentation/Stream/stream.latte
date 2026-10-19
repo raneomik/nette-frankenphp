@@ -1,0 +1,23 @@
+{block append}
+    <turbo-stream action="append" target="{$target ?? 'stream-container'}">
+        <template>
+	        {$data}
+        </template>
+    </turbo-stream>
+{/block}
+
+{block update}
+    <turbo-stream action="update" target="{$target ?? 'stream-container'}">
+        <template>
+            {$data}
+        </template>
+    </turbo-stream>
+{/block}
+
+{block delete}
+    <turbo-stream action="remove" target="{$target ?? 'stream-container'}">
+        <template>
+        </template>
+    </turbo-stream>}
+	{$data}
+{/block}

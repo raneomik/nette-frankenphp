@@ -16,11 +16,11 @@
     "php": ">= 8.3",
     "nette/application": "^3.3",
     "nette/assets": "^1.0",
-    "nette/bootstrap": "^3.3.0",
+    "nette/bootstrap": "^3.3",
     "nette/caching": "^3.4",
     "nette/database": "^3.2",
     "nette/di": "^3.2",
-    "nette/forms": "^3.3.0",
+    "nette/forms": "^3.3",
     "nette/http": "^3.3",
     "nette/mail": "^4.0",
     "nette/robot-loader": "^4.0",
@@ -28,7 +28,7 @@
     "nette/utils": "^4.0",
     "latte/latte": "^3.0",
     "tracy/tracy": "^2.10",
-    "raneomik/nette-mercure": "^0.2.0"
+    "raneomik/nette-mercure": "dev-main"
   },
   "require-dev": {
     "nette/tester": "^2.5",
