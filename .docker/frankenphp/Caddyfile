@@ -27,11 +27,9 @@
             subscriber {
                 jwt {env.MERCURE_SUBSCRIBER_JWT_KEY}
             }
-
-            {$MERCURE_EXTRA_DIRECTIVES}
         }
 
-        anonymous
+        {$MERCURE_EXTRA_DIRECTIVES}
    }
 
     vulcain

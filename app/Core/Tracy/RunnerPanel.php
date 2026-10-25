@@ -11,37 +11,44 @@ use Tracy;
 
 final readonly class RunnerPanel implements Tracy\IBarPanel
 {
-	public function __construct(
-		private RunnerType $runner,
-		private Registry $assets,
-	) {}
+    public function __construct(
+        private RunnerType $runner,
+        private Registry $assets,
+    ) {}
 
-	public function getTab(): string
-	{
-		return <<<HTML
-			<span title="Runner">🏃‍♂️</span>
-		HTML;
-	}
+    public function getTab(): string
+    {
+        return <<<HTML
+            <span title="Runner">🏃‍♂️</span>
+        HTML;
+    }
 
-	public function getPanel(): string
-	{
-		$runner = htmlspecialchars($this->runner->value);
+    public function getPanel(): string
+    {
+        /** @var ImageAsset */
+        $image = $this->assets->tryGetAsset($this->runner->imageAsset());
 
-		/** @var ImageAsset */
-		$image = $this->assets->tryGetAsset('img:' . $runner);
+        $additionalInfo = '';
 
-		return <<<HTML
-			<div class="tracy-inner">
-			<div class="tracy-inner-container">
-					<h1>Runner</h1>
-					<div style="margin-top: 1rem;">
-						<p>Current runner type is <strong>$runner</strong>.</p>
-						<div style="margin-top: 1rem; max-width: 222px; max-height: 222px;">
-						{$image->getImportElement()}
-						</div>
-					</div>
-				</div>
-			</div>
-		HTML;
-	}
+        if (RunnerType::Frankenphp === $this->runner) {
+            if (function_exists('frankenphp_get_status')) {
+                $additionalInfo = sprintf('<p>%s</p>', htmlspecialchars(frankenphp_get_status()));
+            }
+        }
+
+        $runner = htmlspecialchars($this->runner->value);
+        return <<<HTML
+            <h1>Runner</h1>
+            <div class="tracy-inner runner">
+                <div class="tracy-inner-container">
+                    <div style="margin-top: 1rem;">
+                        <p>Current runner type is <strong>$runner</strong>.</p>
+                        <div style="margin-top: 1rem; max-width: 222px; max-height: 222px;">
+                        {$image->getImportElement()}
+                        </div>
+                        $additionalInfo
+                </div>
+            </div>
+        HTML;
+    }
 }

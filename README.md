@@ -39,44 +39,44 @@ Then visit [https://localhost:8000](https://localhost:8000) in your browser.
 ➜  bin/hey -n 1000 -c 100 https://localhost
 
 Summary:
-  Total:        0.1377 secs
-  Slowest:      0.0939 secs
-  Fastest:      0.0007 secs
-  Average:      0.0130 secs
-  Requests/sec: 7259.9676
+  Total:        0.2287 secs
+  Slowest:      0.1440 secs
+  Fastest:      0.0018 secs
+  Average:      0.0211 secs
+  Requests/sec: 4372.4150
 
   Total data:   313000 bytes
   Size/request: 313 bytes
 
 Response time histogram:
-  0.001 [1]     |
-  0.010 [793]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.019 [67]    |■■■
-  0.029 [12]    |■
-  0.038 [25]    |■
-  0.047 [2]     |
-  0.057 [34]    |■■
-  0.066 [3]     |
-  0.075 [0]     |
-  0.085 [34]    |■■
-  0.094 [29]    |■
+  0.002 [1]     |
+  0.016 [694]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.030 [124]   |■■■■■■■
+  0.044 [29]    |■■
+  0.059 [43]    |■■
+  0.073 [56]    |■■■
+  0.087 [2]     |
+  0.101 [0]     |
+  0.116 [10]    |■
+  0.130 [32]    |■■
+  0.144 [9]     |■
 
 
 Latency distribution:
-  10% in 0.0019 secs
-  25% in 0.0033 secs
-  50% in 0.0050 secs
-  75% in 0.0083 secs
-  90% in 0.0503 secs
-  95% in 0.0809 secs
-  99% in 0.0894 secs
+  10% in 0.0040 secs
+  25% in 0.0055 secs
+  50% in 0.0098 secs
+  75% in 0.0199 secs
+  90% in 0.0617 secs
+  95% in 0.1106 secs
+  99% in 0.1297 secs
 
 Details (average, fastest, slowest):
-  DNS+dialup:   0.0024 secs, 0.0007 secs, 0.0939 secs
-  DNS-lookup:   0.0003 secs, 0.0000 secs, 0.0418 secs
-  req write:    0.0002 secs, 0.0000 secs, 0.0297 secs
-  resp wait:    0.0060 secs, 0.0007 secs, 0.0309 secs
-  resp read:    0.0008 secs, 0.0000 secs, 0.0297 secs
+  DNS+dialup:   0.0016 secs, 0.0018 secs, 0.1440 secs
+  DNS-lookup:   0.0003 secs, 0.0000 secs, 0.0496 secs
+  req write:    0.0016 secs, 0.0000 secs, 0.0631 secs
+  resp wait:    0.0111 secs, 0.0016 secs, 0.0589 secs
+  resp read:    0.0009 secs, 0.0000 secs, 0.0621 secs
 
 Status code distribution:
   [200] 1000 responses

@@ -13,8 +13,8 @@ final readonly class DefaultRunner
 	public function run(): void
 	{
 		$bootstrap = new Bootstrap();
-		$container = $bootstrap->bootWebApplication();
-		$application = $container->getByType(Application::class);
+		$bootstrap->prepare();
+		$application = $bootstrap->createContainer()->getByType(Application::class);
 
 		$application->onShutdown[] = function (): void {
 			gc_collect_cycles();

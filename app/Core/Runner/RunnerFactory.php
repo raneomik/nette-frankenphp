@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core\Runner;
 
-final class RunnerFactory
+final readonly class RunnerFactory
 {
 	public function create(string $workerMode): DefaultRunner|FrankenphpRunner
 	{
