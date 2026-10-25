@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace app\Presentation\Subscribe;
+namespace App\Presentation\Subscribe;
 
 use Nette;
 use Nette\Application\Attributes\Parameter;
-use Raneomik\NetteMercure\Core\Subscribe\JWTProviderInterface;
+use Raneomik\NetteMercure\Core\Subscribe\AuthorizationInterface;
 use Raneomik\NetteMercure\SubscriberInterface;
 
 final class SubscribePresenter extends Nette\Application\UI\Presenter
@@ -20,6 +20,7 @@ final class SubscribePresenter extends Nette\Application\UI\Presenter
 
 
     public function __construct(
+        private readonly AuthorizationInterface $authorization,
         private readonly SubscriberInterface $subscriber,
     ) {
     }
@@ -29,6 +30,8 @@ final class SubscribePresenter extends Nette\Application\UI\Presenter
         if (!$this->isAjax()) {
             return;
         }
+
+//        $this->authorization->setCookie($this->topics, hub: $this->hub);
 
         $this->sendJson(
             $this->subscriber->subscribe($this->hub, $this->topics),

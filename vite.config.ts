@@ -20,6 +20,9 @@ export default defineConfig({
 	build: {
         outDir: '../www/assets',
 		emptyOutDir: true,
+        watch: {
+            include: ['assets', 'app']
+        }
 	},
 
 	css: {

@@ -3,7 +3,8 @@
 {block append}
     <turbo-stream action="append" target="{$target ?? 'stream-container'}">
         <template>
-            {$data}
+            <div class="alert alert-info toast-auto to-close">{$data}</div>
         </template>
     </turbo-stream>
 {/block}
+

@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const placeholders = document.querySelectorAll("[data-mercure]");
 	eventSource.onmessage = event => {
 		for (const placeholder of placeholders) {
-			placeholder.textContent = event.data;
+			placeholder.innerHTML = event.data;
 		}
 	}
 

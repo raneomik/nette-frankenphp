@@ -40,11 +40,9 @@ final readonly class FrankenphpRunner
 
     private function productionHandler(Bootstrap $bootstrap): \Closure
     {
-        $container = $bootstrap->bootWebApplication(false);
-        return static function () use ($container): void {
-
-            $container->initialize();
-            $application = $container->getByType(Application::class);
+        $bootstrap->prepare();
+        return static function () use ($bootstrap): void {
+            $application = $bootstrap->createContainer()->getByType(Application::class);
 
             $application->onShutdown[] = function (): void {
                 gc_collect_cycles();
@@ -59,16 +57,17 @@ final readonly class FrankenphpRunner
     {
         return static function () use ($bootstrap): void {
             try {
-                $container = $bootstrap->bootWebApplication();
+                $bootstrap->prepare(); // needed for tracy metrics
+                $container = $bootstrap->createContainer();
             } catch (\Throwable $e) {
                 Debugger::exceptionHandler($e);
-                exit(255);
+                exit(0);
             }
 
             $application = $container->getByType(Application::class);
             $application->onError[] = function (Application $application, \Throwable $e): void {
                 Debugger::exceptionHandler($e);
-                exit(255);
+                exit(0);
             };
 
             $application->onShutdown[] = function (): void {

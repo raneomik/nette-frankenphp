@@ -1,5 +1,5 @@
-{contentType $contentType}
+{contentType $contentType ?? 'text/html'}
 
 {block content}
-	{$data}
+	<div class="alert alert-info toast-auto">{$data}</div>
 {/block}

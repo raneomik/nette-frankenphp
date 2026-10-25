@@ -17,21 +17,27 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 
 	public function renderDefault(): void
 	{
-		$this->broadcaster->broadcast(
-			data: 'Hello with Turbo from hub one!',
-			topics: ['another-test-topic'],
-			template: 'test.test.latte',
-			options: [
-				'template' => 'test.stream.latte',
-				'action' => TurboStreamAction::Append,
-			],
-		);
-
-		$this->broadcaster->broadcast(
-			data: 'Hello Mercure from hub two!',
-			topics: ['test-topic'],
-			template: 'test.latte',
-			options: ['hub' => 'two'],
-		);
 	}
+
+	public function handleDispatch(string $type = 'plain'): void
+	{
+        if ('turbo' === $type) {
+            $this->broadcaster->broadcast(
+                data: 'Hello with Turbo from Mercure!',
+                topics: ['turbo-test-topic'],
+                options: [
+                    'template' => 'test.stream.latte',
+                    'action' => TurboStreamAction::Append,
+                ],
+            );
+
+            return;
+        }
+
+        $this->broadcaster->broadcast(
+            data: 'Hello from Mercure!',
+            topics: ['test-topic'],
+            template: 'test.latte',
+        );
+    }
 }

@@ -9,14 +9,15 @@
   "devDependencies": {
     "@hotwired/turbo": "^8.0.23",
     "@nette/vite-plugin": "^1.1.0",
+    "daisyui": "^5.7.50",
     "event-source-polyfill": "^1.0.31",
     "typescript": "^5.9.3",
     "vite": "^7.3.7",
     "vite-plugin-static-copy": "^4.1.1"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vite & npm run tailwind -- --watch",
+    "build": "vite build & npm run tailwind",
     "tailwind": "npx @tailwindcss/cli -i assets/app.css -o assets/.build/tailwind.css --minify --optimize"
   },
   "allowScripts": {

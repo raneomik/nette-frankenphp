@@ -7,3 +7,7 @@ import netteForms from 'nette-forms';
 
 netteForms.initOnLoad();
 naja.initialize();
+
+document.addEventListener('animationend', (e) => {
+    e.animationName === 'toast-out' && e.target.remove();
+});

@@ -24,12 +24,15 @@ final readonly class Bootstrap
         return $this->isDebug ??= (bool) getenv('NETTE_DEBUG');
     }
 
-    public function bootWebApplication(bool $initializeContainer = true): Container
+    public function prepare(): void
     {
         $this->initializeEnvironment();
         $this->setupContainer();
+    }
 
-        return $this->configurator->createContainer($initializeContainer);
+    public function createContainer(): Container
+    {
+        return $this->configurator->createContainer();
     }
 
     public function initializeEnvironment(): void

@@ -1,5 +1,6 @@
 import {EventSourcePolyfill} from 'event-source-polyfill';
 import * as Turbo from '@hotwired/turbo';
+Turbo.session.drive = false;
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -8,7 +9,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    let mercureUrl;
     let mercureTopics = turboContainer.dataset.turboListen;
 
     const subUrl = new URL('/subscribe', window.origin);
@@ -18,17 +18,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         headers: {'X-Requested-With': 'XMLHttpRequest'},
 
     })
+        .then(response => response.json())
         .then(response => {
-            mercureUrl = new URL(getHubUrl(response), window.origin);
-            mercureUrl.searchParams.append('match', mercureTopics)
+            const {jwtToken, subscribeUrl, expiresAt} = response;
 
-            return response.json()
-        })
-        .then(data => {
-            console.debug("Received jwt token. ExpiresAt: ", data.expiresAt);
+            const dec = s => JSON.parse(atob(s.replace(/-/g,'+').replace(/_/g,'/')));
+            const [h, p] = jwtToken.split('.');
 
-            setupTurboClient(mercureUrl, data.jwtToken);
+            console.debug("Received jwt token. ExpiresAt: ", expiresAt);
+            console.debug("Trying to connect to mercure: ", subscribeUrl, dec(h), dec(p));
 
+            setupTurboClient(subscribeUrl, jwtToken);
         })
         .catch(error => {
             console.error("Error fetching data from Turbo endpoint:", error);
@@ -36,10 +36,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function setupTurboClient(mercureUrl, mercureJWTToken) {
-    const dec = s => JSON.parse(atob(s.replace(/-/g,'+').replace(/_/g,'/')));
-    const [h, p] = mercureJWTToken.split('.');
-
-    console.debug("Trying to connect to mercure: ", mercureUrl, dec(h), dec(p));
     const eventSource = new EventSourcePolyfill(mercureUrl, {
         headers: {
             'Authorization': `Bearer ${mercureJWTToken}`
@@ -62,12 +58,3 @@ function setupTurboClient(mercureUrl, mercureJWTToken) {
         eventSource.close();
     };
 }
-
-const getHubUrl = (resp) => {
-    const link = resp.headers.get("Link");
-    if (!link) {
-        throw new Error('No rel="mercure" Link header provided.');
-    }
-
-    return link.match(/<(.*)>.*rel="mercure".*/)[1];
-};
