@@ -76,12 +76,12 @@
     </div>
 
     <div
-        data-mercure-url="{mercure('test-topic', hub: 'legacy', options: [addJwt => true])}"
+        data-mercure-url="{mercure('test-topic')}"
         data-mercure="test-topic"
         class="toast toast-start">
     </div>
     <div class="flex justify-center" data-turbo-listen="turbo-test-topic">
-        <div id="stream-container" class="toast toast-end">
+        <div id="toast-container" class="toast toast-end">
         </div>
     </div>
 {/block}

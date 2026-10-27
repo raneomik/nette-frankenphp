@@ -23,10 +23,11 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	{
         if ('turbo' === $type) {
             $this->broadcaster->broadcast(
-                data: 'Hello with Turbo from Mercure!',
                 topics: ['turbo-test-topic'],
+                data: 'Hello with Turbo from Mercure!',
                 options: [
                     'template' => 'test.stream.latte',
+                    'target' => 'toast-container',
                     'action' => TurboStreamAction::Append,
                 ],
             );
