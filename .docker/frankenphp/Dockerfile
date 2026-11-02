@@ -12,8 +12,8 @@ WORKDIR /srv
 
 RUN <<-EOF
 	set -eux
-	apk add --no-cache file git libcap-utils
-	install-php-extensions @composer apcu intl opcache zip
+	apk add --no-cache file git libcap-utils zlib
+	install-php-extensions @composer apcu intl opcache zip zlib
 
 	addgroup -g "${GROUP_ID}" app
 	adduser -D -u "${USER_ID}" -G app app
@@ -32,7 +32,6 @@ COPY --link .docker/frankenphp/conf.d/10-app.ini $PHP_INI_DIR/app.conf.d/
 COPY --link .docker/frankenphp/Caddyfile /etc/frankenphp/Caddyfile
 
 HEALTHCHECK --start-period=60s CMD php -r 'exit(false === @file_get_contents("http://localhost:2019/metrics", context: stream_context_create(["http" => ["timeout" => 5]])) ? 1 : 0);'
-CMD ["frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile"]
 
 # ---------- Dev ----------
 FROM base AS dev
@@ -60,10 +59,11 @@ FROM base AS prod_builder
 ENV NETTE_DEBUG=0
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-COPY --link composer.* ./
+# deps d'abord : un changement de code ne relance pas composer install
+COPY --link composer.json composer.lock ./
 RUN composer install --no-cache --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress
 
-COPY --link --exclude=.docker --exclude=node_modules --exclude=var . ./
+COPY --link --exclude=.docker . ./
 
 RUN <<-EOF
 	set -eux
@@ -81,3 +81,7 @@ COPY --link .docker/frankenphp/conf.d/20-app.prod.ini $PHP_INI_DIR/app.conf.d/
 COPY --from=prod_builder --chown=app:app /srv /srv
 
 USER app
+
+CMD rm -rf var/temp/cache; \
+    tail -F -n0 var/log/critical.log var/log/exception.log var/log/error.log var/log/warning.log 2>/dev/null & \
+    exec frankenphp run --config /etc/frankenphp/Caddyfile

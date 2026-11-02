@@ -36,50 +36,50 @@ Then visit [https://localhost:8000](https://localhost:8000) in your browser.
 ### FrankenPHP
 ```
 ➜  bin/dev -f --port=443 -d -p // frankenphp on 443 to solve tls issues (windows' wsl)
-➜  bin/hey -n 1000 -c 100 https://localhost
+➜   bin/hey -n 10000 -c 100 https://localhost
 
 Summary:
-  Total:        0.2287 secs
-  Slowest:      0.1440 secs
-  Fastest:      0.0018 secs
-  Average:      0.0211 secs
-  Requests/sec: 4372.4150
+  Total:        0.8961 secs
+  Slowest:      0.1129 secs
+  Fastest:      0.0012 secs
+  Average:      0.0086 secs
+  Requests/sec: 11159.7469
 
-  Total data:   313000 bytes
+  Total data:   3130000 bytes
   Size/request: 313 bytes
 
 Response time histogram:
-  0.002 [1]     |
-  0.016 [694]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.030 [124]   |■■■■■■■
-  0.044 [29]    |■■
-  0.059 [43]    |■■
-  0.073 [56]    |■■■
-  0.087 [2]     |
-  0.101 [0]     |
-  0.116 [10]    |■
-  0.130 [32]    |■■
-  0.144 [9]     |■
+  0.001 [1]     |
+  0.012 [8534]  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.024 [1283]  |■■■■■■
+  0.035 [54]    |
+  0.046 [34]    |
+  0.057 [21]    |
+  0.068 [0]     |
+  0.079 [4]     |
+  0.091 [66]    |
+  0.102 [1]     |
+  0.113 [2]     |
 
 
 Latency distribution:
-  10% in 0.0040 secs
-  25% in 0.0055 secs
-  50% in 0.0098 secs
-  75% in 0.0199 secs
-  90% in 0.0617 secs
-  95% in 0.1106 secs
-  99% in 0.1297 secs
+  10% in 0.0033 secs
+  25% in 0.0048 secs
+  50% in 0.0070 secs
+  75% in 0.0101 secs
+  90% in 0.0141 secs
+  95% in 0.0175 secs
+  99% in 0.0447 secs
 
 Details (average, fastest, slowest):
-  DNS+dialup:   0.0016 secs, 0.0018 secs, 0.1440 secs
-  DNS-lookup:   0.0003 secs, 0.0000 secs, 0.0496 secs
-  req write:    0.0016 secs, 0.0000 secs, 0.0631 secs
-  resp wait:    0.0111 secs, 0.0016 secs, 0.0589 secs
-  resp read:    0.0009 secs, 0.0000 secs, 0.0621 secs
+  DNS+dialup:   0.0002 secs, 0.0012 secs, 0.1129 secs
+  DNS-lookup:   0.0000 secs, 0.0000 secs, 0.0350 secs
+  req write:    0.0001 secs, 0.0000 secs, 0.0379 secs
+  resp wait:    0.0076 secs, 0.0011 secs, 0.0356 secs
+  resp read:    0.0004 secs, 0.0000 secs, 0.0482 secs
 
 Status code distribution:
-  [200] 1000 responses
+  [200] 10000 responses
 
 ```
 

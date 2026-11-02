@@ -20,8 +20,9 @@ services:
                 }
             MERCURE_EXTRA_DIRECTIVES: |
                 anonymous
+            CADDY_SERVER_LOG_OPTIONS: level DEBUG
         extra_hosts:
             # Ensure that host.docker.internal is correctly defined on Linux
             - host.docker.internal:host-gateway
         volumes:
-            - ~/.config/composer/auth.json:/app/.config/composer/auth.json
+            - ./:/srv

@@ -20,6 +20,43 @@ services:
             XDEBUG_MODE: "off"
             MERCURE_PUBLISHER_JWT_KEY: ${MERCURE_JWT_SECRET}
             MERCURE_SUBSCRIBER_JWT_KEY: ${MERCURE_JWT_SECRET}
+            CADDY_SERVER_LOG_OPTIONS: level ERROR
         volumes:
-            - ./:/srv
-            - .docker/frankenphp/Caddyfile:/etc/frankenphp/Caddyfile
+            - ./var/:/srv/var
+        logging:
+            driver: json-file
+            options:
+                max-size: 10m
+                max-file: "3"
+
+    # --- monitor : make monitor (deactivated by default) ---
+    prometheus:
+        image: prom/prometheus:v3.15.1
+        profiles: [monitor]
+#        ports:
+#            - ${PROMETHEUS_PORT:-9090}:9090
+        volumes:
+            - ./.docker/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+            - prometheus_data:/prometheus
+
+    grafana:
+        image: grafana/grafana:13.3.0
+        profiles: [monitor]
+        ports:
+            - 127.0.0.1:${GRAFANA_PORT:-3000}:3000
+        volumes:
+            - ./.docker/monitoring/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml:ro
+            - ./.docker/monitoring/grafana/dashboards/:/etc/grafana/provisioning/dashboards/:ro
+            - grafana_data:/var/lib/grafana
+
+    dozzle:
+        image: amir20/dozzle:v11.4.0
+        profiles: [monitor]
+        ports:
+            - 127.0.0.1:${DOZZLE_PORT:-8888}:8080
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+
+volumes:
+    prometheus_data:
+    grafana_data:

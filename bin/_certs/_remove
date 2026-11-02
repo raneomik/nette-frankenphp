@@ -8,9 +8,9 @@ local_certs_remove() {
 	if [ -f  $LOCAL_CERT_PATH ]; then
 		sudo rm $LOCAL_CERT_PATH
 		sudo update-ca-certificates --fresh 1> /dev/null 2>&1
-		log "✔️ Removed system certificates. ($LOCAL_CERT_PATH)" ${BLUE}
+		log "✔️   Removed system certificates. ($LOCAL_CERT_PATH)" ${BLUE}
 	else
-		log "⚠️ Certificate file not found: $LOCAL_CERT_PATH. No cleanup needed" ${YELLOW}
+		log "⚠️   Certificate file not found: $LOCAL_CERT_PATH. No cleanup needed" ${YELLOW}
 	fi
 }
 
@@ -18,12 +18,12 @@ local_certs_remove() {
 # Cleanup windows certificates
 #
 win_certs_remove() {
-	log "🧹 Windows Certificates cleanup...(a prompt may appear and needs to be accepted)" ${BLUE}
+	log "🧹️  Windows Certificates cleanup...(a prompt may appear and needs to be accepted)" ${BLUE}
 
     win_certs_check
 
 	if [ $installed_certs -lt 0 ]; then
-        log "ℹ️ No Caddy Local Authority certificates found in Windows. No cleanup needed" ${YELLOW}
+        log "ℹ️   No Caddy Local Authority certificates found in Windows. No cleanup needed" ${YELLOW}
         return
     fi
 
@@ -40,10 +40,10 @@ win_certs_remove() {
 	win_cert_dir="/mnt/c/Users/$USER/frankenphp-certs"
 	if [ -d "$win_cert_dir" ]; then
 		rm -rf "$win_cert_dir"
-		log "✔️ Removed certificate directory: $win_cert_dir"
+		log "✔️   Removed certificate directory: $win_cert_dir"
 	fi
 
-	log "✔️ Removed Windows certificates" ${GREEN}
+	log "✔️   Removed Windows certificates" ${GREEN}
 }
 
 certs_remove() {
@@ -55,11 +55,11 @@ certs_remove() {
 		local_certs_remove
 		;;
 	all)
-        log "ℹ️(repetitions may occur. Please, don't mind 'em)" ${BLUE}
+        log "ℹ️   (repetitions may occur. Please, don't mind 'em)" ${BLUE}
 		local_certs_remove
 		win_certs_remove
 		;;
 	*)
-		log "⚠️ Please specify a mode: --win, --local or --all" ${YELLOW}
+		log "⚠️   Please specify a mode: --win, --local or --all" ${YELLOW}
 	esac
 }

@@ -9,7 +9,7 @@ date_to_timestamp() {
 #
 local_cert_expiration_check() {
     if [ ! -f "$LOCAL_CERT_PATH" ]; then
-        log "❌ Certificate not found: $LOCAL_CERT_PATH" ${YELLOW}
+        log "❌  Certificate not found: $LOCAL_CERT_PATH" ${YELLOW}
         return 1
     fi
 
@@ -29,13 +29,13 @@ local_cert_expiration_check() {
     log "  Expires: $not_after" ${BLUE}
 
     if [ $days_left -lt 0 ]; then
-        log "❌ EXPIRED since $((0 - $days_left)) days ago!" ${RED}
+        log "❌️   EXPIRED since $((0 - $days_left)) days ago!" ${RED}
         return 1
     elif [ $days_left -lt 2 ]; then
         log "⚠️ Expires in $days_left days (renewal recommended)" ${YELLOW}
         return 1
     else
-        log "✔️ Valid for $days_left more days" ${GREEN}
+        log "✔️   Valid for $days_left more days" ${GREEN}
         return 0
     fi
 }
@@ -47,14 +47,14 @@ container_cert_expiration_check() {
     load_frankenphp_dc_name
 
     if [ -z "$CONTAINER_NAME" ]; then
-        log "⚠️ Container not running" ${YELLOW}
+        log "⚠️️   Container not running" ${YELLOW}
         return 1
     fi
 
     log "  Container: $CONTAINER_NAME" ${BLUE}
 
     if ! docker exec $CONTAINER_NAME test -f $FRANKEN_CERT_PATH 2>/dev/null; then
-        log "❌ Certificate not found in container" ${RED}
+        log "❌️   Certificate not found in container" ${RED}
         return 1
     fi
 
@@ -62,7 +62,7 @@ container_cert_expiration_check() {
     local not_after=$(echo "$cert_info" | grep "notAfter" | cut -d= -f2)
 
     if [ -z "$not_after" ]; then
-        log "❌ Unable to read certificate expiration date" ${RED}
+        log "❌️   Unable to read certificate expiration date" ${RED}
         return 1
     fi
 
@@ -73,13 +73,13 @@ container_cert_expiration_check() {
     log "  Expires: $not_after" ${BLUE}
 
     if [ $days_left -lt 0 ]; then
-        log "❌ EXPIRED since $((0 - $days_left)) days ago!" ${RED}
+        log "❌️   EXPIRED since $((0 - $days_left)) days ago!" ${RED}
         return 1
     elif [ $days_left -lt 3 ]; then
         log "⚠️ Expires in $days_left days (renewal recommended)" ${YELLOW}
         return 1
     else
-        log "✔️ Valid for $days_left more days" ${GREEN}
+        log "✔️   Valid for $days_left more days" ${GREEN}
         return 0
     fi
 }
@@ -105,7 +105,7 @@ win_cert_expiration_check() {
     " 2>/dev/null | tr -d '\r')
 
     if ! echo "$win_cert_info" | grep -q '"Found": *true'; then
-        log "❌  Certificate not found in Windows certificate store" ${RED}
+        log "❌️   Certificate not found in Windows certificate store" ${RED}
         return 1
     fi
 
@@ -115,18 +115,18 @@ win_cert_expiration_check() {
     log "  Expires: $not_after" ${BLUE}
 
     if [ -z "$days_left" ]; then
-        log "❌ Unable to calculate expiration" ${RED}
+        log "❌️   Unable to calculate expiration" ${RED}
         return 1
     fi
 
     if [ "$days_left" -lt 0 ]; then
-        log "❌ EXPIRED since $((0 - $days_left)) days ago!" ${RED}
+        log "❌️   EXPIRED since $((0 - $days_left)) days ago!" ${RED}
         return 1
     elif [ "$days_left" -lt 30 ]; then
-        log "⚠️ Expires in $days_left days (renewal recommended)" ${YELLOW}
+        log "⚠️️   Expires in $days_left days (renewal recommended)" ${YELLOW}
         return 1
     else
-        log "✔️ Valid for $days_left more days" ${GREEN}
+        log "✔️   Valid for $days_left more days" ${GREEN}
         return 0
     fi
 }

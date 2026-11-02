@@ -10,7 +10,7 @@ use Tracy\Debugger;
 
 final readonly class FrankenphpRunner
 {
-    private const int MAX_REQUESTS = 20;
+    private const int MAX_REQUESTS = 1000;
 
     public function run(): void
     {
@@ -57,7 +57,7 @@ final readonly class FrankenphpRunner
     {
         return static function () use ($bootstrap): void {
             try {
-                $bootstrap->prepare(); // needed for tracy metrics
+                $bootstrap->prepare(); // needed for correct tracy time&memory metrics
                 $container = $bootstrap->createContainer();
             } catch (\Throwable $e) {
                 Debugger::exceptionHandler($e);
