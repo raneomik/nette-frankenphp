@@ -23,7 +23,7 @@ compare_certificates() {
 # Check Windows certificate change
 #
 win_certs_change_check() {
-    log "🔍 Checking Caddy/FrankenPHP-Windows certificates change..." ${BLUE}
+    log "🔍️  Checking Caddy/FrankenPHP-Windows certificates change..." ${BLUE}
     local win_cert_file="/mnt/c/Users/$USER/frankenphp-certs/caddy-root.crt"
 
 	load_frankenphp_dc_name
@@ -32,12 +32,12 @@ win_certs_change_check() {
 
     if [ -f "$win_cert_file" ]; then
         if compare_certificates "$temp_container_cert" "$win_cert_file"; then
-            log "✔️ Windows certificate matches Caddy/FrankenPHP's" ${GREEN}
+            log "✔️   Windows certificate matches Caddy/FrankenPHP's" ${GREEN}
         else
-            log "⚠️ Windows certificate differs from Caddy/FrankenPHP's (rebuild detected - consider new install)" ${YELLOW}
+            log "⚠️   Windows certificate differs from Caddy/FrankenPHP's (rebuild detected - consider new install)" ${YELLOW}
         fi
     else
-        log "⚠️ Windows certificate file not found" ${YELLOW}
+        log "⚠️   Windows certificate file not found" ${YELLOW}
     fi
 
 	sudo rm -f "$temp_container_cert"
@@ -47,7 +47,7 @@ win_certs_change_check() {
 # Check System certificate change (Linux)
 #
 local_certs_change_check() {
-    log "🔍 Checking Caddy/FrankenPHP-Linux certificates change..." ${BLUE}
+    log "🔍️  Checking Caddy/FrankenPHP-Linux certificates change..." ${BLUE}
 
 	load_frankenphp_dc_name
 	local temp_container_cert="/tmp/caddy-container-current.crt"
@@ -55,12 +55,12 @@ local_certs_change_check() {
 
     if [ -f "$LOCAL_CERT_PATH" ]; then
         if compare_certificates "$temp_container_cert" "$LOCAL_CERT_PATH"; then
-            log "✔️ Linux certificate matches Caddy/FrankenPHP's" ${GREEN}
+            log "✔️   Linux certificate matches Caddy/FrankenPHP's" ${GREEN}
         else
-            log "⚠️ Linux certificate differs from Caddy/FrankenPHP's (rebuild detected - consider new install)" ${YELLOW}
+            log "⚠️   Linux certificate differs from Caddy/FrankenPHP's (rebuild detected - consider new install)" ${YELLOW}
         fi
     else
-        log "⚠️ Linux certificate not found" ${YELLOW}
+        log "⚠️   Linux certificate not found" ${YELLOW}
     fi
 
 	sudo rm -f "$temp_container_cert"

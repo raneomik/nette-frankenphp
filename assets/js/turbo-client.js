@@ -20,15 +20,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
         .then(response => response.json())
         .then(response => {
-            const {jwtToken, subscribeUrl, expiresAt} = response;
+            const {jwt, subscribeUrl} = response;
 
             const dec = s => JSON.parse(atob(s.replace(/-/g,'+').replace(/_/g,'/')));
-            const [h, p] = jwtToken.split('.');
+            const [h, p] = jwt.token.split('.');
 
-            console.debug("Received jwt token. ExpiresAt: ", expiresAt);
+            console.debug("Received jwt token. ExpiresAt: ", jwt.ttl);
             console.debug("Trying to connect to mercure: ", subscribeUrl, dec(h), dec(p));
 
-            setupTurboClient(subscribeUrl, jwtToken);
+            setupTurboClient(subscribeUrl, jwt.token);
         })
         .catch(error => {
             console.error("Error fetching data from Turbo endpoint:", error);

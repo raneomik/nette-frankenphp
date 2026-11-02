@@ -5,15 +5,18 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/_common"
 
 MODE=""
-PORT="8000"
-PROD=0
+PORT="${PORT:-8000}"
+PROD="${PROD:-0}"
 BACKGROUND=0
 BUILD=0
 DEBUG=0
+VENDORS=0
 
 run() {
     log "▶ Mode: $MODE"  ${BLUE}
     log "▶ Debug: $((1 - PROD))" ${BLUE}
+
+    ensure_vendors
 
     case "$MODE" in
 	php)
@@ -26,6 +29,28 @@ run() {
         log "--php | -f mode required" $YELLOW
         ;;
 	esac
+}
+
+ensure_vendors() {
+    if [ "$PROD" -eq 1 ]; then
+        log "▶ Vendors are installed internally in prod mode" ${GRAY}
+        return
+    fi
+
+    if [ "$VENDORS" -eq 0 ] && [ -f vendor/composer/installed.json ] && [ ! composer.lock -nt vendor/composer/installed.json ]; then
+        return
+    fi
+
+    log "▶ Installing vendors (composer install)" ${BLUE}
+    cmd="composer install --no-interaction --no-progress"
+    if [ "$MODE" = "franken" ]; then
+        [ "$DEBUG" -eq 1 ] && log "[running] docker compose -f compose.yml -f compose.dev.yml run --rm --no-deps app $cmd" ${GRAY}
+        docker compose -f compose.yml -f compose.dev.yml run --rm --no-deps app $cmd || exit 1
+    else
+        [ "$DEBUG" -eq 1 ] && log "[running] $cmd" ${GRAY}
+        $cmd || exit 1
+    fi
+    touch vendor/composer/installed.json
 }
 
 run_php_server() {
@@ -64,7 +89,7 @@ run_frankenphp() {
 }
 
 restart_frankenphp() {
-    log "▶ Restarting FrankenPHP (Docker)" ${INFO}
+    log "▶ Restarting FrankenPHP (Docker)" ${BLUE}
     [ "$DEBUG" -eq 1 ] && log "[running] docker compose restart" ${GRAY}
     docker compose restart
 }
@@ -119,10 +144,12 @@ usage() {
   log "  --php              Run in php built-in server mode (default)" ${GREEN}
   log "  --restart|-r       Restart server" ${GREEN}
   log "  --build|-b         Build FrankenPHP container" ${GREEN}
+  log "  --vendors|-u       Force composer install (auto if composer.lock changed, dev only)" ${GREEN}
   log "  --back|-d          Run server in background (detached mode)" ${GREEN}
   log "  --clear-logs       Clear log files" ${GREEN}
   log "  --clear-cache      Clear cache files" ${GREEN}
   log "  --verbose|-v       Verbose mode: show executed commands" ${GREEN}
+  log "  (env PORT=<port> and PROD=1 work too, e.g. from make)" ${GREEN}
   log "  stop               Stop server" ${GREEN}
   exit 1
 }
@@ -150,6 +177,9 @@ while [ $# -gt 0 ]; do
       ;;
     --build|-b)
       BUILD=1
+      ;;
+    --vendors|-u)
+      VENDORS=1
       ;;
     --clear-logs)
       ACTION="clear-logs"

@@ -7,16 +7,19 @@ namespace App\Presentation\Home;
 use Nette;
 use Raneomik\NetteMercure\BroadcasterInterface;
 use Raneomik\NetteMercure\Core\Publish\Latte\TurboStreamAction;
+use Raneomik\NetteMercure\Core\Subscribe\AuthorizationInterface;
 
 final class HomePresenter extends Nette\Application\UI\Presenter
 {
 	public function __construct(
 		private BroadcasterInterface $broadcaster,
+		private AuthorizationInterface $authorization,
 	) {
     }
 
 	public function renderDefault(): void
 	{
+        $this->authorization->setCookie(['test-topic']);
 	}
 
 	public function handleDispatch(string $type = 'plain'): void
