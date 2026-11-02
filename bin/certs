@@ -24,15 +24,15 @@ load_frankenphp_dc_name() {
 	CONTAINER_NAME=$(docker ps --format "{{.Names}}" | grep frankenphp | head -n 1)
 
 	if [ -z "$CONTAINER_NAME" ]; then
-		log "⚠️ FrankenPHP container not running. Please, start it first." ${YELLOW}
+		log "⚠️️   FrankenPHP container not running. Please, start it first." ${YELLOW}
 		exit 1
 	fi
 
-	log "📦 Found FrankenPHP docker container: $CONTAINER_NAME"
-	log "⏳ Checking Caddy/FrankenPHP certificate..."
+	log "📦️  Found FrankenPHP docker container: $CONTAINER_NAME"
+	log "⏳️  Checking Caddy/FrankenPHP certificate..."
 	for i in {1..10}; do
 		if docker exec $CONTAINER_NAME test -f $FRANKEN_CERT_PATH 2>/dev/null; then
-			log "✔️ Caddy/FrankenPHP certificate is available."
+			log "✔️   Caddy/FrankenPHP certificate is available."
 			break
 		fi
 		sleep 0.5

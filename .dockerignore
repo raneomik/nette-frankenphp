@@ -1,0 +1,14 @@
+.git
+.github
+.idea
+.claude
+.docs
+.env
+node_modules
+vendor
+var
+bin/hey
+!libs/nette-mercure
+libs/*/.git
+libs/*/vendor
+libs/*/var

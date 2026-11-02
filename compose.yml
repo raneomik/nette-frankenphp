@@ -20,6 +20,11 @@ services:
             XDEBUG_MODE: "off"
             MERCURE_PUBLISHER_JWT_KEY: ${MERCURE_JWT_SECRET}
             MERCURE_SUBSCRIBER_JWT_KEY: ${MERCURE_JWT_SECRET}
+            CADDY_SERVER_LOG_OPTIONS: level ERROR
         volumes:
-            - ./:/srv
-            - .docker/frankenphp/Caddyfile:/etc/frankenphp/Caddyfile
+            - ./var/:/srv/var
+        logging:
+            driver: json-file
+            options:
+                max-size: 10m
+                max-file: "3"

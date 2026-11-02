@@ -9,7 +9,7 @@ services:
             # Xdebug
             XDEBUG_SESSION: 1
             XDEBUG_CONFIG: "idekey=docker"
-            XDEBUG_MODE: "debug"
+            XDEBUG_MODE: "off"
             PHP_IDE_CONFIG: "serverName=docker"
             # Server config with hot reloading
             FRANKENPHP_SITE_CONFIG: |
@@ -18,6 +18,11 @@ services:
                     file /srv/www/index.php
                     watch
                 }
+            MERCURE_EXTRA_DIRECTIVES: |
+                anonymous
+            CADDY_SERVER_LOG_OPTIONS: level DEBUG
         extra_hosts:
             # Ensure that host.docker.internal is correctly defined on Linux
             - host.docker.internal:host-gateway
+        volumes:
+            - ./:/srv

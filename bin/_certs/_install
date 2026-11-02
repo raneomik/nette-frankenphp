@@ -4,21 +4,21 @@
 # Copy the certificate from FrankenPHP container to local system (linux)
 #
 local_certs_install() {
-	log "🔧 Extracting Caddy/FrankenPHP certificate..." ${BLUE}
+	log "🔧️   Extracting Caddy/FrankenPHP certificate..." ${BLUE}
 
 	load_frankenphp_dc_name
 	extract_cert_from_container "$LOCAL_CERT_PATH"
 
 	if [ ! -f "$LOCAL_CERT_PATH" ]; then
-		log "⚠️ Cannot copy the certificate automatically ($feedback)" ${YELLOW}
+		log "⚠️   Cannot copy the certificate automatically ($feedback)" ${YELLOW}
 		exit 1
 	fi
 
-	log "🔄 Updating System Certificates..." ${BLUE}
+	log "🔄️   Updating System Certificates..." ${BLUE}
 
 	sudo update-ca-certificates > /dev/null 2>&1
 
-	log "✔️ Certificate installed" ${GREEN}
+	log "✔️   Certificate installed" ${GREEN}
 }
 
 
@@ -26,7 +26,7 @@ local_certs_install() {
 # Install Caddy/FrankenPHP certificates in Windows
 #
 win_certs_install() {
-	log "🔧 Installing FrankenPHP certificate in Windows - Removing first..."
+	log "🔧️  Installing FrankenPHP certificate in Windows - Removing first..."
 
 	load_frankenphp_dc_name
 	win_certs_remove
@@ -34,31 +34,31 @@ win_certs_install() {
 	win_cert_dir="/mnt/c/Users/$USER/frankenphp-certs"
 	mkdir -p "$win_cert_dir"
 
-	log "📋 Copying Caddy/FrankenPHP certificate..." ${BLUE}
+	log "📋️  Copying Caddy/FrankenPHP certificate..." ${BLUE}
 	extract_cert_from_container "$win_cert_dir/caddy-root.crt" 2>/dev/null
 
 	if [ ! -f "$win_cert_dir/caddy-root.crt" ] || [ ! -s "$win_cert_dir/caddy-root.crt" ]; then
-		log "⚠️ Unable to copy the certificate automatically. Manual action requied..." ${YELLOW}
+		log "⚠️  Unable to copy the certificate automatically. Manual action requied..." ${YELLOW}
 		log "docker exec $CONTAINER_NAME cat $FRANKEN_CERT_PATH > caddy-root.crt"
 		exit 1
 	fi
 
-	log "✔️ Certificate copied to: $win_cert_dir/caddy-root.crt" ${GREEN}
+	log "✔️   Certificate copied to: $win_cert_dir/caddy-root.crt" ${GREEN}
 
 	win_path=$(wslpath -w "$win_cert_dir/caddy-root.crt")
 
-	log "📦 Installing certificate in Windows..."
+	log "📦️  Installing certificate in Windows..."
 
-	log "🔧 Attempting automatic installation..."
+	log "🔧️  Attempting automatic installation..."
 	powershell.exe -Command "Start-Process certutil.exe -ArgumentList '-addstore','Root','$win_path' -Verb RunAs -Wait" 2>/dev/null
 
 	if [ $installed_certs -gt 0 ]; then
-		log "✔️ Certificate installed successfully!" ${GREEN}
-		log "ℹ️ Restart your browser(s) completely (close all windows)" ${BLUE}
+		log "✔️   Certificate installed successfully!" ${GREEN}
+		log "ℹ️   Restart your browser(s) completely (close all windows)" ${BLUE}
 	else
-		log "⚠️ Automatic installation failed or was denied" ${YELLOW}
+		log "⚠️   Automatic installation failed or was denied" ${YELLOW}
 		log "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-		log "📝 MANUAL installation required:"
+		log "📝️   MANUAL installation required:"
 		log "1️. Open Windows Explorer and navigate to:"
 		log "    $(wslpath -w "$win_cert_dir")"
 		log "2️. Double-click on: caddy-root.crt"
@@ -85,12 +85,12 @@ certs_install() {
 		local_certs_install
 		;;
 	all)
-        log "ℹ️(repetitions may occur. Please, don't mind 'em)" ${BLUE}
+        log "ℹ️️   (repetitions may occur. Please, don't mind 'em)" ${BLUE}
 		local_certs_install
 		win_certs_install
 		;;
 	*)
-		log "⚠️ Please specify a mode: --win, --local or --all" ${YELLOW}
+		log "⚠️️   Please specify a mode: --win, --local or --all" ${YELLOW}
 		;;
 	esac
 }

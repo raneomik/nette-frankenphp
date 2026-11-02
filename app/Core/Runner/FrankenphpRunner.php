@@ -10,7 +10,7 @@ use Tracy\Debugger;
 
 final readonly class FrankenphpRunner
 {
-	private const int MAX_REQUESTS = 20;
+	private const int MAX_REQUESTS = 1000;
 
 	public function run(): void
 	{
