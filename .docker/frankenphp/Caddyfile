@@ -1,5 +1,11 @@
 {
+    metrics
     {$CADDY_GLOBAL_OPTIONS}
+}
+
+# Prometheus scrap (inside docker only)
+:9180 {
+    metrics
 }
 
 {$CADDY_EXTRA_CONFIG}

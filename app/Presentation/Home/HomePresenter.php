@@ -17,10 +17,13 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	) {
     }
 
-	public function renderDefault(): void
-	{
+    protected function startup(): void
+    {
+        parent::startup();
+
         $this->authorization->setCookie(['test-topic']);
-	}
+
+    }
 
 	public function handleDispatch(string $type = 'plain'): void
 	{
