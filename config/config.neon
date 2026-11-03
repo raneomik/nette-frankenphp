@@ -1,8 +1,8 @@
 # ======================================
 # Config ===============================
 php:
-	date.timezone: Europe/Prague
-	session.save_path: %tempDir%/session
+    date.timezone: Europe/Prague
+    session.save_path: %tempDir%/session
 
 # ======================================
 # Extension ============================
@@ -17,52 +17,53 @@ parameters:
 
 
 application:
-	catchExceptions: '%productionMode%'
-	errorPresenter: Nella:Error
+    debugger: %debugMode%
+    catchExceptions: %productionMode%
+    errorPresenter: Nella:Error
 
-	mapping:
-		*: 'App\UI\*\**Presenter'
-		Nella: 'Contributte\Nella\UI\*Presenter'
+    mapping:
+        *: 'App\UI\*\**Presenter'
+        Nella: 'Contributte\Nella\UI\*Presenter'
 
 assets:
 
-	mapping:
-		default:
-			path: assets
-			type: vite  # Uncomment to activate Vite for asset building
+    mapping:
+        default:
+            path: assets
+            type: vite  # Uncomment to activate Vite for asset building
 
-		favicon:
-			path: favicon
-			extension: ico
-		img:
-			path: img
-			extension: [png, jpg, jpeg, gif, svg, webp]
+        favicon:
+            path: favicon
+            extension: ico
+        img:
+            path: img
+            extension: [png, jpg, jpeg, gif, svg, webp]
 
 di:
-	lazy: yes
-	export:
-		parameters: '%debugMode%'
-		tags: '%debugMode%'
+    lazy: yes
+    export:
+        parameters: '%debugMode%'
+        tags: '%debugMode%'
 
 http:
-	headers:
-		X-XSS-Protection: '1; mode=block'
-		X-Powered-By: 'Contributte'
+    headers:
+        X-XSS-Protection: '1; mode=block'
+        X-Powered-By: 'Contributte'
 
 latte:
-	strictTypes: yes
-	strictParsing: yes
-	extensions:
-		- App\UI\LatteExtension('%runner%', '%hotReloadUrl%')
+    strictTypes: yes
+    strictParsing: yes
+    extensions:
+        - App\UI\LatteExtension('%runner%', '%hotReloadUrl%')
 
 routing:
-	debugger: '%debugMode%'
+    debugger: '%debugMode%'
 
 session:
-	debugger: '%debugMode%'
-	expiration: '+14 days'
-	autoStart: 'smart'
+    debugger: '%debugMode%'
+    expiration: '+14 days'
+    autoStart: 'smart'
 
 tracy:
-	strictMode: yes
-	dumpTheme: dark
+    strictMode: %debugMode%
+    dumpTheme: dark

@@ -12,8 +12,8 @@ WORKDIR /srv
 
 RUN <<-EOF
 	set -eux
-	apk add --no-cache file git libcap-utils
-	install-php-extensions @composer apcu intl opcache zip
+	apk add --no-cache file git libcap-utils zlib
+	install-php-extensions @composer apcu intl opcache zip zlib
 
 	addgroup -g "${GROUP_ID}" app
 	adduser -D -u "${USER_ID}" -G app app
@@ -82,4 +82,6 @@ COPY --from=prod_builder --chown=app:app /srv /srv
 
 USER app
 
-CMD [ "sh", "-c", "tail -F -n0 var/log/critical.log var/log/exception.log var/log/error.log var/log/warning.log 2>/dev/null & exec frankenphp run --config /etc/frankenphp/Caddyfile"]
+CMD rm -rf var/temp/cache; \
+    tail -F -n0 var/log/critical.log var/log/exception.log var/log/error.log var/log/warning.log 2>/dev/null & \
+    exec frankenphp run --config /etc/frankenphp/Caddyfile
