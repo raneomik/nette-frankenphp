@@ -1,0 +1,47 @@
+# /srv/rpsls/compose.yaml — sur le VPS
+# Pas de container_name ni de ports: docker rollout doit pouvoir lancer 2 instances
+services:
+  app:
+    image: ghcr.io/raneomik/nette-frankenphp:${TAG:-latest}
+    restart: unless-stopped
+    env_file: app.env # secrets de l'appli (clés JWT Mercure...), distinct de .env
+    environment:
+      # TLS est terminé par caddy-docker-proxy : HTTP simple, tout nom d'hôte
+      SERVER_NAME: ":80"
+      # = claim "iss" des JWT générés par nette-mercure (schéma + domaine public)
+      MERCURE_ISSUER: https://${HOST}
+      # IP réelle des clients pour Caddy/Mercure (limites d'abonnements, logs)
+      CADDY_GLOBAL_OPTIONS: |
+        servers {
+          trusted_proxies static private_ranges
+        }
+      CADDY_SERVER_LOG_OPTIONS: level ERROR
+      # Si tu limites la mémoire du conteneur, aligne le GC de Go dessus :
+      # GOMEMLIMIT: 450MiB
+    # Seule capacité gardée : écouter sur le port 80 sans être root
+    cap_drop: [ALL]
+    cap_add: [NET_BIND_SERVICE]
+    volumes:
+      # pas de volume sur /data : deux instances ne peuvent pas partager mercure.db (verrou)
+      - sessions:/srv/var/temp/sessions
+      - logs:/srv/var/log
+    networks: [caddy]
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    labels:
+      caddy: ${HOST}
+      caddy.reverse_proxy: "{{upstreams 80}}"
+      caddy.reverse_proxy.lb_try_duration: 10s
+      caddy.reverse_proxy.health_uri: /health
+      caddy.reverse_proxy.health_interval: 10s
+
+networks:
+  caddy:
+    external: true
+
+volumes:
+  sessions: {}
+  logs: {}
