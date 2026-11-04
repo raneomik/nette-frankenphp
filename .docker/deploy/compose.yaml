@@ -25,6 +25,9 @@ services:
       # pas de volume sur /data : deux instances ne peuvent pas partager mercure.db (verrou)
       - sessions:/srv/var/temp/sessions
       - logs:/srv/var/log
+      # base SQLite (+ -wal/-shm) : le dossier entier, pas le seul fichier ; partagé sans
+      # risque par les deux instances d'un rollout et litestream (même hôte, verrous SQLite)
+      - data:/srv/var/data
     networks: [caddy]
     logging:
       driver: json-file
@@ -38,6 +41,27 @@ services:
       caddy.reverse_proxy.health_uri: /health
       caddy.reverse_proxy.health_interval: 10s
 
+  # Réplication continue de la base vers un stockage externe : restauration à un instant
+  # donné sur 7 jours (litestream.yml). Hors rollout : une seule instance, jamais deux.
+  litestream:
+    image: litestream/litestream:0.5.18
+    # facultatif : démarré par deploy.sh seulement si litestream.env existe
+    profiles: [backup]
+    restart: unless-stopped
+    command: replicate
+    # même uid que l'utilisateur app de l'image : les fichiers -wal/-shm que litestream
+    # recrée parfois doivent rester écrivables par l'app
+    user: "1000:1000"
+    env_file: litestream.env
+    volumes:
+      - data:/data
+      - ./litestream.yml:/etc/litestream.yml:ro
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
 networks:
   caddy:
     external: true
@@ -45,3 +69,4 @@ networks:
 volumes:
   sessions: {}
   logs: {}
+  data: {}
