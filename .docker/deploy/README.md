@@ -34,11 +34,12 @@ chmod +x ~/.docker/cli-plugins/docker-rollout
 # accès à l'image si le package GHCR est privé (PAT classique, scope read:packages)
 docker login ghcr.io -u raneomik
 
-# /srv/rpsls : compose.yaml, deploy.sh (chmod +x) et app.env (depuis app.env.example, chmod 600)
+# /srv/rpsls : compose.yaml, deploy.sh (chmod +x), app.env (depuis app.env.example, chmod 600)
+# et .env, lu par compose pour ${HOST} (deploy.sh y ajoute TAG=… sans toucher au reste) :
+echo 'HOST=rpsls.example.fr' > /srv/rpsls/.env
 ```
 
-Remplace `rpsls.example.fr` dans `compose.yaml` (labels `caddy` et `MERCURE_ISSUER`) et dans
-l'URL de l'environnement du workflow.
+Remplace aussi `rpsls.example.fr` dans l'URL de l'environnement du workflow.
 
 ### Clé SSH (sur ta machine)
 
@@ -69,3 +70,85 @@ mettant en bypass) : personne d'autre ne peut créer un tag qui déploie, ni dé
 - Le hub Mercure est intégré à FrankenPHP : à chaque déploiement, les connexions SSE se
   reconnectent, et pendant les quelques secondes de bascule les deux instances ont chacune
   leur hub. Un hub séparé (`dunglas/mercure`) supprime ce point.
+
+## Base SQLite
+
+- Fichier `var/data/app.db`, dans le volume `data` (le dossier entier : les fichiers `-wal` et
+  `-shm` doivent rester à côté). Les deux instances d'un rollout et Litestream le partagent sans
+  risque (même hôte, verrous SQLite).
+- Chaque connexion est configurée par `App\Core\Database\SqliteConfigurator` : WAL,
+  `busy_timeout`, `synchronous = NORMAL`, clés étrangères, et transactions `IMMEDIATE`
+  (PHP 8.5) : sous charge, sans ce dernier réglage, les transactions « lire puis écrire »
+  concurrentes échouent en `database is locked`.
+
+### Migrations : [dbmate](https://github.com/amacneil/dbmate)
+
+Fichiers SQL dans `db/migrations`, appliqués au démarrage du conteneur (`dbmate up`). Si une
+migration échoue, le nouveau conteneur ne démarre pas et l'ancien reste en place.
+
+```sh
+make migration name=create_game   # crée db/migrations/<horodatage>_create_game.sql
+make migrate                      # applique (dev) ; met aussi à jour db/schema.sql, à commiter
+make rollback                     # annule la dernière (dev), via sa section migrate:down
+```
+
+```sql
+-- migrate:up
+CREATE TABLE game (id INTEGER PRIMARY KEY, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+
+-- migrate:down
+DROP TABLE game;
+```
+
+L'ancienne version tourne encore quelques secondes sur la base migrée : une migration doit
+rester compatible avec le code précédent (ajouter une colonne maintenant, supprimer l'ancienne
+à la version suivante). En prod, on ne fait pas de `rollback` de schéma : on corrige par une
+nouvelle migration, ou on restaure la base (ci-dessous).
+
+### Sauvegarde : [Litestream](https://litestream.io)
+
+Facultatif : sans `litestream.env`, `deploy.sh` déploie quand même et prévient que la base
+n'est pas sauvegardée.
+
+Le service `litestream` réplique la base en continu (toutes les 10 s) vers
+`LITESTREAM_REPLICA_URL`, hors du VPS. Pas besoin d'AWS : tout stockage compatible S3, ou SFTP
+(`litestream.env.example`). Une base de ce jeu pèse quelques Mo, les offres gratuites suffisent :
+
+| Stockage | Compte | Gratuit |
+|---|---|---|
+| Backblaze B2 | oui, clé d'application limitée au bucket | 10 Go, envois gratuits |
+| Cloudflare R2 | oui, jeton API R2 | 10 Go, 1 M d'écritures/mois |
+| SFTP (NAS, autre serveur) | aucun, une clé SSH | — |
+
+Restauration possible à n'importe quel instant des 7 derniers jours (`litestream.yml`) : à
+~30 s près (à la seconde sur les 5 dernières minutes).
+
+En SFTP, ajoute la clé dans `litestream.yml` (sous `replica:`) et monte-la dans le service :
+
+```yaml
+      key-path: /etc/litestream/sftp_key
+      host-key: ssh-ed25519 AAAA…   # ssh-keyscan nas.example.fr, à vérifier
+```
+```yaml
+    volumes:
+      - ./sftp_key:/etc/litestream/sftp_key:ro   # chmod 600, lisible par l'uid 1000
+```
+
+`deploy.sh` note dans `deploys.log` l'heure de chaque déploiement : c'est le point de
+restauration « juste avant que cette version migre la base ».
+
+```sh
+# vérifier que la réplication suit
+docker compose logs --tail 20 litestream
+
+# restaurer (ex. après une migration ratée), puis redéployer la version précédente :
+# app ET litestream arrêtés pendant qu'on remplace le fichier
+docker compose stop app litestream
+docker compose run --rm litestream restore -timestamp 2026-11-04T16:43:25Z -o /data/restored.db /data/app.db
+docker compose run --rm --entrypoint sh litestream -c \
+  'cd /data && mv restored.db app.db && rm -f app.db-wal app.db-shm'
+./deploy.sh 1.2.0   # relance litestream (reprend depuis l'état restauré) puis l'app
+```
+
+Sans `-timestamp`, on restaure le dernier état répliqué (VPS perdu : nouveau serveur, même
+`litestream.env`, restaurer avant le premier déploiement).
