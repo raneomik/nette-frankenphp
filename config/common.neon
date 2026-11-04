@@ -24,10 +24,12 @@ session:
     savePath: %tempDir%/sessions
 
 
+# SQLite file shared by every FrankenPHP thread (":memory:" would give each thread its own empty
+# database). var/data is a volume in production: the -wal and -shm files must stay next to it.
 database:
-    dsn: 'sqlite::memory:'
-    user:
-    password:
+    dsn: 'sqlite:%dataDir%/app.db'
+    options:
+        lazy: yes  # connect on first query, once the onConnect hook (services.neon) is set
 
 
 latte:

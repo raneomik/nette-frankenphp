@@ -29,6 +29,12 @@ ENV PHP_INI_SCAN_DIR=":$PHP_INI_DIR/app.conf.d"
 COPY --link .docker/frankenphp/conf.d/10-app.ini $PHP_INI_DIR/app.conf.d/
 COPY --link .docker/frankenphp/Caddyfile /etc/frankenphp/Caddyfile
 
+# Migrations SQL (db/migrations) : https://github.com/amacneil/dbmate, binaire statique.
+# Même fichier que la DSN Nette (config/common.neon) ; _txlock=immediate et _busy_timeout
+# reprennent les réglages de SqliteConfigurator.
+COPY --link --from=ghcr.io/amacneil/dbmate:2.37.0 /usr/local/bin/dbmate /usr/local/bin/dbmate
+ENV DATABASE_URL="sqlite:/srv/var/data/app.db?_busy_timeout=5000&_txlock=immediate"
+
 HEALTHCHECK --start-period=60s CMD php -r 'exit(false === @file_get_contents("http://localhost:2019/metrics", context: stream_context_create(["http" => ["timeout" => 5]])) ? 1 : 0);'
 
 # ---------- Dev ----------
@@ -42,7 +48,7 @@ COPY --link --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 RUN <<-EOF
 	set -eux
 	apt-get update
-	apt-get install -y --no-install-recommends file git unzip
+	apt-get install -y --no-install-recommends file git sqlite3 unzip
 	rm -rf /var/lib/apt/lists/*
 	mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 	install-php-extensions xdebug
@@ -53,7 +59,9 @@ EOF
 COPY --link .docker/frankenphp/conf.d/20-app.dev.ini $PHP_INI_DIR/app.conf.d/
 
 USER app
-CMD ["frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile", "--watch"]
+# dbmate met aussi à jour db/schema.sql (schéma complet, à commiter : il montre le diff)
+CMD mkdir -p var/data && dbmate up; \
+    exec frankenphp run --config /etc/frankenphp/Caddyfile --watch
 
 
 # ---------- Assets (Tailwind + Vite) ----------
@@ -99,6 +107,7 @@ EOF
 FROM base AS prod
 
 ENV NETTE_DEBUG=0 \
+    DBMATE_NO_DUMP_SCHEMA=true \
     APP_RUNNER=frankenphp \
     FRANKENPHP_SITE_CONFIG="worker ./www/index.php"
 
@@ -109,7 +118,7 @@ COPY --link .docker/frankenphp/conf.d/20-app.prod.ini $PHP_INI_DIR/app.conf.d/
 COPY --from=prod_builder /srv /srv
 RUN <<-EOF
 	set -eux
-	mkdir -p var/log var/temp/sessions
+	mkdir -p var/log var/temp/sessions var/data
 	chown -R app:app var
 EOF
 
@@ -121,6 +130,9 @@ USER app
 HEALTHCHECK --interval=10s --timeout=5s --start-period=60s --start-interval=2s --retries=3 \
     CMD php -r 'exit(false === @file_get_contents("http://localhost/health", context: stream_context_create(["http" => ["timeout" => 4], "ssl" => ["verify_peer" => false, "verify_peer_name" => false]])) ? 1 : 0);'
 
+# Migrate befoire start : container stops on fail, is never
+# "healthy", and docker rollout keeps previous version
 CMD rm -rf var/temp/cache; \
+    dbmate up || exit 1; \
     tail -F -n0 var/log/critical.log var/log/exception.log var/log/error.log var/log/warning.log 2>/dev/null & \
     exec frankenphp run --config /etc/frankenphp/Caddyfile

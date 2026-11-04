@@ -1,5 +1,10 @@
 services:
 	- App\Core\RouterFactory::createRouter
+	- App\Core\Database\SqliteConfigurator
+
+	database.default.connection:
+		setup:
+			- '$onConnect[]' = [@App\Core\Database\SqliteConfigurator, configure]
 
 
 search:

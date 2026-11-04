@@ -39,10 +39,16 @@ final readonly class Bootstrap
     public function initializeEnvironment(): void
     {
         FileSystem::createDir($this->rootDir . '/var/temp/sessions');
+        FileSystem::createDir($this->rootDir . '/var/data');
+        FileSystem::createDir($this->rootDir . '/var/log');
 
         $this->configurator
             ->setDebugMode($this->isDebug())
             ->setTempDirectory($this->rootDir . '/var/temp')
+            ->addStaticParameters([
+                'rootDir' => $this->rootDir,
+                'dataDir' => $this->rootDir . '/var/data',
+            ])
 
             ->addDynamicParameters([
                 'hotReloadUrl' => $_SERVER['FRANKENPHP_HOT_RELOAD'] ?? null,
