@@ -17,7 +17,7 @@
   },
   "scripts": {
     "dev": "vite & npm run tailwind -- --watch",
-    "build": "vite build & npm run tailwind",
+    "build": "npm run tailwind && vite build",
     "tailwind": "npx @tailwindcss/cli -i assets/app.css -o assets/.build/tailwind.css --minify --optimize"
   },
   "allowScripts": {

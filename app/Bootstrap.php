@@ -7,6 +7,7 @@ namespace App;
 use App\Core\Runner\RunnerType;
 use Nette\Bootstrap\Configurator;
 use Nette\DI\Container;
+use Nette\Utils\FileSystem;
 
 final readonly class Bootstrap
 {
@@ -37,6 +38,8 @@ final readonly class Bootstrap
 
     public function initializeEnvironment(): void
     {
+        FileSystem::createDir($this->rootDir . '/var/temp/sessions');
+
         $this->configurator
             ->setDebugMode($this->isDebug())
             ->setTempDirectory($this->rootDir . '/var/temp')
@@ -61,6 +64,21 @@ final readonly class Bootstrap
             ->addConfig($configDir . '/services.neon')
             ->addDynamicParameters([
                 'runner' => RunnerType::from(getenv('APP_RUNNER') ?: 'nette'),
+                // même secret que celui qui vérifie les JWT côté hub (Caddyfile)
+                'mercureJwtSecret' => (string) getenv('MERCURE_PUBLISHER_JWT_KEY'),
+                // ex. "172.16.0.0/12" : réseau du reverse proxy, pour un baseUrl en https://
+                'trustedProxies' => self::listFromEnv('TRUSTED_PROXIES'),
             ]);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private static function listFromEnv(string $name): array
+    {
+        return array_values(array_filter(
+            array_map(trim(...), explode(',', (string) getenv($name))),
+            static fn (string $value): bool => '' !== $value,
+        ));
     }
 }

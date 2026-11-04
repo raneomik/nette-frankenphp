@@ -9,6 +9,10 @@ vendor
 var
 bin/hey
 
+# rebuilt inside the image (assets stage)
+assets/.build
+www/assets
+
 !libs/nette-mercure
 libs/*/.git
 libs/*/vendor

@@ -9,7 +9,7 @@ services:
             # Xdebug
             XDEBUG_SESSION: 1
             XDEBUG_CONFIG: "idekey=docker"
-            XDEBUG_MODE: "off"
+            XDEBUG_MODE: "debug"
             PHP_IDE_CONFIG: "serverName=docker"
             # Server config with hot reloading
             FRANKENPHP_SITE_CONFIG: |

@@ -25,7 +25,9 @@
     encode zstd br gzip
 
     mercure {
-        issuer https://{$SERVER_NAME:localhost} {
+        # doit égaler le claim "iss" des JWT (= https://<domaine public>), indépendamment
+        # de SERVER_NAME qui vaut ":80" derrière un reverse proxy
+        issuer {$MERCURE_ISSUER:https://localhost} {
             publisher {
                jwt {env.MERCURE_PUBLISHER_JWT_KEY}
             }
