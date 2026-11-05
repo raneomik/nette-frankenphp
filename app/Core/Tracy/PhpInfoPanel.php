@@ -36,7 +36,7 @@ final readonly class PhpInfoPanel implements Tracy\IBarPanel
 
 		$style = $dom->getElementsByTagName('style')->item(0);
 
-		if (!$style) {
+		if (! $style) {
 			$style = $dom->createElement('style');
 			$dom->appendChild($style);
 		}
@@ -55,18 +55,18 @@ final readonly class PhpInfoPanel implements Tracy\IBarPanel
 		$mainDiv = $dom->getElementsByTagName('div')->item(0);
 
 		$phphinfo = str_replace(
-			['h1'],
-			['h2'],
-			$dom->saveHTML($mainDiv) ?: 'no info',
+		    ['h1'],
+		    ['h2'],
+		    $dom->saveHTML($mainDiv) ?: 'no info',
 		);
 
 		return str_replace(
-			['%style%', '%info%'],
-			[
-				$dom->saveHTML($style) ?: '',
-				$phphinfo,
-			],
-			$html
+		    ['%style%', '%info%'],
+		    [
+		        $dom->saveHTML($style) ?: '',
+		        $phphinfo,
+		    ],
+		    $html
 		);
 	}
 
@@ -75,18 +75,18 @@ final readonly class PhpInfoPanel implements Tracy\IBarPanel
 		$css = preg_replace('~\bbody\s*\{[^}]*\}~m', '', $css) ?: $css;
 		$css = preg_replace('~@media[^{]*\{(?:[^{}]|\{[^}]*\})*\}~si', '', $css) ?: $css;
 		$css = preg_replace_callback(
-			'~(^|})\s*([^{@}][^{]*)\{~m',
-			function ($m) {
+		    '~(^|})\s*([^{@}][^{]*)\{~m',
+		    function ($m) {
 				$selectors = array_map('trim', explode(',', $m[2]));
 				$selectors = array_map(
-					fn($s) => str_starts_with($s, '.phpinfo')
+				    fn($s) => str_starts_with($s, '.phpinfo')
 						? $s
 						: '.phpinfo ' . $s,
-					$selectors
+				    $selectors
 				);
 				return $m[1] . ' ' . implode(', ', $selectors) . ' {';
 			},
-			$css
+		    $css
 		);
 
 		return $css ?: '';

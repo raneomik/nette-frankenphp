@@ -3,7 +3,7 @@
 # Debian (glibc) over Alpine (musl) :  https://frankenphp.dev/docs/performance/
 FROM dunglas/frankenphp:1-php8.5-trixie AS frankenphp_upstream
 
-# ---------- Base (commune dev / prod) ----------
+# ---------- Base (dev / prod) ----------
 FROM frankenphp_upstream AS base
 
 ARG USER_ID=1000
@@ -29,9 +29,9 @@ ENV PHP_INI_SCAN_DIR=":$PHP_INI_DIR/app.conf.d"
 COPY --link .docker/frankenphp/conf.d/10-app.ini $PHP_INI_DIR/app.conf.d/
 COPY --link .docker/frankenphp/Caddyfile /etc/frankenphp/Caddyfile
 
-# Migrations SQL (db/migrations) : https://github.com/amacneil/dbmate, binaire statique.
-# Même fichier que la DSN Nette (config/common.neon) ; _txlock=immediate et _busy_timeout
-# reprennent les réglages de SqliteConfigurator.
+# Migrations SQL (db/migrations) : https://github.com/amacneil/dbmate, binary.
+# Same file as Nette DSN (config/common.neon) ;
+# _txlock=immediate & _busy_timeout are provided by SqliteConfigurator.
 COPY --link --from=ghcr.io/amacneil/dbmate:2.37.0 /usr/local/bin/dbmate /usr/local/bin/dbmate
 ENV DATABASE_URL="sqlite:/srv/var/data/app.db?_busy_timeout=5000&_txlock=immediate"
 
@@ -59,13 +59,13 @@ EOF
 COPY --link .docker/frankenphp/conf.d/20-app.dev.ini $PHP_INI_DIR/app.conf.d/
 
 USER app
-# dbmate met aussi à jour db/schema.sql (schéma complet, à commiter : il montre le diff)
+# dbmate also updates db/schema.sql (full schema, to commit: it shows the diff)
 CMD mkdir -p var/data && dbmate up; \
     exec frankenphp run --config /etc/frankenphp/Caddyfile --watch
 
 
 # ---------- Assets (Tailwind + Vite) ----------
-# Le résultat (www/assets) est ignoré par git : il doit être construit dans l'image
+# The output (www/assets) is ignored by git: it must be built in the image
 FROM node:24-slim AS assets
 
 WORKDIR /app
@@ -73,12 +73,12 @@ WORKDIR /app
 COPY --link package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
 
-# Tailwind scanne les templates Latte pour trouver les classes utilisées
+# Tailwind scans the Latte templates to find the classes in use
 COPY --link vite.config.ts .gitignore ./
 COPY --link assets ./assets
 COPY --link app ./app
 
-# "build" lance tailwind puis vite (app.js importe assets/.build/tailwind.css)
+# "build" runs tailwind then vite (app.js imports assets/.build/tailwind.css)
 RUN npm_config_yes=true npm run build
 
 
@@ -88,8 +88,8 @@ FROM base AS prod_builder
 ENV COMPOSER_ALLOW_SUPERUSER=1
 COPY --link --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
-# deps d'abord : un changement de code ne relance pas composer install.
-# Le secret (optionnel) évite la limite de l'API GitHub pour les paquets dev-main en CI.
+# deps first: a code change does not rerun composer install.
+# The (optional) secret avoids the GitHub API rate limit for dev-main packages in CI.
 COPY --link composer.json composer.lock ./
 RUN --mount=type=secret,id=composer_auth,env=COMPOSER_AUTH \
     composer install --no-cache --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress
@@ -114,7 +114,7 @@ ENV NETTE_DEBUG=0 \
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY --link .docker/frankenphp/conf.d/20-app.prod.ini $PHP_INI_DIR/app.conf.d/
 
-# Le code appartient à root : l'utilisateur app ne peut écrire que dans var/
+# The code belongs to root: the app user can only write to var/
 COPY --from=prod_builder /srv /srv
 RUN <<-EOF
 	set -eux
@@ -124,15 +124,14 @@ EOF
 
 USER app
 
-# Sonds /health ("PHP  worker responds"), not only Caddy.
+# Probes /health ("PHP  worker responds"), not only Caddy.
 # redirects are followed and local certificate is accepted to work
 # with SERVER_NAME=localhost (compose.yml) and SERVER_NAME=:80 (behind proxy).
 HEALTHCHECK --interval=10s --timeout=5s --start-period=60s --start-interval=2s --retries=3 \
     CMD php -r 'exit(false === @file_get_contents("http://localhost/health", context: stream_context_create(["http" => ["timeout" => 4], "ssl" => ["verify_peer" => false, "verify_peer_name" => false]])) ? 1 : 0);'
 
-# Migrate befoire start : container stops on fail, is never
-# "healthy", and docker rollout keeps previous version
+# Migrate before start : container stops on fail, is never
+# "healthy", and docker rollout keeps previous version.
 CMD rm -rf var/temp/cache; \
     dbmate up || exit 1; \
-    tail -F -n0 var/log/critical.log var/log/exception.log var/log/error.log var/log/warning.log 2>/dev/null & \
     exec frankenphp run --config /etc/frankenphp/Caddyfile

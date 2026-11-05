@@ -4,16 +4,18 @@ Turbo.session.drive = false;
 
 document.addEventListener('DOMContentLoaded', async () => {
 
-    const turboContainer = document.querySelector('[data-turbo-listen]');
-    if (!turboContainer) {
-        return;
-    }
-
-    let mercureTopics = turboContainer.dataset.turboListen;
+    const turboContainers = document.querySelectorAll('[data-turbo-listen]');
 
     const subUrl = new URL('/subscribe', window.origin);
-    subUrl.searchParams.append('topics', mercureTopics);
+    turboContainers.forEach(container => {
+        // "topics[]": with a repeated "topics", PHP keeps only the last value
+        subUrl.searchParams.append('topics[]', container.dataset.turboListen);
+    });
 
+    subscribe(subUrl)
+});
+
+async function subscribe(subUrl) {
     await fetch(subUrl, {
         headers: {'X-Requested-With': 'XMLHttpRequest'},
 
@@ -22,7 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         .then(response => {
             const {jwt, subscribeUrl} = response;
 
-            const dec = s => JSON.parse(atob(s.replace(/-/g,'+').replace(/_/g,'/')));
+            const dec = s => JSON.parse(atob(s.replace(/-/g, '+').replace(/_/g, '/')));
             const [h, p] = jwt.token.split('.');
 
             console.debug("Received jwt token. ExpiresAt: ", jwt.ttl);
@@ -33,8 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         .catch(error => {
             console.error("Error fetching data from Turbo endpoint:", error);
         });
-});
-
+}
 function setupTurboClient(mercureUrl, mercureJWTToken) {
     const eventSource = new EventSourcePolyfill(mercureUrl, {
         headers: {

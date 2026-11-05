@@ -5,19 +5,24 @@ declare(strict_types=1);
 namespace App;
 
 use App\Core\Runner\RunnerType;
+use App\Core\Tracy\StderrLogger;
 use Nette\Bootstrap\Configurator;
 use Nette\DI\Container;
 use Nette\Utils\FileSystem;
+use Tracy;
 
 final readonly class Bootstrap
 {
     private string $rootDir;
+
     private bool $isDebug;
 
     public function __construct(
-        private Configurator $configurator = new Configurator,
+        private Configurator $configurator = new Configurator(),
     ) {
         $this->rootDir = dirname(__DIR__);
+
+        Tracy\Debugger::setLogger(new StderrLogger(Tracy\Debugger::getLogger()));
     }
 
     public function isDebug(): bool
@@ -46,6 +51,7 @@ final readonly class Bootstrap
             ->setDebugMode($this->isDebug())
             ->setTempDirectory($this->rootDir . '/var/temp')
             ->addStaticParameters([
+                'appDir' => __DIR__,
                 'rootDir' => $this->rootDir,
                 'dataDir' => $this->rootDir . '/var/data',
             ])
@@ -70,9 +76,9 @@ final readonly class Bootstrap
             ->addConfig($configDir . '/services.neon')
             ->addDynamicParameters([
                 'runner' => RunnerType::from(getenv('APP_RUNNER') ?: 'nette'),
-                // même secret que celui qui vérifie les JWT côté hub (Caddyfile)
+                // same secret as the one verifying JWTs on the hub side (Caddyfile)
                 'mercureJwtSecret' => (string) getenv('MERCURE_PUBLISHER_JWT_KEY'),
-                // ex. "172.16.0.0/12" : réseau du reverse proxy, pour un baseUrl en https://
+                // e.g. "172.16.0.0/12": reverse proxy network, for an https:// baseUrl
                 'trustedProxies' => self::listFromEnv('TRUSTED_PROXIES'),
             ]);
     }

@@ -12,8 +12,8 @@ use Raneomik\NetteMercure\Core\Subscribe\AuthorizationInterface;
 final class HomePresenter extends Nette\Application\UI\Presenter
 {
 	public function __construct(
-		private BroadcasterInterface $broadcaster,
-		private AuthorizationInterface $authorization,
+	    private BroadcasterInterface $broadcaster,
+	    private AuthorizationInterface $authorization,
 	) {
     }
 
@@ -30,7 +30,7 @@ final class HomePresenter extends Nette\Application\UI\Presenter
         if ('turbo' === $type) {
             $this->broadcaster->broadcast(
                 topics: ['turbo-test-topic'],
-                data: 'Hello with Turbo from Mercure!',
+                data: 'Hello from Mercure, via Turbo Streams!',
                 options: [
                     'template' => 'test.stream.latte',
                     'target' => 'toast-container',
@@ -42,8 +42,8 @@ final class HomePresenter extends Nette\Application\UI\Presenter
         }
 
         $this->broadcaster->broadcast(
-            data: 'Hello from Mercure!',
             topics: ['test-topic'],
+            data: 'Hello from Mercure!',
             template: 'test.latte',
         );
     }

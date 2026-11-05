@@ -1,0 +1,33 @@
+{layout tRoot('@layout.latte')}
+
+{block meta}
+    <meta name="user-id" content="{$user->id}">
+{/block}
+
+{block navbarContent}
+    <div class="flex-none cursor-pointer">
+        <span class="text-rotate font-bold text-lg duration-10000">
+            <span class="justify-items-center">
+                <span>👊 rock</span>
+                <span>paper ✋</span>
+                <span>✌️ scissors</span>
+                <span>lizard 🤏</span>
+                <span>🖖 Spock</span>
+            </span>
+        </span>
+    </div>
+{/block}
+
+{block turboLink}
+    <div data-turbo-listen="chat">
+        <div id="chat" class="toast toast-end">
+        </div>
+    </div>
+
+    <div data-turbo-listen="player/{$user->id}">
+    </div>
+
+    <div class="flex justify-center" data-turbo-listen="room/{$room}">
+    </div>
+{/block}
+

@@ -35,7 +35,6 @@ return ECSConfig::configure()
         spaces: true,
         namespaces: true,
         controlStructures: true,
-        strict: true,
         cleanCode: true,
     )
 

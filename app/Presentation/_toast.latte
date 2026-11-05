@@ -1,0 +1,6 @@
+<x-toast data-timeout="{$timeout ?? 3000}" role="status"
+         class="alert alert-{$type ?? 'info'} relative flex items-start overflow-hidden shadow-lg">
+    {$message}
+    <button data-dismiss class="btn btn-ghost btn-xs btn-circle text-black hover:text-amber-50" aria-label="Close">✕</button>
+    <span data-progress class="absolute inset-x-0 bottom-0 h-1 origin-left bg-current opacity-30"></span>
+</x-toast>

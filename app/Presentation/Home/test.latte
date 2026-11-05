@@ -1,5 +1,5 @@
 {contentType $contentType ?? 'text/html'}
 
 {block content}
-	<div class="alert alert-info toast-auto">{$data}</div>
+    {include tRoot('_toast.latte'), type: 'info', message: $data}
 {/block}

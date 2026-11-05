@@ -16,7 +16,6 @@ services:
                 hot_reload app/** assets/** www/** config/**
                 worker {
                     file /srv/www/index.php
-                    watch
                 }
             MERCURE_EXTRA_DIRECTIVES: |
                 anonymous

@@ -16,6 +16,8 @@ final readonly class FrankenphpRunner
     {
         ignore_user_abort(true);
 
+        Debugger::$onFatalError[] = static fn (\Throwable $e) => Debugger::$productionMode ?: Debugger::log($e, Debugger::EXCEPTION);
+
         try {
             $bootstrap = new Bootstrap();
             $handler = $bootstrap->isDebug()
@@ -36,7 +38,6 @@ final readonly class FrankenphpRunner
             $keepRunning = frankenphp_handle_request($handler);
         } while ($keepRunning && (-1 === $maxRequests || 0 < --$maxRequests));
     }
-
 
     private function productionHandler(Bootstrap $bootstrap): \Closure
     {

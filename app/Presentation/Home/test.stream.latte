@@ -3,7 +3,7 @@
 {block append}
     <turbo-stream action="append" target="{$target ?? 'stream-container'}">
         <template>
-            <div class="alert alert-info toast-auto to-close">{$data}</div>
+            {include tRoot('_toast.latte'), type: 'success', message: $data}
         </template>
     </turbo-stream>
 {/block}

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="300" height="300" viewBox="734 120.86458587646484 300 300"><defs/><g/><g/><g/><g/><g/><g/><g/><g id="svg1" role="img" mask="url(#mask-for-svg11)"><g/><g/><g/><g/><g/><g/><g/><mask id="mask-for-svg11"><rect width="300" height="300" x="734" y="120.86458587646484" fill="#ffffff"/></mask><g transform="matrix(0.833333 0 0 0.833333 884 270.865)">
+    <path d="M 99.6 -83.6 A 130 130 0 1 0 99.6 83.6" fill="none" stroke="rgb(244, 246, 248)" stroke-width="26px" stroke-linecap="round" color="rgb(17, 22, 28)"/>
+    <polygon points="121,58 117,99 82,72" fill="rgb(244, 246, 248)" color="rgb(17, 22, 28)" stroke="none"/>
+    <rect x="-52" y="-32" width="64" height="64" rx="14" fill="rgb(244, 246, 248)" transform="matrix(0.707107, 0.707107, -0.707107, 0.707107, -5.85786, 14.1421)" color="rgb(17, 22, 28)" stroke="none"/>
+    <g fill="none" stroke="rgb(244, 246, 248)" stroke-width="10px" stroke-linecap="round" stroke-dasharray="0px, 19px" color="rgb(17, 22, 28)">
+        <path d="M 30 -10 Q 90 -22 152 -50" color="rgb(17, 22, 28)" fill="none" stroke="rgb(244, 246, 248)" stroke-dasharray="0px, 19px" stroke-linecap="round" stroke-width="10px"/>
+        <path d="M 34 0 L 164 0" color="rgb(17, 22, 28)" fill="none" stroke="rgb(244, 246, 248)" stroke-dasharray="0px, 19px" stroke-linecap="round" stroke-width="10px"/>
+        <path d="M 30 10 Q 90 22 152 50" color="rgb(17, 22, 28)" fill="none" stroke="rgb(244, 246, 248)" stroke-dasharray="0px, 19px" stroke-linecap="round" stroke-width="10px"/>
+    </g>
+    <g fill="rgb(244, 246, 248)" color="rgb(17, 22, 28)" stroke="none">
+        <circle cx="156" cy="-52" r="12" color="rgb(17, 22, 28)" fill="rgb(244, 246, 248)" stroke="none"/>
+        <circle cx="168" cy="0" r="12" color="rgb(17, 22, 28)" fill="rgb(244, 246, 248)" stroke="none"/>
+        <circle cx="156" cy="52" r="12" color="rgb(17, 22, 28)" fill="rgb(244, 246, 248)" stroke="none"/>
+    </g>
+</g></g></svg>

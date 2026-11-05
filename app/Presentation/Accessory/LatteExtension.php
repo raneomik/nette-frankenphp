@@ -10,18 +10,19 @@ use Latte\Extension;
 final class LatteExtension extends Extension
 {
 	public function __construct(
-		private readonly RunnerType $runner,
-		private readonly ?string $hotReloadUrl = null,
+	    private readonly RunnerType $runner,
+	    private readonly ?string $hotReloadUrl = null,
 	) {
     }
 
 	public function getFunctions(): array
 	{
 		return [
-			'runnerName' => fn(): string => $this->runner->value,
-			'runnerIconAsset' => fn(): string => $this->runner->faviconAsset(),
-			'runnerImageAsset' => fn(): string => $this->runner->imageAsset(),
-			'hotReloadUrl' => fn(): ?string => $this->hotReloadUrl,
+		    'runnerName' => fn(): string => $this->runner->value,
+		    'runnerIconAsset' => fn(): string => $this->runner->faviconAsset(),
+		    'runnerImageAsset' => fn(): string => $this->runner->imageAsset(),
+		    'hotReloadUrl' => fn(): ?string => $this->hotReloadUrl,
+		    'tRoot' => fn(string $layout): string => dirname(__DIR__) . '/' . $layout,
 		];
 	}
 }

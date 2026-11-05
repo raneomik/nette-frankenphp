@@ -1,0 +1,50 @@
+{parameters App\Model\RockPaperScissors\Value\DuelState $state}
+
+{var $outcome = $state->outcome()}
+{var $won = $outcome instanceof App\Model\RockPaperScissors\Enum\WinType}
+
+<div class="card-body items-center gap-4">
+    <h2 class="card-title">
+        {$state->opponent ?? 'Waiting for an opponent…'}
+        <span n:if="$state->opponentPlayed" class="badge badge-success">ready</span>
+    </h2>
+
+    <div class="flex h-42 items-center justify-center gap-6 text-8xl">
+        {if $state->revealed && $state->mine}
+            <span n:class="$outcome && !$won ? opacity-30" title="You: {$state->mine->label()}">{$state->mine->emoji()}</span>
+            <span class="text-xl font-bold opacity-50">VS</span>
+            <span n:class="$won ? opacity-30" title="{$state->opponent}: {$state->revealed->label()}">{$state->revealed->emoji()}</span>
+        {elseif $state->opponent}
+            <span title="hidden hand">{$state->opponentPlayed ? '❕' : '❓'}</span>
+        {else}
+            <span class="loading loading-dots loading-lg"></span>
+        {/if}
+    </div>
+
+    <p n:class="min-h-7, text-lg, font-bold, $won ? text-success : ($outcome ? text-error)">
+        {if $state->revealed && $state->mine}
+            {if $outcome === null}
+                Draw! You both played {$state->mine->label()}.
+            {elseif $won}
+                You win! {$state->mine->label()|firstUpper} {$outcome->value} {$state->revealed->label()}.
+                <x-confetti emoji="{$state->mine->emoji()}"></x-confetti>
+            {else}
+                {* told from the winner's side: "Paper covers rock", not "Rock covered by paper" *}
+                You lose. {$state->revealed->label()|firstUpper} {$state->revealed->game($state->mine)?->value} {$state->mine->label()}.
+            {/if}
+        {/if}
+    </p>
+
+    <p n:if="!$state->opponent || $state->solo" class="text-sm opacity-60">Pick a hand to play against the computer while you wait.</p>
+
+    <div n:if="$state->opponent && !$state->solo" class="stats bg-base-200">
+        <div class="stat place-items-center px-6 py-2">
+            <div class="stat-title">You</div>
+            <div class="stat-value text-primary">{$state->myScore}</div>
+        </div>
+        <div class="stat place-items-center px-6 py-2">
+            <div class="stat-title max-w-32">{$state->opponent}</div>
+            <div class="stat-value text-secondary">{$state->theirScore}</div>
+        </div>
+    </div>
+</div>

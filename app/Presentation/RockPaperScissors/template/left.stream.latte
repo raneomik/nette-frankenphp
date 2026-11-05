@@ -1,0 +1,10 @@
+<turbo-stream action="append" target="snippet--toasts" data-sender={$sender}>
+    <template>
+        {capture $message}<b>{$player}</b> left.{/capture}
+        {include tRoot('_toast.latte'), type: 'warning', message: $message}</template>
+</turbo-stream>
+
+{* the one who stays goes back to waiting (and can play against the computer) *}
+<turbo-stream action="update" target="snippet--opponent" data-sender={$sender}>
+    <template>{include '_opponent.latte', state: $state}</template>
+</turbo-stream>

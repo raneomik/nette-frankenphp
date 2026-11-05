@@ -2,79 +2,77 @@
     <div class="hero">
         <div class="hero-content text-center">
             <div class="max-w-md cursor-pointer">
-                <div class="space-x-5">
-                    <a href="//nette.org" target="_blank">
-                        <div class="hover-3d py-6">
-                            <!-- content -->
-                            <figure class="w-32 rounded-4xl">
-                                <img n:asset="img:nette" alt="nette 3D"/>
-                            </figure>
-
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                    </a>
-                    <a href="//frankenphp.dev" target="_blank">
+                <p class="m-3">
+                    A Nette app running on FrankenPHP, with real-time updates through Mercure.
+                </p>
+                <p class="m-3">
+                    Try the demos below
+                </p>
+                <div class="space-x-10 py-10">
+                    <a href="//nette.org" target="_blank" class="tooltip tooltip-bottom" data-tip="Nette">
                         <div class="hover-3d">
                             <!-- content -->
-                            <figure class="w-32 rounded-4xl">
-                                <img n:asset="img:frankenphp" alt="frankenphp 3D"/>
+                            <figure class="w-25 rounded-4xl">
+                                <img n:asset="img:nette" alt="Nette logo"/>
                             </figure>
-
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
+                            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
                         </div>
                     </a>
-                    <a href="//mercure.rocks" target="_blank">
+                    <a href="//frankenphp.dev" target="_blank" class="tooltip tooltip-bottom" data-tip="FrankenPHP">
                         <div class="hover-3d">
                             <!-- content -->
-                            <figure class="w-32 rounded-4xl">
-                                <img n:asset="img:mercure" alt="mercure 3D"/>
+                            <figure class="w-25 rounded-4xl">
+                                <img n:asset="img:frankenphp" alt="FrankenPHP logo"/>
                             </figure>
+                            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
 
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
+                        </div>
+                    </a>
+                    <a href="//mercure.rocks" target="_blank" class="tooltip tooltip-bottom" data-tip="Mercure">
+                        <div class="hover-3d">
+                            <!-- content -->
+                            <figure class="w-25 rounded-4xl">
+                                <img n:asset="img:mercure" alt="Mercure logo"/>
+                            </figure>
+                            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
                         </div>
                     </a>
                 </div>
+
+                <p class="mt-7">
+                    Powered by the
+                    <a href="//github.com/raneomik/nette-mercure"
+                       target="_blank"
+                       class="inline-flex items-center gap-1 text-primary underline hover:no-underline"
+                    >
+                        nette-mercure
+                        {include tRoot('_icon/github.svg.latte'), class: 'size-5'}
+                    </a> extension
+                </p>
             </div>
         </div>
     </div>
 
-
-    <div class="flex justify-center text-center m-20">
+    <div class="flex justify-center text-center m-15">
         <div class="grid grid-cols-1 gap-4 max-w-100">
+            <a n:href="Home:default" target="_blank" class="btn btn-ghost">
+                Open a second tab to watch live updates 🔗
+            </a>
 
-            <a n:href="dispatch!" class="btn ajax">
-                👉 click me for mercure toast 👈
+            <a n:href="dispatch!" class="btn btn-ghost ajax">
+                Send a toast to every tab
             </a>
-            <a n:href="dispatch! 'turbo'" class="btn ajax">
-                👉 click me for turbo toast 👈
+            <a n:href="dispatch! 'turbo'" class="btn btn-ghost ajax">
+                Send a toast with Turbo Streams
             </a>
-            <a n:href="Home:default" target="_blank" class="btn">
-                new tab to see interaction 🔗
+            <a n:href="RockPaperScissors:Base:default" class="btn btn-ghost">
+                👊 Play Rock Paper Scissors 🖖
             </a>
         </div>
     </div>
+{/block}
 
+{block turboLink}
     <div
         data-mercure-url="{mercure('test-topic')}"
         data-mercure="test-topic"

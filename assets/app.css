@@ -1,16 +1,32 @@
 @import "tailwindcss";
+@source inline("alert-{info,success,warning,error}");
 @plugin "daisyui" {
     include:
         hover3d,
+        card,
+        stat,
+        badge,
+        list,
+        list-row,
+        loading,
         button,
         input,
         select,
         checkbox,
         toggle,
+        tooltip,
+        collapse,
+        swap,
+        carousel,
+        navbar,
+        footer,
         hero,
-        tab,
         alert,
+        color,
         toast,
+        divider,
+        textrotate,
+        link,
     ;
     themes: light --default, night --prefersdark;
 }
@@ -20,9 +36,9 @@
 }
 
 .toast-auto {
-    animation: toast-out 0.5s ease-in 4s forwards;  /* visible 4 s, puis fondu 0,5 s */
+    animation: toast-out 0.5s ease-in 4s forwards;  /* visible for 4 s, then 0.5 s fade */
 }
-.toast-auto:hover { animation-play-state: paused; }  /* le survol suspend le compte à rebours */
+.toast-auto:hover { animation-play-state: paused; }  /* hovering pauses the countdown */
 
 @media (prefers-reduced-motion: reduce) {
     .toast-auto { animation-name: none; animation-delay: 0s; display: none; }

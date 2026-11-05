@@ -8,9 +8,12 @@ use Nette\Application\Routers\RouteList;
 
 final class RouterFactory
 {
-	public static function createRouter(): RouteList
-	{
-		return (new RouteList)
-			->addRoute('<presenter>/<action>[/<id>]', 'Home:default');
+	public static function createRouter(): \Nette\Routing\RouteList
+    {
+		return (new RouteList())
+		    ->withModule('RockPaperScissors')
+		    ->addRoute('rock-paper-scissors[/<room>]/<action>', 'Base:default')
+		    ->end()
+		    ->addRoute('<presenter>/<action>[/<id>]', 'Home:default');
 	}
 }

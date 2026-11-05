@@ -134,6 +134,30 @@ restart() {
 	esac
 }
 
+#!/bin/bash
+set -eE
+
+clean_docker() {
+    local volumes err
+
+    log "Removing unused volumes..." $BLUE
+    volumes=$(docker volume ls -f dangling=true -q)
+    if [[ -z $volumes ]]; then
+        log "No unused volumes" $GRAY
+    elif err=$(docker volume rm $volumes 2>&1 >/dev/null); then
+        log "Done" $GREEN
+    else
+        log "An error occurred: $err" $YELLOW
+    fi
+
+    log "Removing stopped containers, dangling images, unused networks and clearing cache..." $BLUE
+    if err=$(docker system prune -af 2>&1 >/dev/null); then
+        log "Done" $GREEN
+    else
+        log "An error occurred: $err" $YELLOW
+    fi
+}
+
 usage() {
   log "Usage: $0 [--franken|f | --php] [--prod|p] [--port|o] [--back|d] [--build|b] [stop]" ${GREEN}
   log "" ${GREEN}
@@ -148,6 +172,7 @@ usage() {
   log "  --back|-d          Run server in background (detached mode)" ${GREEN}
   log "  --clear-logs       Clear log files" ${GREEN}
   log "  --clear-cache      Clear cache files" ${GREEN}
+  log "  --clean-docker     Cleanup dangling docker containers, volumes, images and networks" ${GREEN}
   log "  --verbose|-v       Verbose mode: show executed commands" ${GREEN}
   log "  (env PORT=<port> and PROD=1 work too, e.g. from make)" ${GREEN}
   log "  stop               Stop server" ${GREEN}
@@ -187,6 +212,9 @@ while [ $# -gt 0 ]; do
     --clear-cache)
       ACTION="clear-cache"
       ;;
+    --clean-docker)
+      ACTION="clean-docker"
+      ;;
     run)
       ACTION="run"
 	  ;;
@@ -224,6 +252,9 @@ case "$ACTION" in
   clear-cache)
     log "▶ Clearing cache files"
     rm -rf var/temp/*
+    ;;
+  clean-docker)
+    clean_docker
     ;;
 esac
 

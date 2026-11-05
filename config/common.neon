@@ -7,7 +7,9 @@ application:
     errorPresenter:
         4xx: Error:Error4xx
         5xx: Error:Error5xx
-    mapping: App\Presentation\*\**Presenter
+    mapping:
+        *: App\Presentation\*\**Presenter
+        RockPaperScissors: App\Presentation\RockPaperScissors\*Presenter
 
 
 di:
@@ -22,15 +24,23 @@ http:
 
 session:
     savePath: %tempDir%/sessions
+    expiration: 30 days
 
 
 # SQLite file shared by every FrankenPHP thread (":memory:" would give each thread its own empty
 # database). var/data is a volume in production: the -wal and -shm files must stay next to it.
 database:
     dsn: 'sqlite:%dataDir%/app.db'
+    user:
+    password:
     options:
         lazy: yes  # connect on first query, once the onConnect hook (services.neon) is set
 
+
+security:
+    authentication:
+        storage: session
+        expiration: 30 days
 
 latte:
     strictTypes: yes
@@ -59,7 +69,6 @@ assets:
         default:
             path: assets
             type: vite  # Uncomment to activate Vite for asset building
-
         favicon:
             path: assets/favicon
             extension: ico

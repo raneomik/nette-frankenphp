@@ -1,0 +1,6 @@
+{* chat.stream.latte *}
+<turbo-stream action="append" target="chat" data-sender={$sender}>
+    <template>
+        <div class="chat-msg"><b>{$author}</b> {$text}</div>
+    </template>
+</turbo-stream>

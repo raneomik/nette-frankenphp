@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dbeb96e420dd867055a385eeb79ab48d",
+    "content-hash": "1cf757c6401278744a60fcc6a0fd2afe",
     "packages": [
         {
             "name": "brick/math",
@@ -65,6 +65,69 @@
                 }
             ],
             "time": "2026-09-12T10:28:18+00:00"
+        },
+        {
+            "name": "fakerphp/faker",
+            "version": "v1.24.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FakerPHP/Faker.git",
+                "reference": "e0ee18eb1e6dc3cda3ce9fd97e5a0689a88a64b5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/e0ee18eb1e6dc3cda3ce9fd97e5a0689a88a64b5",
+                "reference": "e0ee18eb1e6dc3cda3ce9fd97e5a0689a88a64b5",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4 || ^8.0",
+                "psr/container": "^1.0 || ^2.0",
+                "symfony/deprecation-contracts": "^2.2 || ^3.0"
+            },
+            "conflict": {
+                "fzaninotto/faker": "*"
+            },
+            "require-dev": {
+                "bamarni/composer-bin-plugin": "^1.4.1",
+                "doctrine/persistence": "^1.3 || ^2.0",
+                "ext-intl": "*",
+                "phpunit/phpunit": "^9.5.26",
+                "symfony/phpunit-bridge": "^5.4.16"
+            },
+            "suggest": {
+                "doctrine/orm": "Required to use Faker\\ORM\\Doctrine",
+                "ext-curl": "Required by Faker\\Provider\\Image to download images.",
+                "ext-dom": "Required by Faker\\Provider\\HtmlLorem for generating random HTML.",
+                "ext-iconv": "Required by Faker\\Provider\\ru_RU\\Text::realText() for generating real Russian text.",
+                "ext-mbstring": "Required for multibyte Unicode string functionality."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Faker\\": "src/Faker/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "François Zaninotto"
+                }
+            ],
+            "description": "Faker is a PHP library that generates fake data for you.",
+            "keywords": [
+                "data",
+                "faker",
+                "fixtures"
+            ],
+            "support": {
+                "issues": "https://github.com/FakerPHP/Faker/issues",
+                "source": "https://github.com/FakerPHP/Faker/tree/v1.24.1"
+            },
+            "time": "2024-11-21T13:46:39+00:00"
         },
         {
             "name": "latte/latte",
@@ -226,6 +289,72 @@
                 }
             ],
             "time": "2026-10-10T09:42:14+00:00"
+        },
+        {
+            "name": "navisborealis/wonderwords-php",
+            "version": "v1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/navisborealis/wonderwords-php.git",
+                "reference": "a0f024fda920ff77d053d4deafd04d5757451a3a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/navisborealis/wonderwords-php/zipball/a0f024fda920ff77d053d4deafd04d5757451a3a",
+                "reference": "a0f024fda920ff77d053d4deafd04d5757451a3a",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "fakerphp/faker": "2.0.x-dev",
+                "friendsofphp/php-cs-fixer": "^3.1",
+                "php-coveralls/php-coveralls": "dev-master",
+                "phpstan/phpstan": "^1.4",
+                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "NavisBorealis\\WonderwordsPhp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Piotr Grabski-Gradziński",
+                    "email": "piotr.gradzinski@navisborealis.io"
+                }
+            ],
+            "description": "Generate random words, phrases, and grammatically correct sentences in PHP. Perfect for seeding databases with realistic test data.",
+            "homepage": "https://github.com/navisborealis/wonderwords-php",
+            "keywords": [
+                "adjective",
+                "adverbs",
+                "animals",
+                "colors",
+                "fake-data",
+                "generator",
+                "names",
+                "noun",
+                "phrase",
+                "profanity",
+                "profanity-filter",
+                "seeder",
+                "sentence",
+                "tech-terms",
+                "testing",
+                "word"
+            ],
+            "support": {
+                "issues": "https://github.com/navisborealis/wonderwords-php/issues",
+                "source": "https://github.com/navisborealis/wonderwords-php/tree/v1.4.0"
+            },
+            "time": "2026-08-08T09:38:34+00:00"
         },
         {
             "name": "nette/application",
@@ -3111,7 +3240,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">= 8.3"
+        "php": "8.4 - 8.5"
     },
     "platform-dev": {},
     "plugin-api-version": "2.9.0"

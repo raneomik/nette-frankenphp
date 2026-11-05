@@ -1,0 +1,20 @@
+{parameters App\Model\RockPaperScissors\Enum\Hand $hand, array $rulesTable}
+
+<template data-tip>
+    <div class="text-center p-3">
+    <p class="font-bold mb-3">{$hand->label()|firstUpper}</p>
+    {foreach $rulesTable as $rule}
+        <div n:if="$rule->player === $hand" class="grid grid-cols-3 items-center justify-center-safe">
+            {var $textColor = $rule->isAWin() ? 'text-success': 'text-error'}
+            <span class="text-end {$textColor}">{$rule->game->value}</span>
+            <span class="text-3xl">{$rule->opponent->emoji()}</span>
+            <span class="text-start">{$rule->opponent->label()}</span>
+        </div>
+    {/foreach}
+    </div>
+</template>
+<div class="hover-3d">
+    <figure class="text-9xl rounded-4xl h-42">{$hand->emoji()}</figure>
+    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+</div>
+

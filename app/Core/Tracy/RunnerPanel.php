@@ -25,7 +25,7 @@ final readonly class RunnerPanel implements Tracy\IBarPanel
 
     public function getPanel(): string
     {
-        /** @var ImageAsset */
+        /** @var ImageAsset $image */
         $image = $this->assets->tryGetAsset($this->runner->imageAsset());
 
         $additionalInfo = '';
@@ -42,11 +42,11 @@ final readonly class RunnerPanel implements Tracy\IBarPanel
             <div class="tracy-inner runner">
                 <div class="tracy-inner-container">
                     <div style="margin-top: 1rem;">
-                        <p>Current runner type is <strong>$runner</strong>.</p>
+                        <p>Current runner type is <strong>{$runner}</strong>.</p>
                         <div style="margin-top: 1rem; max-width: 222px; max-height: 222px;">
                         {$image->getImportElement()}
                         </div>
-                        $additionalInfo
+                        {$additionalInfo}
                 </div>
             </div>
         HTML;

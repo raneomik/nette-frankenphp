@@ -1,34 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width">
-	<link rel="icon" n:asset?="runnerIconAsset()" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    {* before any paint, so a full reload does not flash the default theme (x-theme-switch keeps it in sync) *}
+    <script>try { if (localStorage.theme === 'light') document.documentElement.dataset.theme = 'light'; } catch {}</script>
+{*    <link rel="icon" n:asset?="runnerIconAsset()" type="image/x-icon">*}
+    <link rel="icon" n:asset?="favicon:app" type="image/x-icon">
 
-	<title>{ifset title}{include title|stripHtml} | {/ifset}Nette Web</title>
+    <title>{ifset title}{include title|stripHtml} | {/ifset}frankenette</title>
 
-	{asset? app.js}
+    {asset? app.js}
+
+    {block meta}{/block}
+
 </head>
 
 <body>
-<div class="toast toast-end" data-naja-snippet-append>
-    <div n:foreach="$flashes as $flash" n:class="alert, alert-$flash->type">
-        {$flash->message}
-    </div>
-</div>
-
-<main class="p-5">
-    <div class="flex justify-end">
-        <label class="toggle text-base-content">
-            <input type="checkbox" value="light" class="theme-controller" />
-            <svg aria-label="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></g></svg>
-            <svg aria-label="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></g></svg>
-        </label>
+    <div n:snippet="toasts"
+        data-naja-snippet-append
+        class="toast toast-end toast-bottom z-50"
+        aria-live="polite"
+    >
+        {foreach $flashes as $flash}
+            {include '_toast.latte', type: $flash->type, message: $flash->message}
+        {/foreach}
     </div>
 
-	{include content}
+    <main class="p-5 min-h-[90vh]">
+        {block navbar}
+            <div class="navbar justify-between">
+                <div class="flex-none">
+                    <a n:href=":Home:" class="inline-flex items-center gap-3 text-xl">
+                        {include tRoot('_icon/app.svg.latte'), class: 'size-12'}
+                        frankenette
+                    </a>
+                </div>
+                {block navbarContent}{/block}
+                <div class="flex-none">
+                    <x-theme-switch>
+                        <label class="swap swap-rotate text-base-content">
+                            <input type="checkbox" value="light" class="theme-controller" aria-label="Light theme"/>
+                            {include tRoot('_icon/moon.svg.latte'), class: 'swap-on h-10 w-10 fill-current'}
+                            {include tRoot('_icon/sun.svg.latte'), class: 'swap-off h-10 w-10 fill-current'}
+                        </label>
+                    </x-theme-switch>
+                </div>
+            </div>
+        {/block}
 
-</main>
+        {include content}
+        {include turboLink}
+
+    </main>
 
 {*    <script type="module">*}
 {*        const eventSource = new EventSource({mercure('test-topic', options: [addJwt => true])});*}
@@ -40,6 +64,17 @@
 {*            }*}
 {*        }*}
 {*    </script>*}
-
+    <footer class="footer footer-horizontal bg-neutral text-neutral-content items-center p-4 min-h-[10vh]">
+        {block footer}
+            <nav class="grid-flow-col gap-4 place-self-center justify-self-center">
+                <p>© {date('Y')} by raneomik</p>
+            </nav>
+            <nav class="grid-flow-col gap-4 place-self-center justify-self-end">
+                <a href="https://github.com/raneomik/nette-frankenphp" target="_blank" aria-label="Source on GitHub">
+                    {include tRoot('_icon/github.svg.latte')}
+                </a>
+            </nav>
+        {/block}
+    </footer>
 </body>
 </html>

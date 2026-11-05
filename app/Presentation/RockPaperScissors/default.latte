@@ -1,0 +1,60 @@
+{block title}Lobby{/block}
+
+{block content}
+<div class="flex w-full flex-col">
+    <p class="mx-auto mb-4 max-w-md text-center opacity-80">
+        Rock, paper, scissors… plus lizard and Spock, the Big Bang Theory variant.
+        Browse the hands to see what beats what.
+    </p>
+    <x-carousel class="mx-auto block w-72">
+        <div class="relative">
+            <div class="tooltip tooltip-bottom block">
+                <div class="carousel carousel-center w-full justify-center-safe gap-3 px-10 py-2" tabindex="0">
+                    {foreach $availableHands as $hand}
+                        <div
+                            class="carousel-item card w-full">
+                            <div class="card-body items-center p-4">
+                                {include 'template/_hand.latte', hand: $hand, rulesTable: $rulesTable}
+                            </div>
+                        </div>
+
+                    {/foreach}
+                </div>
+                <span class="md:hidden text-5xl float-end cursor-pointer" role="img" aria-label="Rules">🛈︎</span>
+                <div class="tooltip-content text-left" data-tip-slot></div>
+            </div>
+            <button type="button" data-prev aria-label="Previous"
+                    class="btn btn-circle md:btn-sm btn-xl absolute left-0 top-1/2 -translate-y-1/2 disabled:invisible">❮
+            </button>
+            <button type="button" data-next aria-label="Next"
+                    class="btn btn-circle md:btn-sm btn-xl absolute right-0 top-1/2 -translate-y-1/2 disabled:invisible">❯
+            </button>
+        </div>
+    </x-carousel>
+
+    <div class="divider"></div>
+
+    <div class="mx-auto block">
+        <a n:href="Base:game $newRoom" class="btn btn-ghost max-w-lg m-5 text-lg">
+            Start a new game
+        </a>
+    </div>
+
+    <div class="mx-auto block">
+        <details n:if="$rooms" class="collapse collapse-arrow border-base-300 border max-w-2xl">
+            <summary class="collapse-title font-semibold">
+                Join a waiting player
+            </summary>
+            <div class="collapse-content flex justify-center">
+                <ul n:inner-foreach="$rooms as $waitingRoom" class="list">
+                    <li class="list-row p-0">
+                        <a n:href="Base:game $waitingRoom->id" class="btn btn-link">
+                            Play against {$waitingRoom->lonelyPlayer}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</div>
+{/block}
