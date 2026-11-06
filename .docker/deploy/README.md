@@ -21,6 +21,9 @@ Rollback rapide : `ssh deploy@vps /srv/rpsls/deploy.sh 1.2.0` (images gardées 7
 
 ### VPS
 
+Avant tout : le sous-domaine pointe vers le VPS (DNS), et le réseau de caddy-docker-proxy
+s'appelle bien `caddy` (`docker network ls`) ; sinon, adapte `networks:` dans `compose.yaml`.
+
 ```sh
 # utilisateur dédié (être dans le groupe docker revient à être root : clé SSH dédiée)
 sudo adduser --disabled-password deploy && sudo usermod -aG docker deploy
@@ -34,9 +37,13 @@ chmod +x ~/.docker/cli-plugins/docker-rollout
 # accès à l'image si le package GHCR est privé (PAT classique, scope read:packages)
 docker login ghcr.io -u raneomik
 
-# /srv/rpsls : compose.yaml, deploy.sh (chmod +x), app.env (depuis app.env.example, chmod 600)
+# /srv/rpsls : compose.yaml, deploy.sh (chmod +x), litestream.yml,
+# app.env (depuis app.env.example, chmod 600 : clés Mercure neuves, TRUSTED_PROXIES)
 # et .env, lu par compose pour ${HOST} (deploy.sh y ajoute TAG=… sans toucher au reste) :
 echo 'HOST=rpsls.example.fr' > /srv/rpsls/.env
+
+# sous-réseau du réseau caddy, pour TRUSTED_PROXIES dans app.env :
+docker network inspect caddy -f '{{range .IPAM.Config}}{{.Subnet}}{{end}}'
 ```
 
 Remplace aussi `rpsls.example.fr` dans l'URL de l'environnement du workflow.
@@ -59,6 +66,25 @@ les tags de version accèdent aux secrets SSH.
 
 Settings → Rules → New tag ruleset, cible `v*`, restrict creations/updates/deletions (en te
 mettant en bypass) : personne d'autre ne peut créer un tag qui déploie, ni déplacer un tag existant.
+
+## Premier déploiement
+
+```sh
+# 1. en local : l'image prod se construit (images de base, assets, dépendances)
+docker build --target prod -f .docker/frankenphp/Dockerfile .
+
+# 2. un tag : le workflow construit, pousse sur GHCR et lance deploy.sh
+git tag v0.1.0 && git push origin v0.1.0
+```
+
+3. Vérifier, sur le VPS (`cd /srv/rpsls`) puis dans un navigateur :
+   - `docker compose ps` : `app` est `healthy` ;
+   - `https://<domaine>/health` répond `ok` ;
+   - une partie avec deux navigateurs (dont un en navigation privée) ;
+   - `docker compose logs app` : pas d'erreur ; avec Litestream, `docker compose logs litestream`.
+
+Sans `TRUSTED_PROXIES` correct, la page d'accueil répond 500 (le cookie Mercure `__Secure-`
+exige que Nette voie le HTTPS).
 
 ## Ce que l'image prod suppose
 
