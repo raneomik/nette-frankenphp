@@ -11,6 +11,7 @@ use App\Model\RockPaperScissors\Value\GameRecord;
 use App\Model\Service\Messenger;
 use App\Model\Service\Randomiser;
 use App\Presentation\RockPaperScissors\TemplateData\GameTemplate;
+use JetBrains\PhpStorm\NoReturn;
 use Nette;
 use Nette\DI\Attributes\Inject;
 use Nette\Security\SimpleIdentity;
@@ -42,7 +43,10 @@ final class BasePresenter extends Nette\Application\UI\Presenter
                 ],
             ));
         }
-        $this->game->cleanRooms();
+
+        if (0 < $this->game->cleanRooms()) { // abandoned rooms (beacon lost) leave the lobby list too
+            $this->refreshWaitingRoomList();
+        }
 
         $this->me = $this->getUser();
     }
@@ -54,6 +58,7 @@ final class BasePresenter extends Nette\Application\UI\Presenter
     public function actionDefault(string $room = 'lobby'): void
     {
         $this->template->rooms = $this->game->waitingRooms();
+        $this->template->gameLink = $this->gameLink(...);
         $this->room = $room;
         $this->template->newRoom = $this->randomiser->id();
     }
@@ -79,6 +84,8 @@ final class BasePresenter extends Nette\Application\UI\Presenter
             'availableHands' => Hand::cases(),
             'state' => $this->game->duelState($room, $opponent->userId ?? ''), // as seen by the opponent
         ]);
+
+        $this->refreshWaitingRoomList();
     }
 
     public function renderDefault(): void
@@ -103,6 +110,7 @@ final class BasePresenter extends Nette\Application\UI\Presenter
     /**
      * called by sendBeacon when the page closes: leave the room and the opponent goes back to waiting
      */
+    #[NoReturn]
     public function handleLeave(string $room, string $page): void
     {
         $myId = (string) $this->me->id;
@@ -112,6 +120,9 @@ final class BasePresenter extends Nette\Application\UI\Presenter
             'player' => $this->me->identity->username,
             'state' => $this->game->duelState($room, $other->userId), // as seen by the one who stays
         ]);
+
+        $this->refreshWaitingRoomList();
+
         $this->terminate();
     }
 
@@ -157,6 +168,20 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         $this->flashMessage('Your move is in.', 'success');
         $this->redrawControl('toasts');
         $this->redrawControl('opponent');
+
         $this->isAjax() || $this->redirect('this'); // without JS: Post/Redirect/Get, the signal URL does not stay in the address bar
+    }
+
+    private function refreshWaitingRoomList(): void
+    {
+        $this->messenger->toAll('lobby', __DIR__ . '/template/waitingRooms.stream.latte', [
+            'rooms' => $this->game->waitingRooms(),
+            'gameLink' => $this->gameLink(...),
+        ]);
+    }
+
+    private function gameLink(string $room): string
+    {
+        return $this->link('game', $room);
     }
 }

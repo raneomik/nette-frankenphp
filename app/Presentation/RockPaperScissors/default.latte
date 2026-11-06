@@ -40,21 +40,9 @@
         </a>
     </div>
 
-    <div class="mx-auto block">
-        <details n:if="$rooms" class="collapse collapse-arrow border-base-300 border max-w-2xl">
-            <summary class="collapse-title font-semibold">
-                Join a waiting player
-            </summary>
-            <div class="collapse-content flex justify-center">
-                <ul n:inner-foreach="$rooms as $waitingRoom" class="list">
-                    <li class="list-row p-0">
-                        <a n:href="Base:game $waitingRoom->id" class="btn btn-link">
-                            Play against {$waitingRoom->lonelyPlayer}
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </details>
+    {* always rendered, even empty: target of the live updates (waitingRooms.stream.latte) *}
+    <div id="waiting-room-list" class="mx-auto block">
+        {include 'template/_waitingRooms.latte', rooms: $rooms, gameLink: $gameLink}
     </div>
 </div>
 {/block}

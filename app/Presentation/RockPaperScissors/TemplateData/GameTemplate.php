@@ -21,6 +21,9 @@ final class GameTemplate extends Nette\Bridges\ApplicationLatte\Template
 
     public iterable $rooms = [];
 
+    /** @var \Closure(string): string  URL of a room's game page, also usable in Mercure streams */
+    public \Closure $gameLink;
+
     public string $room = 'lobby';
 
     public string $newRoom = '';
