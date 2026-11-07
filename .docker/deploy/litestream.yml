@@ -1,0 +1,17 @@
+# /srv/rpsls/litestream.yml — on the VPS, read by the litestream service (compose.yaml)
+# Continuously replicates var/data/app.db ("data" volume, mounted on /data); the ${VAR} come
+# from litestream.env. https://litestream.io
+dbs:
+  - path: /data/app.db
+    replica:
+      url: ${LITESTREAM_REPLICA_URL}
+      # changes sent every 10 s (default: 1 s): at worst 10 s of writes
+      # lost if the VPS disappears, ~10x fewer requests to the storage (free quotas)
+      sync-interval: 10s
+
+# Restore window: one full snapshot per day, kept 7 days (default: 24 h).
+# Precision: to the second over the last 5 minutes, ~30 s beyond (compacted files,
+# kept as long as the oldest snapshot).
+snapshot:
+  interval: 24h
+  retention: 168h
