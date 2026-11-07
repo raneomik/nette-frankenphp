@@ -358,27 +358,27 @@
         },
         {
             "name": "nette/application",
-            "version": "v3.3.0",
+            "version": "v3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/application.git",
-                "reference": "104484c317fdb1b29baf77617ca040b97685e9bb"
+                "reference": "9be740fd3f87df584271630436606cb53a9d4bb2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/application/zipball/104484c317fdb1b29baf77617ca040b97685e9bb",
-                "reference": "104484c317fdb1b29baf77617ca040b97685e9bb",
+                "url": "https://api.github.com/repos/nette/application/zipball/9be740fd3f87df584271630436606cb53a9d4bb2",
+                "reference": "9be740fd3f87df584271630436606cb53a9d4bb2",
                 "shasum": ""
             },
             "require": {
                 "nette/component-model": "^3.2 || ^4.0",
                 "nette/http": "^3.4",
-                "nette/routing": "^3.1.1",
+                "nette/routing": "^3.1.5",
                 "nette/utils": "^4.1",
-                "php": "8.3 - 8.5"
+                "php": "8.3 - 8.6"
             },
             "conflict": {
-                "latte/latte": "<3.1.4 || >=3.2",
+                "latte/latte": "<3.1.5 || >=3.2",
                 "nette/caching": "<3.2",
                 "nette/di": "<3.2",
                 "nette/forms": "<3.2",
@@ -428,31 +428,24 @@
                 {
                     "name": "David Grudl",
                     "homepage": "https://davidgrudl.com"
-                },
-                {
-                    "name": "Nette Community",
-                    "homepage": "https://nette.org/contributors"
                 }
             ],
-            "description": "🏆 Nette Application: a full-stack component-based MVC kernel for PHP that helps you write powerful and modern web applications. Write less, have cleaner code and your work will bring you joy.",
-            "homepage": "https://nette.org",
+            "description": "🏆 Nette Application: the heart of Nette, a component-based MVC framework. Presenters, components that keep their own state, AJAX snippets, and security built in.",
+            "homepage": "https://doc.nette.org/application",
             "keywords": [
-                "Forms",
-                "component-based",
-                "control",
-                "framework",
+                "ajax",
+                "components",
                 "mvc",
                 "mvp",
                 "nette",
                 "presenter",
-                "routing",
-                "seo"
+                "web framework"
             ],
             "support": {
                 "issues": "https://github.com/nette/application/issues",
-                "source": "https://github.com/nette/application/tree/v3.3.0"
+                "source": "https://github.com/nette/application/tree/v3.3.1"
             },
-            "time": "2026-06-29T19:05:48+00:00"
+            "time": "2026-11-05T23:18:56+00:00"
         },
         {
             "name": "nette/assets",
@@ -1077,16 +1070,16 @@
         },
         {
             "name": "nette/mail",
-            "version": "v4.2.2",
+            "version": "v4.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/mail.git",
-                "reference": "849c1f53a545ab694410b7ab32afc52eff6ad8df"
+                "reference": "ad6b20edcc1d79932456c92c7c4bc213570a7674"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/mail/zipball/849c1f53a545ab694410b7ab32afc52eff6ad8df",
-                "reference": "849c1f53a545ab694410b7ab32afc52eff6ad8df",
+                "url": "https://api.github.com/repos/nette/mail/zipball/ad6b20edcc1d79932456c92c7c4bc213570a7674",
+                "reference": "ad6b20edcc1d79932456c92c7c4bc213570a7674",
                 "shasum": ""
             },
             "require": {
@@ -1150,22 +1143,22 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/mail/issues",
-                "source": "https://github.com/nette/mail/tree/v4.2.2"
+                "source": "https://github.com/nette/mail/tree/v4.2.3"
             },
-            "time": "2026-10-27T09:46:02+00:00"
+            "time": "2026-11-06T01:09:26+00:00"
         },
         {
             "name": "nette/neon",
-            "version": "v4.0.0",
+            "version": "v4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/neon.git",
-                "reference": "187c00a5c45d786a00ba08b3297f2ebb43d53c96"
+                "reference": "8fd6289466739c13f4b196936fa185bd933e1ddb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/neon/zipball/187c00a5c45d786a00ba08b3297f2ebb43d53c96",
-                "reference": "187c00a5c45d786a00ba08b3297f2ebb43d53c96",
+                "url": "https://api.github.com/repos/nette/neon/zipball/8fd6289466739c13f4b196936fa185bd933e1ddb",
+                "reference": "8fd6289466739c13f4b196936fa185bd933e1ddb",
                 "shasum": ""
             },
             "require": {
@@ -1222,9 +1215,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/neon/issues",
-                "source": "https://github.com/nette/neon/tree/v4.0.0"
+                "source": "https://github.com/nette/neon/tree/v4.0.1"
             },
-            "time": "2026-10-26T00:16:48+00:00"
+            "time": "2026-11-06T01:23:16+00:00"
         },
         {
             "name": "nette/php-generator",
@@ -1882,12 +1875,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/raneomik/nette-mercure.git",
-                "reference": "2ee10eb5902150b2e49e29d4176e85af1f45b8c8"
+                "reference": "490de7e805cbbee26da2d7daab762f953a9d7c96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/raneomik/nette-mercure/zipball/2ee10eb5902150b2e49e29d4176e85af1f45b8c8",
-                "reference": "2ee10eb5902150b2e49e29d4176e85af1f45b8c8",
+                "url": "https://api.github.com/repos/raneomik/nette-mercure/zipball/490de7e805cbbee26da2d7daab762f953a9d7c96",
+                "reference": "490de7e805cbbee26da2d7daab762f953a9d7c96",
                 "shasum": ""
             },
             "require": {
@@ -1910,7 +1903,7 @@
                 "phpstan/extension-installer": "^1.4",
                 "phpstan/phpdoc-parser": "^2.3",
                 "phpstan/phpstan-nette": "^2.0",
-                "raneomik/infection-tester-adapter": "^0.3.1",
+                "raneomik/infection-tester-adapter": "^0.3.3",
                 "rector/rector": "^2.7",
                 "symplify/easy-coding-standard": "^13.3",
                 "tomasvotruba/type-coverage": "^2.2.0|^2.3",
@@ -1959,7 +1952,7 @@
                 "issues": "https://github.com/raneomik/nette-mercure/issues",
                 "source": "https://github.com/raneomik/nette-mercure/tree/main"
             },
-            "time": "2026-10-31T00:48:31+00:00"
+            "time": "2026-11-07T05:18:01+00:00"
         },
         {
             "name": "spomky-labs/pki-framework",
@@ -2828,16 +2821,16 @@
         },
         {
             "name": "web-token/jwt-library",
-            "version": "4.2.4",
+            "version": "4.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-library.git",
-                "reference": "21631c1db4f534aaf571716c41a2c67278cdbd49"
+                "reference": "2ff6e4bac74e8921e07bd1336ebae82a1c5478c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-token/jwt-library/zipball/21631c1db4f534aaf571716c41a2c67278cdbd49",
-                "reference": "21631c1db4f534aaf571716c41a2c67278cdbd49",
+                "url": "https://api.github.com/repos/web-token/jwt-library/zipball/2ff6e4bac74e8921e07bd1336ebae82a1c5478c6",
+                "reference": "2ff6e4bac74e8921e07bd1336ebae82a1c5478c6",
                 "shasum": ""
             },
             "require": {
@@ -2901,7 +2894,7 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/web-token/jwt-library/tree/4.2.4"
+                "source": "https://github.com/web-token/jwt-library/tree/4.2.5"
             },
             "funding": [
                 {
@@ -2913,7 +2906,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-10-30T22:08:19+00:00"
+            "time": "2026-11-05T19:58:51+00:00"
         }
     ],
     "packages-dev": [
@@ -3185,16 +3178,16 @@
         },
         {
             "name": "symplify/easy-coding-standard",
-            "version": "13.3.13",
+            "version": "13.3.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ecsphp/ecs.git",
-                "reference": "ceb2ac9fd79dc30841dbecb4e259f88ceb9d5600"
+                "reference": "c6a379b5d5cce68c60d2dbd1211989bdf58eacaf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ecsphp/ecs/zipball/ceb2ac9fd79dc30841dbecb4e259f88ceb9d5600",
-                "reference": "ceb2ac9fd79dc30841dbecb4e259f88ceb9d5600",
+                "url": "https://api.github.com/repos/ecsphp/ecs/zipball/c6a379b5d5cce68c60d2dbd1211989bdf58eacaf",
+                "reference": "c6a379b5d5cce68c60d2dbd1211989bdf58eacaf",
                 "shasum": ""
             },
             "require": {
@@ -3227,9 +3220,9 @@
             ],
             "support": {
                 "issues": "https://github.com/ecsphp/ecs/issues",
-                "source": "https://github.com/ecsphp/ecs/tree/13.3.13"
+                "source": "https://github.com/ecsphp/ecs/tree/13.3.14"
             },
-            "time": "2026-11-02T22:11:38+00:00"
+            "time": "2026-11-05T16:53:58+00:00"
         }
     ],
     "aliases": [],
@@ -3243,5 +3236,5 @@
         "php": "8.4 - 8.5"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }

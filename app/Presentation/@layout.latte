@@ -29,15 +29,15 @@
 
     <main class="p-5 min-h-[90vh]">
         {block navbar}
-            <div class="navbar justify-between">
-                <div class="flex-none">
+            <div class="navbar">
+                <div class="navbar-start">
                     <a n:href=":Home:" class="inline-flex items-center gap-3 text-xl">
                         {include tRoot('_icon/app.svg.latte'), class: 'size-12'}
                         frankenette
                     </a>
                 </div>
                 {block navbarContent}{/block}
-                <div class="flex-none">
+                <div class="navbar-end">
                     <x-theme-switch>
                         <label class="swap swap-rotate text-base-content">
                             <input type="checkbox" value="light" class="theme-controller" aria-label="Light theme"/>

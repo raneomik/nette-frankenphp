@@ -130,11 +130,11 @@ final class GameFacade
     public function waitingRooms(): array
     {
         return array_map(
-            fn($row) => new WaitingRoom($row['room'], $row['username']),
+            fn($row) => new WaitingRoom($row['room'], $row['username'], $row['userId']),
             array_values(
                 $this->database
                     ->table('room_players')
-                    ->select('room, MIN(username) AS username')
+                    ->select('room, MIN(username) AS username, MIN(userId) AS userId') // single player per room (HAVING): MIN() = that player
                     ->group('room')
                     ->having('COUNT(DISTINCT userId) = 1')
                     ->order('MIN(joinedAt)')

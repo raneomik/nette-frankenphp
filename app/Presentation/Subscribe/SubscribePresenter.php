@@ -17,10 +17,14 @@ use Raneomik\NetteMercure\SubscriberInterface;
  */
 final class SubscribePresenter extends Nette\Application\UI\Presenter
 {
-    /** topics readable by every visitor */
-    private const array PublicTopics = ['chat', 'turbo-test-topic'];
+    /**
+     * topics readable by every visitor
+     */
+    private const array PublicTopics = ['chat', 'turbo-test-topic', 'room/lobby'];
 
-    /** rooms are public: the lobby lists them */
+    /**
+     * rooms are public: the lobby lists them
+     */
     private const string RoomTopic = '~^room/[A-Za-z0-9-]{1,64}$~D';
 
     #[Parameter]
@@ -49,7 +53,7 @@ final class SubscribePresenter extends Nette\Application\UI\Presenter
         }
 
         $this->sendJson(
-            $this->subscriber->subscribe($this->hub, $topics),
+            $this->subscriber->subscribe($topics, $this->hub),
         );
     }
 
@@ -58,7 +62,6 @@ final class SubscribePresenter extends Nette\Application\UI\Presenter
         if (! \is_string($topic)) {
             return false;
         }
-
         $user = $this->getUser();
 
         return \in_array($topic, self::PublicTopics, true)

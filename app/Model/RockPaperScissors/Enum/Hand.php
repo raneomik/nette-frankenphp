@@ -70,7 +70,9 @@ enum Hand: string
         };
     }
 
-    /** display name, mid-sentence: "Spock" is a proper noun, the others stay lower case (|firstUpper at the start of a sentence) */
+    /**
+     * display name, mid-sentence: "Spock" is a proper noun, the others stay lower case (|firstUpper at the start of a sentence)
+     */
     public function label(): string
     {
         return match($this) {

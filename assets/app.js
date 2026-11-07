@@ -26,8 +26,15 @@ addEventListener('pagehide', () => {
     const url = document.querySelector('[data-leave-url]')?.dataset.leaveUrl;
     url && navigator.sendBeacon(url);
 });
-// back navigation from the cache (bfcache): we left the room, reload to re-enter it
-addEventListener('pageshow', (e) => e.persisted && document.querySelector('[data-leave-url]') && location.reload());
+// lobby: rendered before the leave beacon of the game page was handled, so the list it then published was missed
+document.addEventListener('mercure:open', async () => {
+    const list = document.getElementById('waiting-room-list');
+    const html = list && await (await fetch(location.href)).text();
+    html && list.replaceWith(new DOMParser().parseFromString(html, 'text/html').getElementById('waiting-room-list'));
+});
+
+// back navigation from the cache (bfcache): the game page re-enters its room, the lobby gets a fresh list and Mercure connection
+addEventListener('pageshow', (e) => e.persisted && document.querySelector('[data-leave-url], #waiting-room-list') && location.reload());
 
 new ClipboardJS('.clipboard').on('success', ({trigger}) => {
     trigger.dataset.tip = trigger.dataset.copied ?? 'Copied!'; // text from the template: data-copied="…"

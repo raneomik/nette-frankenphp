@@ -31,15 +31,5 @@
     themes: light --default, night --prefersdark;
 }
 
-@keyframes toast-out {
-    to { opacity: 0; transform: translateY(0.5rem); visibility: hidden; }
-}
-
-.toast-auto {
-    animation: toast-out 0.5s ease-in 4s forwards;  /* visible for 4 s, then 0.5 s fade */
-}
-.toast-auto:hover { animation-play-state: paused; }  /* hovering pauses the countdown */
-
-@media (prefers-reduced-motion: reduce) {
-    .toast-auto { animation-name: none; animation-delay: 0s; display: none; }
-}
+/* rounded buttons in every theme; inputs and selects keep the theme's --radius-field */
+.btn { --radius-field: 9999px; }

@@ -7,6 +7,7 @@ readonly class WaitingRoom
     public function __construct(
         public string $id,
         public string $lonelyPlayer,
+        public string $userId,
     ) {
     }
 }

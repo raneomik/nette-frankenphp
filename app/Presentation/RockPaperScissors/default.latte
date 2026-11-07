@@ -1,48 +1,46 @@
 {block title}Lobby{/block}
 
 {block content}
-<div class="flex w-full flex-col">
-    <p class="mx-auto mb-4 max-w-md text-center opacity-80">
-        Rock, paper, scissors… plus lizard and Spock, the Big Bang Theory variant.
-        Browse the hands to see what beats what.
-    </p>
-    <x-carousel class="mx-auto block w-72">
-        <div class="relative">
-            <div class="tooltip tooltip-bottom block">
-                <div class="carousel carousel-center w-full justify-center-safe gap-3 px-10 py-2" tabindex="0">
-                    {foreach $availableHands as $hand}
-                        <div
-                            class="carousel-item card w-full">
-                            <div class="card-body items-center p-4">
-                                {include 'template/_hand.latte', hand: $hand, rulesTable: $rulesTable}
+    <div class="flex w-full flex-col">
+        <x-carousel class="mx-auto block w-72">
+            <div class="relative">
+                <div class="tooltip tooltip-bottom block">
+                    <div class="carousel carousel-center w-full justify-center-safe gap-3 px-10 py-2" tabindex="0">
+                        {foreach $availableHands as $hand}
+                            <div
+                                class="carousel-item card w-full">
+                                <div class="card-body items-center p-4">
+                                    {include 'template/_hand.latte', hand: $hand, rulesTable: $rulesTable}
+                                </div>
                             </div>
-                        </div>
 
-                    {/foreach}
+                        {/foreach}
+                    </div>
+                    <span class="md:hidden text-5xl float-end cursor-pointer" role="img" aria-label="Rules">🛈︎</span>
+                    <div class="tooltip-content text-left" data-tip-slot></div>
                 </div>
-                <span class="md:hidden text-5xl float-end cursor-pointer" role="img" aria-label="Rules">🛈︎</span>
-                <div class="tooltip-content text-left" data-tip-slot></div>
+                <button type="button" data-prev aria-label="Previous"
+                        class="btn btn-circle md:btn-sm btn-xl absolute left-0 top-1/2 -translate-y-1/2 disabled:invisible">
+                    ❮
+                </button>
+                <button type="button" data-next aria-label="Next"
+                        class="btn btn-circle md:btn-sm btn-xl absolute right-0 top-1/2 -translate-y-1/2 disabled:invisible">
+                    ❯
+                </button>
             </div>
-            <button type="button" data-prev aria-label="Previous"
-                    class="btn btn-circle md:btn-sm btn-xl absolute left-0 top-1/2 -translate-y-1/2 disabled:invisible">❮
-            </button>
-            <button type="button" data-next aria-label="Next"
-                    class="btn btn-circle md:btn-sm btn-xl absolute right-0 top-1/2 -translate-y-1/2 disabled:invisible">❯
-            </button>
+        </x-carousel>
+
+        <div class="divider"></div>
+
+        <div class="mx-auto block">
+            <a n:href="Base:game $newRoom" class="btn btn-ghost max-w-lg m-5 text-lg">
+                Start a new game
+            </a>
         </div>
-    </x-carousel>
 
-    <div class="divider"></div>
-
-    <div class="mx-auto block">
-        <a n:href="Base:game $newRoom" class="btn btn-ghost max-w-lg m-5 text-lg">
-            Start a new game
-        </a>
+        {* always rendered, even empty: target of the live updates (waitingRooms.stream.latte) *}
+        <div id="waiting-room-list" class="mx-auto block">
+            {include 'template/_waitingRooms.latte', rooms: $rooms}
+        </div>
     </div>
-
-    {* always rendered, even empty: target of the live updates (waitingRooms.stream.latte) *}
-    <div id="waiting-room-list" class="mx-auto block">
-        {include 'template/_waitingRooms.latte', rooms: $rooms, gameLink: $gameLink}
-    </div>
-</div>
 {/block}

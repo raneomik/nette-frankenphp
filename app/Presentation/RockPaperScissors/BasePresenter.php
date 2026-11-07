@@ -8,6 +8,7 @@ use App\Model\RockPaperScissors\Enum\Hand;
 use App\Model\RockPaperScissors\GameFacade;
 use App\Model\RockPaperScissors\Value\DuelState;
 use App\Model\RockPaperScissors\Value\GameRecord;
+use App\Model\RockPaperScissors\Value\WaitingRoom;
 use App\Model\Service\Messenger;
 use App\Model\Service\Randomiser;
 use App\Presentation\RockPaperScissors\TemplateData\GameTemplate;
@@ -57,8 +58,8 @@ final class BasePresenter extends Nette\Application\UI\Presenter
 
     public function actionDefault(string $room = 'lobby'): void
     {
-        $this->template->rooms = $this->game->waitingRooms();
-        $this->template->gameLink = $this->gameLink(...);
+        $this->refreshWaitingRoomList();
+
         $this->room = $room;
         $this->template->newRoom = $this->randomiser->id();
     }
@@ -92,6 +93,12 @@ final class BasePresenter extends Nette\Application\UI\Presenter
     {
         $this->template->initData();
         $this->template->room = $this->room;
+
+        // rendered before the leave beacon of the game page just left: never list my own room(s)
+        $this->template->rooms = array_values(array_filter(
+            $this->template->rooms,
+            fn(WaitingRoom $waitingRoom) => $waitingRoom->userId !== (string) $this->me->id,
+        ));
     }
 
     public function renderGame(): void
@@ -174,14 +181,10 @@ final class BasePresenter extends Nette\Application\UI\Presenter
 
     private function refreshWaitingRoomList(): void
     {
-        $this->messenger->toAll('lobby', __DIR__ . '/template/waitingRooms.stream.latte', [
-            'rooms' => $this->game->waitingRooms(),
-            'gameLink' => $this->gameLink(...),
-        ]);
-    }
+        $this->template->rooms = $this->game->waitingRooms();
 
-    private function gameLink(string $room): string
-    {
-        return $this->link('game', $room);
+        $this->messenger->toAll('lobby', __DIR__ . '/template/waitingRooms.stream.latte', [
+            'rooms' => $this->template->rooms,
+        ]);
     }
 }

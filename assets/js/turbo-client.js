@@ -47,6 +47,9 @@ function setupTurboClient(mercureUrl, mercureJWTToken) {
         Turbo.renderStreamMessage(event.data);
     });
 
+    // updates published before this point are lost (no history replay): pages refetch what they display
+    eventSource.onopen = () => document.dispatchEvent(new Event('mercure:open'));
+
     eventSource.onerror = event => {
         console.error("Mercure connection error: ", event.error);
 
