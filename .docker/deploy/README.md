@@ -15,35 +15,33 @@ git tag v1.3.0 && git push origin v1.3.0
 | (branch, manual run) | `sha-8f3c2a9`                     | no       |
 
 Redeploy a version: Actions tab → Build & deploy → Run workflow, picking the tag.
-Quick rollback: `ssh deploy@vps /srv/rpsls/deploy.sh 1.2.0` (images are kept for 7 days).
+Quick rollback: `ssh <you>@your-vps.example /srv/rpsls/deploy.sh 1.2.0` (images are kept for 7 days).
 
 ## Setup (once)
 
+`<you>` below is your usual user on the VPS: it deploys too, no dedicated user. GitHub gets its
+own key, which can only run `deploy.sh` (see SSH key).
+
 ### VPS
 
-First of all: the subdomain points to the VPS (DNS), and the caddy-docker-proxy network
-is indeed called `caddy` (`docker network ls`); otherwise, adapt `networks:` in `compose.yaml`.
+First of all: the subdomain points to the VPS (DNS), the caddy-docker-proxy network
+is indeed called `caddy` (`docker network ls`; otherwise, adapt `networks:` in `compose.yaml`),
+and `<you>` runs docker without sudo (`groups` lists `docker`).
 
 ```sh
-# dedicated user (being in the docker group amounts to being root: dedicated SSH key)
-sudo adduser --disabled-password deploy && sudo usermod -aG docker deploy
-
-# docker rollout plugin, for the deploy user
+# docker rollout plugin, for <you>
 mkdir -p ~/.docker/cli-plugins
 curl -fsSL https://raw.githubusercontent.com/wowu/docker-rollout/v0.14/docker-rollout \
   -o ~/.docker/cli-plugins/docker-rollout
 chmod +x ~/.docker/cli-plugins/docker-rollout
 
-# access to the image if the GHCR package is private (classic PAT, read:packages scope)
-docker login ghcr.io -u raneomik
+# access to the image if the GHCR package is private (stored in ~/.docker/config.json of <you>).
+# The password is a classic PAT with the read:packages scope only (fine-grained tokens do not
+# support GHCR, the GitHub password is refused); renew it before it expires, or pulls fail
+read -rs CR_PAT && echo "$CR_PAT" | docker login ghcr.io -u raneomik --password-stdin; unset CR_PAT
 
-# /srv/rpsls: compose.yaml, deploy.sh (chmod +x), litestream.yml,
-# app.env (from app.env.example, chmod 600: fresh Mercure keys, TRUSTED_PROXIES)
-# and .env, read by compose for ${HOST} (deploy.sh adds TAG=… to it without touching the rest):
-echo 'HOST=rpsls.example.fr' > /srv/rpsls/.env
-
-# subnet of the caddy network, for TRUSTED_PROXIES in app.env:
-docker network inspect caddy -f '{{range .IPAM.Config}}{{.Subnet}}{{end}}'
+# the deployment folder (Server files below)
+sudo mkdir -p /srv/rpsls && sudo chown "$USER:" /srv/rpsls
 ```
 
 Also replace `rpsls.example.fr` in the workflow environment URL.
@@ -52,14 +50,64 @@ Also replace `rpsls.example.fr` in the workflow environment URL.
 
 ```sh
 ssh-keygen -t ed25519 -f deploy_key -N "" -C "github-deploy"
-# deploy_key.pub → ~deploy/.ssh/authorized_keys on the VPS
 # deploy_key     → VPS_SSH_KEY secret
 ssh-keyscan -t ed25519 your-vps.example   # → VPS_KNOWN_HOSTS secret (check the fingerprint)
 ```
 
+`deploy_key.pub` goes in `~/.ssh/authorized_keys` of `<you>` on the VPS, restricted to the
+deployment: `command=` runs `deploy.sh` whatever the client asks (it reads the version from
+`$SSH_ORIGINAL_COMMAND`), `restrict` disables port forwarding, agent and terminal. A leaked
+key can only redeploy an existing image; to revoke it, delete the line.
+
+```
+command="/srv/rpsls/deploy.sh",restrict ssh-ed25519 AAAA… github-deploy
+```
+
+This key therefore gives no shell and no `scp`: for everything else, keep your own access.
+Test from your machine (`-i`: not a default key name):
+
+```sh
+ssh -i deploy_key <you>@your-vps.example latest   # runs deploy.sh latest, once an image is pushed
+```
+
+Asked for a password: sshd silently ignores an `authorized_keys` owned by root or writable by
+others (`chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys && chmod go-w ~`);
+`sudo journalctl -u ssh -f` on the VPS while connecting gives the reason.
+
+### Server files
+
+The project itself is not copied to the VPS: the code ships in the image pulled from GHCR.
+`/srv/rpsls` only holds the files of this folder. From the project root on your machine:
+
+```sh
+scp .docker/deploy/{compose.yaml,deploy.sh,litestream.yml,app.env.example,litestream.env.example} \
+  <you>@your-vps.example:/srv/rpsls/
+```
+
+Then on the VPS:
+
+```sh
+cd /srv/rpsls
+chmod +x deploy.sh
+
+# app secrets, never committed: two fresh Mercure keys (openssl rand -base64 48, one each)
+# and TRUSTED_PROXIES = subnet of the caddy network:
+#   docker network inspect caddy -f '{{range .IPAM.Config}}{{.Subnet}}{{end}}'
+cp app.env.example app.env && chmod 600 app.env && nano app.env
+
+# public domain, read by compose for ${HOST} (deploy.sh adds TAG=… to it without touching the rest)
+echo 'HOST=rpsls.example.fr' > .env
+
+# optional backup (see Litestream below): without this file, deploy.sh deploys and warns
+cp litestream.env.example litestream.env && chmod 600 litestream.env && nano litestream.env
+```
+
+After a change in `compose.yaml`, `deploy.sh` or `litestream.yml`, copy it again: the workflow
+only deploys a new image, not these files.
+
 ### GitHub
 
-Settings → Environments → `production`, secrets: `VPS_HOST`, `VPS_USER` (`deploy`),
+Settings → Environments → `production`, secrets: `VPS_HOST`, `VPS_USER` (`<you>`),
 `VPS_SSH_KEY`, `VPS_KNOWN_HOSTS`, and `VPS_PORT` if SSH does not listen on 22.
 In that same environment, "Deployment branches and tags" → Selected → tag `v*`: only
 version tags get access to the SSH secrets.

@@ -4,7 +4,12 @@
 #        ./deploy.sh sha-8f3c2a9  (any built image)
 set -eu
 
-TAG="${1:?usage: deploy.sh <version>}"
+# argument, or through the forced command of the GitHub key (authorized_keys command="…"):
+# what the client asked for is in SSH_ORIGINAL_COMMAND ("/srv/rpsls/deploy.sh 1.3.0" or "1.3.0"),
+# its last word is the version
+SSH_ORIGINAL_COMMAND="${SSH_ORIGINAL_COMMAND:-}" # unset outside SSH, and set -u
+TAG="${1:-${SSH_ORIGINAL_COMMAND##* }}"
+TAG="${TAG:?usage: deploy.sh <version>}"
 cd "$(dirname "$0")"
 
 # only accepts an expected image tag, in full: the argument comes from an SSH connection
