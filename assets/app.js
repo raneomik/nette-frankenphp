@@ -4,9 +4,11 @@ import './js/components/xtoast';
 import './js/components/xcarousel';
 import './js/components/xconfetti';
 import './js/components/xtheme-switch';
-import './js/mercure-client.js';
-import './js/turbo-client.js';
-import './js/turbo-user-rule.ts';
+
+import './js/mercure-client';
+import './js/turbo-client';
+import './js/turbo-user-rule';
+import './js/mercure-fixes';
 
 import naja from 'naja';
 import netteForms from 'nette-forms';
@@ -14,27 +16,6 @@ import ClipboardJS from "clipboard";
 
 netteForms.initOnLoad();
 naja.initialize();
-
-document.addEventListener('animationend', (e) => {
-    e.animationName === 'toast-out' && e.target.remove();
-});
-
-// visual feedback: daisy tooltip forced open for 1.5 s (data-tip only exists during that time, otherwise it would show on hover)
-// leaving the game: sendBeacon goes out even while the tab is closing
-// shortcut: a crash or a tab killed on mobile sends nothing (cleanRooms catches up after 1 h); reliable presence = Mercure subscriptions API
-addEventListener('pagehide', () => {
-    const url = document.querySelector('[data-leave-url]')?.dataset.leaveUrl;
-    url && navigator.sendBeacon(url);
-});
-// lobby: rendered before the leave beacon of the game page was handled, so the list it then published was missed
-document.addEventListener('mercure:open', async () => {
-    const list = document.getElementById('waiting-room-list');
-    const html = list && await (await fetch(location.href)).text();
-    html && list.replaceWith(new DOMParser().parseFromString(html, 'text/html').getElementById('waiting-room-list'));
-});
-
-// back navigation from the cache (bfcache): the game page re-enters its room, the lobby gets a fresh list and Mercure connection
-addEventListener('pageshow', (e) => e.persisted && document.querySelector('[data-leave-url], #waiting-room-list') && location.reload());
 
 new ClipboardJS('.clipboard').on('success', ({trigger}) => {
     trigger.dataset.tip = trigger.dataset.copied ?? 'Copied!'; // text from the template: data-copied="…"

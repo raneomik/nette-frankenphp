@@ -13,7 +13,7 @@ class XCarousel extends HTMLElement {
         this.#ac = new AbortController();
         const signal = this.#ac.signal;
         const track = this.querySelector<HTMLElement>('.carousel');
-        if (!track) return reportError(new Error('x-carousel : élément .carousel introuvable'));
+        if (!track) return reportError(new Error('x-carousel: .carousel element not found'));
         this.track = track;
         this.prev = this.querySelector<HTMLButtonElement>('[data-prev]');
         this.next = this.querySelector<HTMLButtonElement>('[data-next]');
@@ -83,7 +83,7 @@ class XCarousel extends HTMLElement {
             dot.type = 'button';
             dot.className = 'size-2.5 rounded-full bg-base-content/20 transition '
                 + 'aria-[current=true]:scale-125 aria-[current=true]:bg-primary';
-            dot.setAttribute('aria-label', `Position ${i + 1} sur ${count}`);
+            dot.setAttribute('aria-label', `Position ${i + 1} of ${count}`);
             dot.addEventListener('click', () => this.#scrollTo(i));
             return dot;
         }));

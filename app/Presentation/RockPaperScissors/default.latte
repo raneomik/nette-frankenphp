@@ -38,9 +38,16 @@
             </a>
         </div>
 
-        {* always rendered, even empty: target of the live updates (waitingRooms.stream.latte) *}
-        <div id="waiting-room-list" class="mx-auto block">
-            {include 'template/_waitingRooms.latte', rooms: $rooms}
-        </div>
-    </div>
+        {* always rendered, hidden while empty: the live updates (waitingRooms.stream.latte) only replace the <li>s *}
+        <details class="collapse collapse-arrow border-base-300 border max-w-100 mx-auto not-has-[li]:hidden">
+            <summary class="collapse-title font-semibold">
+                Join a waiting player
+            </summary>
+            <div class="collapse-content flex justify-center">
+                <ul id="waiting-room-list" class="list" data-refetch-on-connect>
+                    {include 'template/_waitingRooms.latte', rooms: $rooms}
+                </ul>
+            </div>
+        </details>
+</div>
 {/block}

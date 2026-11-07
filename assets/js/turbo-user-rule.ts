@@ -7,5 +7,3 @@ document.addEventListener('turbo:before-stream-render', (e) => {
         e.preventDefault();
     }
 });
-
-export {};

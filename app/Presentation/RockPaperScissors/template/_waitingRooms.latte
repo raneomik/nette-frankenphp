@@ -1,18 +1,9 @@
-{* rendered by the page and by Mercure (waitingRooms.stream.latte) *}
+{* list items only: rendered by the page and by Mercure (waitingRooms.stream.latte), so the <details> around keeps its open state *}
 {parameters array $rooms}
 {varType App\Model\RockPaperScissors\Value\WaitingRoom $waitingRoom}
 
-<details n:if="$rooms" class="collapse collapse-arrow border-base-300 border max-w-2xl">
-    <summary class="collapse-title font-semibold">
-        Join a waiting player
-    </summary>
-    <div class="collapse-content flex justify-center">
-        <ul n:inner-foreach="$rooms as $waitingRoom" class="list">
-            <li class="list-row">
-                <a n:href=":RockPaperScissors:Base:game $waitingRoom->id" class="btn w-90">
-                    Play against {$waitingRoom->lonelyPlayer}
-                </a>
-            </li>
-        </ul>
-    </div>
-</details>
+<li n:foreach="$rooms as $waitingRoom" class="list-row">
+    <a n:href=":RockPaperScissors:Base:game $waitingRoom->id" class="btn w-90">
+        Play against {$waitingRoom->lonelyPlayer}
+    </a>
+</li>

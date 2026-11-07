@@ -1,16 +1,16 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-	const mercureUrlPlaceholder = document.querySelector('[data-mercure-url]');
+	const mercureUrlHolder = document.querySelector('[data-mercure-url]') as null|HTMLElement;
 	let mercureUrl = '';
 
 
-	if (!mercureUrlPlaceholder) {
+	if (!mercureUrlHolder) {
 		console.error("Mercure URL not found in data-mercure-url attribute.");
 		return;
 	}
 
-	mercureUrl = mercureUrlPlaceholder.dataset.mercureUrl;
+	mercureUrl = mercureUrlHolder.dataset.mercureUrl as string;
 
 	const eventSource = new EventSource(mercureUrl, {
         withCredentials: true
