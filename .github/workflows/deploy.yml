@@ -12,21 +12,30 @@ concurrency:
   group: deploy-production
   cancel-in-progress: false
 
+# No token rights unless a job asks for them
+permissions: {}
+
 env:
   # GHCR requires a lowercase name (metadata-action lowercases it itself)
   IMAGE: ghcr.io/${{ github.repository }}
 
+# The deploy files (.docker/deploy) reach the VPS inside the image, not through this workflow:
+# deploy.sh installs them from the image it deploys (.docker/deploy/README.md, "Deploy files").
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
       contents: read
       packages: write # allows the GITHUB_TOKEN to push to GHCR
     outputs:
-      # tag v1.3.0 → "1.3.0"; run from a branch → "sha-8f3c2a9"
-      version: ${{ steps.meta.outputs.version }}
+      # what deploy.sh receives: tag v1.3.0 → "1.3.0@sha256:…", the exact image just pushed
+      # (a tag can be pushed again later, a digest cannot change)
+      image: ${{ steps.meta.outputs.version }}@${{ steps.build.outputs.digest }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       # Derives the image tags from the git ref. For the tag v1.3.0:
       #   1.3.0, 1.3, sha-8f3c2a9, latest
@@ -48,7 +57,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: docker/build-push-action@v7
+      - id: build
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: .docker/frankenphp/Dockerfile
@@ -71,9 +81,10 @@ jobs:
     # only a version tag is deployed (a manual run from a branch stops after the build)
     if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment:
       name: production
-      url: https://rpsls.example.fr
+      url: ${{ vars.APP_URL }} # environment variable, e.g. https://rpsls.example.fr
     steps:
       - name: Configure SSH
         env:
@@ -81,14 +92,34 @@ jobs:
           KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
         run: |
           install -m 700 -d ~/.ssh
-          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
           printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
 
+      # Runs deploy.sh in the project folder of the VPS (VPS_PROJECT_DIR). With the key restricted to
+      # deploy.sh (authorized_keys command="…"), the VPS runs it anyway and reads the version from
+      # the last word: this command works with or without that restriction.
       - name: Deploy
         env:
           VPS_USER: ${{ secrets.VPS_USER }}
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_PORT: ${{ secrets.VPS_PORT }}
-          VERSION: ${{ needs.build.outputs.version }}
-        run: ssh -p "${VPS_PORT:-22}" "$VPS_USER@$VPS_HOST" "/home/raneomik/frankenette/deploy.sh $VERSION"
+          VPS_PROJECT_DIR: ${{ secrets.VPS_PROJECT_DIR }}
+          IMAGE_VERSION: ${{ needs.build.outputs.image }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "${VPS_PORT:-22}" \
+            -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
+            -o ConnectTimeout=15 -o ServerAliveInterval=30 \
+            "$VPS_USER@$VPS_HOST" "$VPS_PROJECT_DIR/deploy.sh $IMAGE_VERSION"
+
+      # From the outside, through DNS, TLS and caddy-docker-proxy: what a visitor gets
+      - name: Smoke test
+        env:
+          APP_URL: ${{ vars.APP_URL }}
+        run: |
+          for attempt in 1 2 3 4 5 6; do
+            curl -fsS --max-time 10 "$APP_URL/health" && exit 0
+            sleep 5
+          done
+          echo "::error::$APP_URL/health does not answer after the deployment"
+          exit 1

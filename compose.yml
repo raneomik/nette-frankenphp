@@ -18,8 +18,7 @@ services:
                 }
             SERVER_NAME: localhost
             XDEBUG_MODE: "off"
-            MERCURE_PUBLISHER_JWT_KEY: ${MERCURE_JWT_SECRET}
-            MERCURE_SUBSCRIBER_JWT_KEY: ${MERCURE_JWT_SECRET}
+            MERCURE_JWT_SECRET: ${MERCURE_JWT_SECRET}
             CADDY_SERVER_LOG_OPTIONS: level ERROR
         volumes:
             - ./var/:/srv/var

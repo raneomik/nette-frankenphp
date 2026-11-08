@@ -7,3 +7,16 @@ updates:
     labels:
       - "dependencies"
       - "automerge"
+
+  # new major versions of the actions of .github/workflows (actions/checkout@v7 → v8…): one
+  # grouped PR per month. No "automerge": these actions run with the SSH key and a token that
+  # can push images, review the bump.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
+    labels:
+      - "dependencies"

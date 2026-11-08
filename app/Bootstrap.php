@@ -77,7 +77,7 @@ final readonly class Bootstrap
             ->addDynamicParameters([
                 'runner' => RunnerType::from(getenv('APP_RUNNER') ?: 'nette'),
                 // same secret as the one verifying JWTs on the hub side (Caddyfile)
-                'mercureJwtSecret' => (string) getenv('MERCURE_PUBLISHER_JWT_KEY'),
+                'mercureJwtSecret' => (string) getenv('MERCURE_JWT_SECRET'),
                 // e.g. "172.16.0.0/12": reverse proxy network, for an https:// baseUrl
                 'trustedProxies' => self::listFromEnv('TRUSTED_PROXIES'),
             ]);

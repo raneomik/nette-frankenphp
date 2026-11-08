@@ -1,4 +1,4 @@
-# /srv/rpsls/compose.yaml — on the VPS
+# compose.yaml — on the VPS, in the project folder (VPS_PROJECT_DIR)
 # No container_name nor ports: docker rollout must be able to run 2 instances
 services:
   app:

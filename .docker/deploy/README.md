@@ -15,12 +15,16 @@ git tag v1.3.0 && git push origin v1.3.0
 | (branch, manual run) | `sha-8f3c2a9`                     | no       |
 
 Redeploy a version: Actions tab → Build & deploy → Run workflow, picking the tag.
-Quick rollback: `ssh <you>@your-vps.example /srv/rpsls/deploy.sh 1.2.0` (images are kept for 7 days).
+Quick rollback: `ssh <you>@your-vps.example <dir>/deploy.sh 1.2.0` (images are kept for 7 days).
 
 ## Setup (once)
 
 `<you>` below is your usual user on the VPS: it deploys too, no dedicated user. GitHub gets its
 own key, which can only run `deploy.sh` (see SSH key).
+
+`<dir>` is the project folder on the VPS: any folder `<you>` can write to, as an absolute path
+(e.g. `/home/<you>/frankenette`). The same value goes in the `VPS_PROJECT_DIR` secret (GitHub
+below). Nothing in the repository assumes a particular path.
 
 ### VPS
 
@@ -40,11 +44,10 @@ chmod +x ~/.docker/cli-plugins/docker-rollout
 # support GHCR, the GitHub password is refused); renew it before it expires, or pulls fail
 read -rs CR_PAT && echo "$CR_PAT" | docker login ghcr.io -u raneomik --password-stdin; unset CR_PAT
 
-# the deployment folder (Server files below)
-sudo mkdir -p /srv/rpsls && sudo chown "$USER:" /srv/rpsls
+# the project folder (Server files below); outside your home, create it with sudo then
+# give it to <you>: sudo mkdir -p <dir> && sudo chown "$USER:" <dir>
+mkdir -p <dir>
 ```
-
-Also replace `rpsls.example.fr` in the workflow environment URL.
 
 ### SSH key (on your machine)
 
@@ -60,7 +63,7 @@ deployment: `command=` runs `deploy.sh` whatever the client asks (it reads the v
 key can only redeploy an existing image; to revoke it, delete the line.
 
 ```
-command="/srv/rpsls/deploy.sh",restrict ssh-ed25519 AAAA… github-deploy
+command="<dir>/deploy.sh",restrict ssh-ed25519 AAAA… github-deploy
 ```
 
 This key therefore gives no shell and no `scp`: for everything else, keep your own access.
@@ -77,23 +80,26 @@ others (`chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys && chmod go-w ~`);
 ### Server files
 
 The project itself is not copied to the VPS: the code ships in the image pulled from GHCR.
-`/srv/rpsls` only holds the files of this folder. From the project root on your machine:
+`<dir>` only holds the files of this folder. Copy them once, from the project root on your
+machine; afterwards `deploy.sh` keeps them in sync by itself (see Deploy files below):
 
 ```sh
 scp .docker/deploy/{compose.yaml,deploy.sh,litestream.yml,app.env.example,litestream.env.example} \
-  <you>@your-vps.example:/srv/rpsls/
+  <you>@your-vps.example:<dir>/
 ```
 
 Then on the VPS:
 
 ```sh
-cd /srv/rpsls
+cd <dir>
 chmod +x deploy.sh
 
-# app secrets, never committed: two fresh Mercure keys (openssl rand -base64 48, one each)
-# and TRUSTED_PROXIES = subnet of the caddy network:
+# app secrets, never committed: a fresh Mercure secret, and TRUSTED_PROXIES = subnet
+# of the caddy network:
 #   docker network inspect caddy -f '{{range .IPAM.Config}}{{.Subnet}}{{end}}'
-cp app.env.example app.env && chmod 600 app.env && nano app.env
+cp app.env.example app.env && chmod 600 app.env
+sed -i "s#^MERCURE_JWT_SECRET=.*#MERCURE_JWT_SECRET=$(openssl rand -base64 48)#" app.env
+nano app.env   # TRUSTED_PROXIES
 
 # public domain, read by compose for ${HOST} (deploy.sh adds TAG=… to it without touching the rest)
 echo 'HOST=rpsls.example.fr' > .env
@@ -102,18 +108,51 @@ echo 'HOST=rpsls.example.fr' > .env
 cp litestream.env.example litestream.env && chmod 600 litestream.env && nano litestream.env
 ```
 
-After a change in `compose.yaml`, `deploy.sh` or `litestream.yml`, copy it again: the workflow
-only deploys a new image, not these files.
+Changes to `compose.yaml`, `deploy.sh`, `litestream.yml` or the `*.example` files then reach the
+server with the next deployment, without copying anything (Deploy files below).
 
 ### GitHub
 
-Settings → Environments → `production`, secrets: `VPS_HOST`, `VPS_USER` (`<you>`),
-`VPS_SSH_KEY`, `VPS_KNOWN_HOSTS`, and `VPS_PORT` if SSH does not listen on 22.
-In that same environment, "Deployment branches and tags" → Selected → tag `v*`: only
-version tags get access to the SSH secrets.
+Settings → Environments → `production`:
+- secrets: `VPS_HOST`, `VPS_USER` (`<you>`), `VPS_PROJECT_DIR` (the project folder on the VPS,
+  absolute, e.g. `/home/<you>/frankenette`), `VPS_SSH_KEY`, `VPS_KNOWN_HOSTS`, and `VPS_PORT` if
+  SSH does not listen on 22;
+- variable: `APP_URL` (`https://rpsls.example.fr`), the environment link and the smoke test
+  target (`$APP_URL/health` after each deployment, from outside: DNS, TLS, proxy);
+- "Deployment branches and tags" → Selected → tag `v*`: only version tags get access to the
+  SSH secrets.
 
 Settings → Rules → New tag ruleset, target `v*`, restrict creations/updates/deletions (with
 yourself as bypass): nobody else can create a tag that deploys, or move an existing tag.
+
+What the workflow does, and why:
+- it runs `$VPS_PROJECT_DIR/deploy.sh 1.3.0@sha256:…`: the digest pins the exact image just
+  built (a tag can be pushed again, a digest cannot change); `deploy.sh 1.2.0` by hand still works;
+- the token has no right by default (`permissions: {}`), the build job only `packages: write`;
+- Dependabot (`.github/dependabot.yml`) proposes the new major versions of the actions;
+- jobs have a timeout, and the deployment ends with the smoke test.
+
+## Deploy files
+
+The prod image carries the server-side files of its version under `/deploy` (`compose.yaml`,
+`deploy.sh`, `litestream.yml`, `app.env.example`, `litestream.env.example`). On each deployment,
+`deploy.sh` extracts them from the image it deploys and installs the ones that changed next to
+itself, before starting anything:
+
+- the server always matches what runs, a manual rollback (`deploy.sh 1.2.0`) included, and the
+  GitHub key keeps its single right: running `deploy.sh`;
+- a new `deploy.sh` takes over for that same deployment;
+- `litestream` is recreated when `litestream.yml` changed (it reads that file at start only);
+- secrets are never touched: `.env`, `app.env`, `litestream.env` are not in the image. A new
+  variable in `app.env.example` is to be copied into `app.env` by hand.
+
+An image built before this mechanism ships no `/deploy`: `deploy.sh` warns and keeps the current
+files. Once, to switch a server set up before it, copy the new `deploy.sh` by hand (the old one
+does not sync):
+
+```sh
+scp .docker/deploy/deploy.sh <you>@your-vps.example:<dir>/
+```
 
 ## First deployment
 
@@ -125,7 +164,7 @@ docker build --target prod -f .docker/frankenphp/Dockerfile .
 git tag v0.1.0 && git push origin v0.1.0
 ```
 
-3. Check, on the VPS (`cd /srv/rpsls`) then in a browser:
+3. Check, on the VPS (`cd <dir>`) then in a browser:
    - `docker compose ps`: `app` is `healthy`;
    - `https://<domain>/health` answers `ok`;
    - a game with two browsers (one of them in private browsing);
@@ -133,6 +172,29 @@ git tag v0.1.0 && git push origin v0.1.0
 
 Without a correct `TRUSTED_PROXIES`, the home page answers 500 (the `__Secure-` Mercure cookie
 requires Nette to see HTTPS).
+
+`MERCURE_JWT_SECRET` lives in `app.env` (not `.env`, which only feeds compose). Without it the
+container stops at start (`MERCURE_JWT_SECRET is not set`) and `docker rollout` keeps the
+previous version. After editing `app.env`, recreate the container: a `restart` does not
+reread it.
+
+```sh
+./deploy.sh "$(sed -n 's/^TAG=//p' .env)"
+```
+
+Hub log `Authorization error … token signature is invalid`, a few lines right after a secret
+change: open tabs retry with their old token until they are reloaded.
+
+### Upgrading from two Mercure keys
+
+Before deploying an image that reads `MERCURE_JWT_SECRET`, replace the two lines
+`MERCURE_PUBLISHER_JWT_KEY` / `MERCURE_SUBSCRIBER_JWT_KEY` of `app.env` with one:
+
+```sh
+sed -i '/^MERCURE_SUBSCRIBER_JWT_KEY=/d; s/^MERCURE_PUBLISHER_JWT_KEY=/MERCURE_JWT_SECRET=/' app.env
+```
+
+Forgotten, it is harmless: the new container does not start and the previous one keeps running.
 
 ## What the prod image assumes
 

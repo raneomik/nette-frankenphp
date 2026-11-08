@@ -114,6 +114,11 @@ ENV NETTE_DEBUG=0 \
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY --link .docker/frankenphp/conf.d/20-app.prod.ini $PHP_INI_DIR/app.conf.d/
 
+# Server-side deploy files of this version: deploy.sh installs them next to itself on each
+# deployment (.docker/deploy/README.md). Never the secrets: only the versioned files.
+COPY --link .docker/deploy/compose.yaml .docker/deploy/deploy.sh .docker/deploy/litestream.yml \
+    .docker/deploy/app.env.example .docker/deploy/litestream.env.example /deploy/
+
 # The code belongs to root: the app user can only write to var/
 COPY --from=prod_builder /srv /srv
 RUN <<-EOF
@@ -132,6 +137,9 @@ HEALTHCHECK --interval=10s --timeout=5s --start-period=60s --start-interval=2s -
 
 # Migrate before start : container stops on fail, is never
 # "healthy", and docker rollout keeps previous version.
-CMD rm -rf var/temp/cache; \
+# Without the Mercure secret the hub refuses every token, yet /health still answers: stop
+# here so that the container is never "healthy" and docker rollout keeps the previous version.
+CMD test -n "$MERCURE_JWT_SECRET" || { echo 'MERCURE_JWT_SECRET is not set (app.env)' >&2; exit 1; }; \
+    rm -rf var/temp/cache; \
     dbmate up || exit 1; \
     exec frankenphp run --config /etc/frankenphp/Caddyfile

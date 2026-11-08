@@ -1,4 +1,4 @@
-# /srv/rpsls/litestream.yml — on the VPS, read by the litestream service (compose.yaml)
+# litestream.yml — on the VPS, in the project folder, read by the litestream service (compose.yaml)
 # Continuously replicates var/data/app.db ("data" volume, mounted on /data); the ${VAR} come
 # from litestream.env. https://litestream.io
 dbs:

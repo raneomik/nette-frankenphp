@@ -28,12 +28,14 @@
         # must match the JWT "iss" claim (= https://<public domain>), regardless
         # of SERVER_NAME, which is ":80" behind a reverse proxy
         issuer {$MERCURE_ISSUER:https://localhost} {
+            # one secret for both: the app signs publisher AND subscriber tokens with it
+            # (nette-mercure: one jwt.key per hub, see config/common.neon)
             publisher {
-               jwt {env.MERCURE_PUBLISHER_JWT_KEY}
+                jwt {env.MERCURE_JWT_SECRET}
             }
 
             subscriber {
-                jwt {env.MERCURE_SUBSCRIBER_JWT_KEY}
+                jwt {env.MERCURE_JWT_SECRET}
             }
         }
 
