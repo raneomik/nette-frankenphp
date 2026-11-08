@@ -31,8 +31,8 @@
         {block navbar}
             <div class="navbar">
                 <div class="navbar-start">
-                    <a n:href=":Home:" class="inline-flex items-center gap-3 text-xl">
-                        {include tRoot('_icon/app.svg.latte'), class: 'size-12'}
+                    <a n:href=":Home:" class="inline-flex items-center gap-3 text-lg">
+                        {include tRoot('_icon/app.svg.latte'), class: 'size-10'}
                         frankenette
                     </a>
                 </div>
@@ -70,7 +70,10 @@
                 <p>by raneomik © {date('Y')}</p>
             </nav>
             <nav class="grid-flow-col gap-4 place-self-center justify-self-end">
-                <a href="https://github.com/raneomik/nette-frankenphp" target="_blank" aria-label="Source on GitHub">
+                <a href="https://github.com/raneomik/nette-frankenphp/tree/nette-mercure-intergration"
+                   target="_blank"
+                   aria-label="Source on GitHub"
+                >
                     {include tRoot('_icon/github.svg.latte')}
                 </a>
             </nav>

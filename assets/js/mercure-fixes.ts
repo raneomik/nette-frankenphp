@@ -8,6 +8,7 @@ addEventListener('pagehide', () => {
 
     url && navigator.sendBeacon(url);
 });
+
 // [data-refetch-on-connect][id]: content possibly published before Mercure connected (no history replay), refetched once connected
 // (e.g. the lobby is rendered before the leave beacon of the game page just left is handled)
 document.addEventListener('mercure:open', async () => {
@@ -20,4 +21,6 @@ document.addEventListener('mercure:open', async () => {
 });
 
 // back navigation from the cache (bfcache): the game page re-enters its room, live pages get fresh content and Mercure connection
-addEventListener('pageshow', (e) => e.persisted && document.querySelector('[data-leave-url], [data-refetch-on-connect]') && location.reload());
+addEventListener('pageshow', (e: PageTransitionEvent) => e.persisted
+    && document.querySelector('[data-leave-url], [data-refetch-on-connect]')
+    && location.reload());

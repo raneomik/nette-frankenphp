@@ -6,7 +6,7 @@ use App\Model\RockPaperScissors\Enum\Hand;
 use App\Model\RockPaperScissors\Enum\Result;
 use Traversable;
 
-readonly class RulesTable implements \IteratorAggregate
+readonly class RulesMap implements \IteratorAggregate
 {
     public array $rules;
 

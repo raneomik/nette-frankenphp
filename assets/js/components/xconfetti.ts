@@ -7,8 +7,16 @@ class XConfetti extends HTMLElement {
             return;
 
         const emoji = this.getAttribute('emoji');
+        const count = (this.getAttribute('count') ?? 60) as number;
+        const spread = (this.getAttribute('spread') ?? 80) as number;
         const shapes = emoji ? [confetti.shapeFromText({text: emoji, scalar: 2})] : undefined;
-        confetti({particleCount: 60, spread: 80, origin: {y: 0.6}, scalar: 2, ...(shapes && {shapes})});
+        confetti({
+            particleCount: count,
+            spread: spread,
+            origin: {y: 0.6},
+            scalar: 2,
+            ...(shapes && {shapes})
+        });
     }
 }
 

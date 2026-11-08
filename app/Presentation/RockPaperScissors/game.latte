@@ -6,35 +6,7 @@
         <section class="card min-w-0">
             <div class="card-body items-center gap-4">
                 <h2 class="card-title">You</h2>
-                <x-carousel class="mx-auto block w-72">
-                    <div class="relative">
-                        <div class="tooltip tooltip-bottom block">
-                            <div class="carousel carousel-center w-full justify-center-safe gap-3 px-10 py-2"
-                                 tabindex="0">
-                                {foreach $availableHands as $hand}
-                                    <a n:href="play!, $hand->value, $room"
-                                        data-naja-history="off"
-                                        class="ajax carousel-item card w-full"
-                                    >
-                                        <div class="card-body items-center p-4">
-                                            {include 'template/_hand.latte', hand: $hand, rulesTable: $rulesTable}
-                                        </div>
-                                    </a>
-                                {/foreach}
-                            </div>
-                            <span class="md:hidden float-end text-5xl cursor-pointer" role="img" aria-label="Rules">🛈︎</span>
-                            <div class="tooltip-content text-left" data-tip-slot></div>
-                        </div>
-                        <button type="button" data-prev aria-label="Previous"
-                                class="btn btn-circle md:btn-sm btn-xl absolute left-0 top-1/2 -translate-y-1/2 disabled:invisible">
-                            ❮
-                        </button>
-                        <button type="button" data-next aria-label="Next"
-                                class="btn btn-circle md:btn-sm btn-xl absolute right-0 top-1/2 -translate-y-1/2 disabled:invisible">
-                            ❯
-                        </button>
-                    </div>
-                </x-carousel>
+                {include 'template/_handChoice.latte'}
             </div>
         </section>
 
@@ -44,12 +16,13 @@
         </section>
     </div>
 
-    <div class="mt-8 flex w-full flex-col">
+    <div class="mt-6 flex w-full flex-col">
         <div class="grid h-20 place-items-center">
-            <button type="button" data-clipboard-text="{link Base:game $room|absoluteUrl}" data-copied="Link copied!"
+            <x-clipboard type="button" data-clipboard-text="{link Base:game $room|absoluteUrl}"
+                         data-copied="Link copied!"
                     class="clipboard tooltip btn btn-primary">
                 📋 Copy invite link
-            </button>
+            </x-clipboard>
         </div>
         <div class="divider"></div>
         <div class="grid h-20 place-items-center">

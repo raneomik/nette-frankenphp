@@ -2,33 +2,8 @@
 
 {block content}
     <div class="flex w-full flex-col">
-        <x-carousel class="mx-auto block w-72">
-            <div class="relative">
-                <div class="tooltip tooltip-bottom block">
-                    <div class="carousel carousel-center w-full justify-center-safe gap-3 px-10 py-2" tabindex="0">
-                        {foreach $availableHands as $hand}
-                            <div
-                                class="carousel-item card w-full">
-                                <div class="card-body items-center p-4">
-                                    {include 'template/_hand.latte', hand: $hand, rulesTable: $rulesTable}
-                                </div>
-                            </div>
 
-                        {/foreach}
-                    </div>
-                    <span class="md:hidden text-5xl float-end cursor-pointer" role="img" aria-label="Rules">🛈︎</span>
-                    <div class="tooltip-content text-left" data-tip-slot></div>
-                </div>
-                <button type="button" data-prev aria-label="Previous"
-                        class="btn btn-circle md:btn-sm btn-xl absolute left-0 top-1/2 -translate-y-1/2 disabled:invisible">
-                    ❮
-                </button>
-                <button type="button" data-next aria-label="Next"
-                        class="btn btn-circle md:btn-sm btn-xl absolute right-0 top-1/2 -translate-y-1/2 disabled:invisible">
-                    ❯
-                </button>
-            </div>
-        </x-carousel>
+        {include 'template/_handChoice.latte'}
 
         <div class="divider"></div>
 

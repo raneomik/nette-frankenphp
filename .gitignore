@@ -1,5 +1,8 @@
+.env
+
 # Composer
 /vendor
+
 # assets
 /node_modules
 

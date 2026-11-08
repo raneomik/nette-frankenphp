@@ -1,136 +1,49 @@
+# Nette × FrankenPHP × Mercure
 
-## Goal
+A [Nette](https://nette.org) application running in [FrankenPHP](https://frankenphp.dev) **worker mode**,
+with real-time updates pushed through the [Mercure](https://mercure.rocks) hub built into FrankenPHP
+(via [raneomik/nette-mercure](https://github.com/raneomik/nette-mercure)).
 
-Demo of [FrankenPHP](https://github.com/dunglas/frankenphp) with [Nette Framework](https://nette.org).
+The demo app is a multiplayer **Rock · Paper · Scissors · Lizard · Spock**: a live lobby of waiting rooms
+and two-player duels, updated as [Turbo Streams](https://turbo.hotwired.dev/handbook/streams) rendered from Latte templates.
 
-## Installation
+## What's inside
 
-You will need docker, docker compose, `PHP 8.2+` and [Composer](https://getcomposer.org/).
+- **One entry point, two runners**: FrankenPHP worker mode, or the plain Nette request cycle
+  on the PHP built-in server (`APP_RUNNER`).
+- **Mercure**: broadcasting from presenters, per-topic subscriber JWTs, a TypeScript Turbo Streams client built with Vite.
+- **SQLite** shared by all worker threads (a file in WAL mode: `:memory:` would give each thread its own empty database),
+  migrations with [dbmate](https://github.com/amacneil/dbmate).
+- **Dev**: hot reload, Xdebug.
+- **Monitoring** (optional): Prometheus, Grafana, Dozzle.
+- **Deployment**: a git tag builds the prod image, pushes it to GHCR and deploys it on a VPS
+  behind caddy-docker-proxy, with Litestream backups. See [.docker/deploy/README.md](.docker/deploy/README.md).
 
-Create project using composer.
+## Getting started
 
-```bash
-git clone https://github.com/raneomik/nette-frankenphp --branch plain-nette frankenette
-```
-
-Now you have application installed. It's time to run it.
-
-## Startup
-
-Spin up Docker stack. FrankenPHP with Caddyserver.
-
-
-```bash
-docker compose up -f compose.yml -f compose.dev.yml
-```
-or
+Requires Docker with Compose (PHP 8.4+, Composer and Node only for the built-in server mode).
 
 ```bash
-bin/dev --franken // bin/dev -h to show available options
+git clone https://github.com/raneomik/nette-frankenphp
+cd nette-frankenphp
+make certs   # once, from WSL: trust the local Caddy CA in Windows (bin/certs -h for other targets)
+make up      # FrankenPHP in the background (dev: hot reload, Xdebug, debug mode)
 ```
 
-Then visit [https://localhost:8000](https://localhost:8000) in your browser.
+Then open <https://localhost:448> (ports from `.env`). The game is at `/rock-paper-scissors`:
+open it in two browsers to play against yourself.
 
-## Benchmark (with [hey](https://github.com/rakyll/hey) in no-debug mode & without xdebug)
+| Target | |
+|---|---|
+| `make up` / `start` / `down` / `restart` | FrankenPHP in the background / foreground / stop / restart |
+| `make build` | Rebuild the image |
+| `make php` | Same app on the PHP built-in server (`http://localhost:8000`) |
+| `make migrate` / `migration name=…` / `rollback` | dbmate migrations|
+| `make certs` | Move FrankenPHP tls certificates & load them in navigator (wsl) |
+| `make monitor` | Grafana on `:3000` (admin/admin), Dozzle on `:8888` |
 
-### FrankenPHP
-```
-➜  bin/dev -f --port=443 -d -p // frankenphp on 443 to solve tls issues (windows' wsl)
-➜  bin/hey -n 1000 -c 100 https://localhost
+`make` lists every target; append `PROD=1` to disable debug mode, `V=-v` to print the executed commands.
 
-Summary:
-  Total:        0.1377 secs
-  Slowest:      0.0939 secs
-  Fastest:      0.0007 secs
-  Average:      0.0130 secs
-  Requests/sec: 7259.9676
+## License
 
-  Total data:   313000 bytes
-  Size/request: 313 bytes
-
-Response time histogram:
-  0.001 [1]     |
-  0.010 [793]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.019 [67]    |■■■
-  0.029 [12]    |■
-  0.038 [25]    |■
-  0.047 [2]     |
-  0.057 [34]    |■■
-  0.066 [3]     |
-  0.075 [0]     |
-  0.085 [34]    |■■
-  0.094 [29]    |■
-
-
-Latency distribution:
-  10% in 0.0019 secs
-  25% in 0.0033 secs
-  50% in 0.0050 secs
-  75% in 0.0083 secs
-  90% in 0.0503 secs
-  95% in 0.0809 secs
-  99% in 0.0894 secs
-
-Details (average, fastest, slowest):
-  DNS+dialup:   0.0024 secs, 0.0007 secs, 0.0939 secs
-  DNS-lookup:   0.0003 secs, 0.0000 secs, 0.0418 secs
-  req write:    0.0002 secs, 0.0000 secs, 0.0297 secs
-  resp wait:    0.0060 secs, 0.0007 secs, 0.0309 secs
-  resp read:    0.0008 secs, 0.0000 secs, 0.0297 secs
-
-Status code distribution:
-  [200] 1000 responses
-
-```
-
-compared to :
-
-### Built-in PHP server
-```
-➜  bin/dev -d -p // default
-➜  bin/hey -n 1000 -c 100 http://localhost:8080
-
-Summary:
-  Total:        0.8699 secs
-  Slowest:      0.1128 secs
-  Fastest:      0.0206 secs
-  Average:      0.0816 secs
-  Requests/sec: 1149.5049
-
-  Total data:   307000 bytes // dev note: gziped
-  Size/request: 307 bytes
-
-Response time histogram:
-  0.021 [1]     |
-  0.030 [32]    |■■■
-  0.039 [22]    |■■
-  0.048 [16]    |■
-  0.057 [8]     |■
-  0.067 [31]    |■■■
-  0.076 [11]    |■
-  0.085 [387]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.094 [473]   |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  0.104 [8]     |■
-  0.113 [11]    |■
-
-
-Latency distribution:
-  10% in 0.0662 secs
-  25% in 0.0840 secs
-  50% in 0.0851 secs
-  75% in 0.0869 secs
-  90% in 0.0921 secs
-  95% in 0.0930 secs
-  99% in 0.1045 secs
-
-Details (average, fastest, slowest):
-  DNS+dialup:   0.0008 secs, 0.0206 secs, 0.1128 secs
-  DNS-lookup:   0.0006 secs, 0.0000 secs, 0.0222 secs
-  req write:    0.0000 secs, 0.0000 secs, 0.0006 secs
-  resp wait:    0.0807 secs, 0.0200 secs, 0.0943 secs
-  resp read:    0.0000 secs, 0.0000 secs, 0.0005 secs
-
-Status code distribution:
-  [200] 1000 responses
-
-```
+MIT, see [LICENSE](LICENSE).

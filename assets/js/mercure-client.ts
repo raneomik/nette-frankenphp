@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 	if (!mercureUrlHolder) {
-		console.error("Mercure URL not found in data-mercure-url attribute.");
+		console.warn("Mercure URL not found in data-mercure-url attribute.");
 		return;
 	}
 

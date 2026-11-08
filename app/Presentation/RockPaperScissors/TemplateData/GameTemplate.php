@@ -6,7 +6,7 @@ namespace App\Presentation\RockPaperScissors\TemplateData;
 
 use App\Model\RockPaperScissors\Enum\Hand;
 use App\Model\RockPaperScissors\Value\DuelState;
-use App\Model\RockPaperScissors\Value\RulesTable;
+use App\Model\RockPaperScissors\Value\RulesMap;
 use Nette;
 
 final class GameTemplate extends Nette\Bridges\ApplicationLatte\Template
@@ -17,7 +17,7 @@ final class GameTemplate extends Nette\Bridges\ApplicationLatte\Template
 
     public array $availableHands = [];
 
-    public RulesTable $rulesTable;
+    public RulesMap $rulesMap;
 
     public iterable $rooms = [];
 
@@ -33,6 +33,6 @@ final class GameTemplate extends Nette\Bridges\ApplicationLatte\Template
     public function initData(): void
     {
         $this->availableHands = Hand::cases();
-        $this->rulesTable = new RulesTable();
+        $this->rulesMap = new RulesMap();
     }
 }
