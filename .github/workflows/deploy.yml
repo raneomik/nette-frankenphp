@@ -19,8 +19,8 @@ env:
   # GHCR requires a lowercase name (metadata-action lowercases it itself)
   IMAGE: ghcr.io/${{ github.repository }}
 
-# The deploy files (.docker/deploy) reach the VPS inside the image, not through this workflow:
-# deploy.sh installs them from the image it deploys (.docker/deploy/README.md, "Deploy files").
+# The deploy files (.docker/deploy) reach the VPS through rsync before each deployment
+# (.docker/deploy/README.md, "Deploy files").
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -85,6 +85,13 @@ jobs:
     environment:
       name: production
       url: ${{ vars.APP_URL }} # environment variable, e.g. https://rpsls.example.fr
+    env:
+      VPS_USER: ${{ secrets.VPS_USER }}
+      VPS_HOST: ${{ secrets.VPS_HOST }}
+      VPS_PORT: ${{ secrets.VPS_PORT }}
+      VPS_PROJECT_DIR: ${{ secrets.VPS_PROJECT_DIR }}
+      IMAGE_VERSION: ${{ needs.build.outputs.image }}
+
     steps:
       - name: Configure SSH
         env:
@@ -96,16 +103,23 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
 
-      # Runs deploy.sh in the project folder of the VPS (VPS_PROJECT_DIR). With the key restricted to
-      # deploy.sh (authorized_keys command="…"), the VPS runs it anyway and reads the version from
-      # the last word: this command works with or without that restriction.
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      # Before deploying: the deploy.sh that runs next is the one of this version, even when it
+      # changes what it accepts. The key's forced command (ssh-dispatch, README) hands rsync to
+      # rrsync, rooted at the project folder: hence the empty destination path. Secrets untouched.
+      - name: Sync deploy files
+        run: |
+          rsync -rc --exclude README.md \
+            -e "ssh -i $HOME/.ssh/deploy_key -p ${VPS_PORT:-22} -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
+            .docker/deploy/ "$VPS_USER@$VPS_HOST:"
+
+      # Runs deploy.sh in the project folder of the VPS (VPS_PROJECT_DIR). The key's forced command
+      # runs it anyway and deploy.sh reads the version from the last word: this command works with
+      # or without that restriction.
       - name: Deploy
-        env:
-          VPS_USER: ${{ secrets.VPS_USER }}
-          VPS_HOST: ${{ secrets.VPS_HOST }}
-          VPS_PORT: ${{ secrets.VPS_PORT }}
-          VPS_PROJECT_DIR: ${{ secrets.VPS_PROJECT_DIR }}
-          IMAGE_VERSION: ${{ needs.build.outputs.image }}
         run: |
           ssh -i ~/.ssh/deploy_key -p "${VPS_PORT:-22}" \
             -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \

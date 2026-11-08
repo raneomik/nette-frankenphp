@@ -11,8 +11,9 @@ final class RouterFactory
 	public static function createRouter(): \Nette\Routing\RouteList
     {
 		return (new RouteList())
-		    ->withModule('RockPaperScissors')
-		    ->addRoute('rock-paper-scissors[/<room>]/<action>', 'Base:default')
+            ->addRoute('health', 'Health:default')
+            ->withModule('RockPaperScissors')
+		        ->addRoute('rock-paper-scissors[/<room>]/<action>', 'Base:default')
 		    ->end()
 		    ->addRoute('<presenter>/<action>[/<id>]', 'Home:default');
 	}

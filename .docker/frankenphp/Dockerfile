@@ -114,11 +114,6 @@ ENV NETTE_DEBUG=0 \
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY --link .docker/frankenphp/conf.d/20-app.prod.ini $PHP_INI_DIR/app.conf.d/
 
-# Server-side deploy files of this version: deploy.sh installs them next to itself on each
-# deployment (.docker/deploy/README.md). Never the secrets: only the versioned files.
-COPY --link .docker/deploy/compose.yaml .docker/deploy/deploy.sh .docker/deploy/litestream.yml \
-    .docker/deploy/app.env.example .docker/deploy/litestream.env.example /deploy/
-
 # The code belongs to root: the app user can only write to var/
 COPY --from=prod_builder /srv /srv
 RUN <<-EOF
