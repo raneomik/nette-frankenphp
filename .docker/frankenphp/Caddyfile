@@ -57,6 +57,10 @@
         {$FRANKENPHP_SITE_CONFIG}
     }
 
+    # every URL under /assets changes with its content (Vite hash, or ?v=<mtime> from Nette Assets):
+    # never revalidate. A file linked there without n:asset / {asset} would stay stale for a year.
+    header /assets/* Cache-Control "public, max-age=31536000, immutable"
+
     file_server {
         hide *.php
     }
