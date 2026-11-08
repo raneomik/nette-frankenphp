@@ -42,12 +42,20 @@ jobs:
       # For a pre-release v1.4.0-rc.1: 1.4.0-rc.1, sha-8f3c2a9 (neither 1.4 nor latest)
       - id: meta
         uses: docker/metadata-action@v6
+        env:
+          # buildx pushes an index (image + provenance): GHCR reads the description from there
+          DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
         with:
           images: ${{ env.IMAGE }}
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=sha
+          # shown on the GHCR package page (defaults to the repository description)
+          labels: |
+            org.opencontainers.image.description=Nette on FrankenPHP (worker mode) with Mercure, built from the nette-mercure-intergration branch
+          annotations: |
+            org.opencontainers.image.description=Nette on FrankenPHP (worker mode) with Mercure, built from the nette-mercure-intergration branch
 
       - uses: docker/setup-buildx-action@v4
 
@@ -68,6 +76,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           # OCI labels: version, git revision, date, repository source…
           labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
           # composer downloads raneomik/nette-mercure (dev-main) through the GitHub API:
           # authenticated, it is not subject to the runners' shared anonymous rate limit
           secrets: |
