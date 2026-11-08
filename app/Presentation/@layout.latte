@@ -16,7 +16,7 @@
 
 </head>
 
-<body>
+<body class="flex min-h-dvh flex-col">
     <div n:snippet="toasts"
         data-naja-snippet-append
         class="toast toast-end toast-bottom z-50"
@@ -27,7 +27,7 @@
         {/foreach}
     </div>
 
-    <main class="p-5 min-h-[94vh]">
+    <main class="flex-1 p-5">
         {block navbar}
             <div class="navbar">
                 <div class="navbar-start">
@@ -64,7 +64,7 @@
 {*            }*}
 {*        }*}
 {*    </script>*}
-    <footer class="footer footer-horizontal bg-neutral text-neutral-content items-center p-3 max-h-[6vh]">
+    <footer class="footer footer-horizontal bg-neutral text-neutral-content items-center p-3">
         {block footer}
             <nav class="grid-flow-col gap-4 place-self-center justify-self-start">
                 <p>by raneomik © {date('Y')}</p>

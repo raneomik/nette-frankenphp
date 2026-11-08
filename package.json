@@ -20,7 +20,7 @@
     "vite-plugin-static-copy": "^4.1.1"
   },
   "scripts": {
-    "dev": "tsc --watch & vite & npm run tailwind -- --watch",
+    "dev": "tsc --watch & npm run tailwind -- --watch & vite",
     "validate": "tsc",
     "build": "npm run tailwind && vite build",
     "tailwind": "npx @tailwindcss/cli -i assets/app.css -o assets/.build/tailwind.css --minify --optimize"

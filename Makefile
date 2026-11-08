@@ -44,3 +44,7 @@ monitor: ## Start Prometheus, Grafana (:3000, admin/admin) & Dozzle (:8888)
 	docker compose --profile monitor up -d prometheus grafana dozzle
 monitor-down: ## Stop monitor services
 	docker compose --profile monitor stop prometheus grafana dozzle
+
+#Deploy
+tag:
+	git tag $(tag) && git push origin $(tag)

@@ -32,35 +32,6 @@ echo "→ deploying $TAG (currently: ${previous:-none})"
 export TAG
 docker compose pull app
 
-# Deploy files of the deployed version (compose.yaml, this script, litestream.yml, *.example):
-# shipped in the image under /deploy and installed here, so that the server always matches what
-# runs, rollbacks included, with no other SSH access (the GitHub key can only run this script).
-# Secrets (.env, app.env, litestream.env) are never touched.
-if [ -z "${DEPLOY_FILES_SYNCED:-}" ]; then
-  image=$(docker compose config --images app | head -n 1)
-  files=$(mktemp -d)
-  container=$(docker create "$image" true)
-  if docker cp "$container:/deploy/." "$files" 2>/dev/null; then
-    updated=""
-    for file in compose.yaml litestream.yml app.env.example litestream.env.example deploy.sh; do
-      [ -f "$files/$file" ] || continue
-      cmp -s "$files/$file" "$file" 2>/dev/null && continue
-      cp "$files/$file" "$file.new" && mv "$file.new" "$file" # atomic: this script may be the one replaced
-      updated="$updated $file"
-    done
-    chmod +x deploy.sh
-    echo "  deploy files from $image: ${updated:+updated$updated}${updated:-unchanged}"
-  else
-    echo "⚠ $image ships no deploy files: the current ones are kept" >&2
-    updated=""
-  fi
-  docker rm "$container" >/dev/null
-  rm -rf "$files"
-
-  # a new version of this script: run it instead, for this same deployment
-  case "$updated" in *deploy.sh*) DEPLOY_FILES_SYNCED=1 exec ./deploy.sh "$TAG" ;; esac
-fi
-
 # database replication, if configured (no effect if it already runs with the same config)
 if [ -f litestream.env ]; then
   # litestream reads litestream.yml at start only: recreate it when that file changed

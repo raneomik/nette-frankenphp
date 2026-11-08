@@ -58,15 +58,27 @@ ssh-keyscan -t ed25519 your-vps.example   # → VPS_KNOWN_HOSTS secret (check th
 ```
 
 `deploy_key.pub` goes in `~/.ssh/authorized_keys` of `<you>` on the VPS, restricted to the
-deployment: `command=` runs `deploy.sh` whatever the client asks (it reads the version from
-`$SSH_ORIGINAL_COMMAND`), `restrict` disables port forwarding, agent and terminal. A leaked
-key can only redeploy an existing image; to revoke it, delete the line.
+deployment: `command=` runs `~/bin/ssh-dispatch` whatever the client asks, `restrict` disables
+port forwarding, agent and terminal. To revoke the key, delete the line.
 
 ```
-command="<dir>/deploy.sh",restrict ssh-ed25519 AAAA… github-deploy
+command="/home/<you>/bin/ssh-dispatch",restrict ssh-ed25519 AAAA… github-deploy
 ```
 
-This key therefore gives no shell and no `scp`: for everything else, keep your own access.
+`~/bin/ssh-dispatch` (`chmod 755`, outside `<dir>` so that the sync cannot rewrite it) hands the
+workflow's rsync to `rrsync` (rsync ≥ 3.2.4), jailed in `<dir>`, and anything else to
+`deploy.sh` (it reads the version from `$SSH_ORIGINAL_COMMAND`):
+
+```sh
+#!/bin/sh
+case "${SSH_ORIGINAL_COMMAND:-}" in
+  "rsync --server "*) exec /usr/bin/rrsync -no-del <dir>/ ;;
+  *)                  exec <dir>/deploy.sh ;;
+esac
+```
+
+This key therefore gives no shell: for everything else, keep your own access. It can write files
+in `<dir>` (secrets included) and run `deploy.sh`: treat it as a full access to the app.
 Test from your machine (`-i`: not a default key name):
 
 ```sh
@@ -81,7 +93,7 @@ others (`chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys && chmod go-w ~`);
 
 The project itself is not copied to the VPS: the code ships in the image pulled from GHCR.
 `<dir>` only holds the files of this folder. Copy them once, from the project root on your
-machine; afterwards `deploy.sh` keeps them in sync by itself (see Deploy files below):
+machine; afterwards the workflow keeps them in sync (see Deploy files below):
 
 ```sh
 scp .docker/deploy/{compose.yaml,deploy.sh,litestream.yml,app.env.example,litestream.env.example} \
@@ -134,25 +146,18 @@ What the workflow does, and why:
 
 ## Deploy files
 
-The prod image carries the server-side files of its version under `/deploy` (`compose.yaml`,
-`deploy.sh`, `litestream.yml`, `app.env.example`, `litestream.env.example`). On each deployment,
-`deploy.sh` extracts them from the image it deploys and installs the ones that changed next to
-itself, before starting anything:
+Before each deployment, the workflow rsyncs this folder (`compose.yaml`, `deploy.sh`,
+`litestream.yml`, the `*.example` files) into `<dir>`, then runs `deploy.sh`:
 
-- the server always matches what runs, a manual rollback (`deploy.sh 1.2.0`) included, and the
-  GitHub key keeps its single right: running `deploy.sh`;
-- a new `deploy.sh` takes over for that same deployment;
+- the `deploy.sh` that runs is the one of the version being deployed, even when it changes the
+  argument format the workflow sends;
 - `litestream` is recreated when `litestream.yml` changed (it reads that file at start only);
-- secrets are never touched: `.env`, `app.env`, `litestream.env` are not in the image. A new
-  variable in `app.env.example` is to be copied into `app.env` by hand.
+- secrets are never touched: `.env`, `app.env`, `litestream.env` are not versioned, and rrsync
+  runs with `-no-del`. A new variable in `app.env.example` is to be copied into `app.env` by hand.
 
-An image built before this mechanism ships no `/deploy`: `deploy.sh` warns and keeps the current
-files. Once, to switch a server set up before it, copy the new `deploy.sh` by hand (the old one
-does not sync):
-
-```sh
-scp .docker/deploy/deploy.sh <you>@your-vps.example:<dir>/
-```
+A manual rollback on the VPS (`deploy.sh 1.2.0`) only changes the image: the files stay those of
+the last deployment through the workflow. To restore them too, rerun the workflow on the old tag
+(Actions → "Run workflow", "Use workflow from" → `v1.2.0`).
 
 ## First deployment
 
