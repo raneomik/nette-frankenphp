@@ -31,7 +31,6 @@ final readonly class FrankenphpRunner
             exit;
         }
 
-        // @phpstan-ignore-next-line
         $maxRequests = (int) ($_SERVER['MAX_REQUESTS'] ?? self::MAX_REQUESTS);
 
         do {

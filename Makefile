@@ -1,6 +1,6 @@
 # Facade of bin/dev. Vars: PORT=<port> PROD=1 V=-v (e.g. make up PORT=9000 PROD=1)
 .DEFAULT_GOAL := help
-.PHONY: help up start down restart build vendors php php-stop clear-logs clear-cache migrate migration rollback certs monitor monitor-down
+.PHONY: help up start down restart build vendors php php-stop clear-logs clear-cache migrate migration rollback certs pwa-icon monitor monitor-down
 
 help: ## List available targets
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  \033[32m%-12s\033[0m %s\n", $$1, $$2}'
@@ -39,6 +39,12 @@ migration: ## New migration file: make migration name=create_game
 	docker compose exec app dbmate new $(name)
 rollback: ## Roll back the last migration (dev)
 	docker compose exec app dbmate rollback
+
+# opaque background (iOS paints transparency black) + logo at 64% (maskable safe zone);
+# linked by the manifest as img:pwa-icon (config/common.neon), versioned by Nette Assets
+pwa-icon: ## Regenerate assets/img/pwa-icon.svg (PWA manifest) from assets/img/app.svg
+	@inner=$$(sed -e 's/^<svg[^>]*>//' -e 's#</svg>$$##' assets/img/app.svg | tr -d '\n'); \
+	printf '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" viewBox="0 0 300 300"><rect width="300" height="300" fill="#11161c"/><g transform="translate(150 150) scale(0.64) translate(-884 -270.86458587646484)">%s</g></svg>' "$$inner" > assets/img/pwa-icon.svg
 
 monitor: ## Start Prometheus, Grafana (:3000, admin/admin) & Dozzle (:8888)
 	docker compose --profile monitor up -d prometheus grafana dozzle

@@ -1,9 +1,9 @@
-{block title}Game{/block}
+{block title}Rock Paper Scissors{/block}
 
 {block content}
     {* read by app.js: leave! signal sent when the page closes (outside the snippet, so it does not depend on a redraw) *}
     <div class="grid gap-6 lg:grid-cols-2" data-leave-url="{link leave!, $room, $pageId}">
-        <section class="card min-w-0">
+        <section class="card stitched min-w-0 bg-base-200">
             <div class="card-body items-center gap-4">
                 <h2 class="card-title">You</h2>
                 {include 'template/_handChoice.latte'}
@@ -11,19 +11,29 @@
         </section>
 
         {* opponent: read-only; above on mobile, on the right on large screens *}
-        <section n:snippet="opponent" class="card order-first min-w-0 lg:order-none">
-            {include 'template/_opponent.latte', state: $duelState, availableHands: $availableHands}
+        <section class="group card stitched order-first min-w-0 bg-base-200 lg:order-none">
+            <div n:snippet="opponent">
+                {include 'template/_opponent.latte', state: $duelState, availableHands: $availableHands}
+            </div>
+            {* outside the snippet: Mercure streams render _opponent from the other player's side (their user id, no page link);
+               shown only while the card says [data-waiting] *}
+            <div class="hidden flex-col items-center gap-2 px-6 pb-8 group-has-[[data-waiting]]:flex">
+                <x-clipboard type="button" data-clipboard-text="{link Base:game $room|absoluteUrl}"
+                             data-copied="Link copied!"
+                        class="clipboard tooltip btn btn-primary">
+                    📋 Copy invite link
+                </x-clipboard>
+                {* push-client.js (nette-pwa) hides it while push is off or unsupported, asks to install on iOS;
+                   a toggle: clicked while on (aria-pressed="true", data-pwa-on label), it turns notifications off *}
+                <button type="button" class="btn btn-ghost btn-sm aria-pressed:btn-active" data-pwa-push="player/{$user->id}"
+                        data-pwa-on="🔕 Stop notifying me">
+                    🔔 Notify me when someone joins
+                </button>
+            </div>
         </section>
     </div>
 
     <div class="mt-6 flex w-full flex-col">
-        <div class="grid h-20 place-items-center">
-            <x-clipboard type="button" data-clipboard-text="{link Base:game $room|absoluteUrl}"
-                         data-copied="Link copied!"
-                    class="clipboard tooltip btn btn-primary">
-                📋 Copy invite link
-            </x-clipboard>
-        </div>
         <div class="divider"></div>
         <div class="grid h-20 place-items-center">
             <a n:href="Base:default" class="btn btn-ghost">Back to lobby</a>

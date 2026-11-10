@@ -1,0 +1,12 @@
+{layout tRoot('@layout.latte')}
+
+{block content}
+    <div class="hero py-20">
+        <div class="hero-content text-center">
+            <div class="max-w-md space-y-4 [&_h1]:text-4xl [&_h1]:font-extrabold [&_small]:opacity-60">
+                {include error}
+                <p><a n:href=":Home:" class="btn btn-primary">Back to the home page</a></p>
+            </div>
+        </div>
+    </div>
+{/block}

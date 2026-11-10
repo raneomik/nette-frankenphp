@@ -7,6 +7,8 @@
     <script>try { if (localStorage.theme === 'light') document.documentElement.dataset.theme = 'light'; } catch {}</script>
 {*    <link rel="icon" n:asset?="runnerIconAsset()" type="image/x-icon">*}
     <link rel="icon" n:asset?="favicon:app" type="image/x-icon">
+    {* PWA (nette-pwa): manifest, theme color, Web Push settings; installing the app is what enables Web Push on iOS *}
+    {pwaHead()}
 
     <title>{ifset title}{include title|stripHtml} | {/ifset}frankenette</title>
 
@@ -31,7 +33,7 @@
         {block navbar}
             <div class="navbar">
                 <div class="navbar-start">
-                    <a n:href=":Home:" class="inline-flex items-center gap-3 text-lg">
+                    <a n:href=":Home:" class="font-display inline-flex items-center gap-3 text-xl font-extrabold">
                         {include tRoot('_icon/app.svg.latte'), class: 'size-10'}
                         frankenette
                     </a>

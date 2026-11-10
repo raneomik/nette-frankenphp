@@ -1,25 +1,27 @@
-{block title}Lobby{/block}
+{block title}Rock Paper Scissors - Lobby{/block}
 
 {block content}
     <div class="flex w-full flex-col">
 
-        {include 'template/_handChoice.latte'}
+        <h2 class="text-center text-2xl font-extrabold">The rules</h2>
+        <p class="mb-2 text-center text-sm opacity-60">Five hands, each beats two others.</p>
+        {include 'template/_handChoice.latte', playable: false}
 
         <div class="divider"></div>
 
         <div class="mx-auto block">
-            <a n:href="Base:game $newRoom" class="btn btn-ghost max-w-lg m-5 text-lg">
+            <a n:href="Base:game $newRoom" class="btn btn-primary btn-lg max-w-lg m-5">
                 Start a new game
             </a>
         </div>
 
         {* always rendered, hidden while empty: the live updates (waitingRooms.stream.latte) only replace the <li>s *}
-        <details class="collapse collapse-arrow border-base-300 border max-w-100 mx-auto not-has-[li]:hidden">
+        <details class="collapse collapse-arrow border-base-300 border w-full max-w-100 mx-auto not-has-[li]:hidden">
             <summary class="collapse-title font-semibold">
                 Join a waiting player
             </summary>
             <div class="collapse-content flex justify-center">
-                <ul id="waiting-room-list" class="list" data-refetch-on-connect>
+                <ul id="waiting-room-list" class="list w-full" data-refetch-on-connect>
                     {include 'template/_waitingRooms.latte', rooms: $rooms}
                 </ul>
             </div>

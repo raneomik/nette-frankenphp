@@ -3,25 +3,23 @@
 namespace App\Model\Service;
 
 use Faker\Factory;
-use Faker\Generator;
 use NavisBorealis\WonderwordsPhp\Faker\WonderWordsProvider;
 
 final readonly class Randomiser
 {
-    private Generator $faker;
+    private WonderWordsProvider $words; // called directly: through Faker's magic __call, its methods are unknown to phpstan
 
     public function __construct()
     {
-        $this->faker = Factory::create();
-        $this->faker->addProvider(new WonderWordsProvider($this->faker));
+        $this->words = new WonderWordsProvider(Factory::create());
     }
 
     public function username(): string
     {
         return sprintf(
             '%s %s',
-            ucfirst($this->faker->wonderWordsAdjective()),
-            ucfirst($this->faker->wonderWordsAnimal()),
+            ucfirst($this->words->wonderWordsAdjective()),
+            ucfirst($this->words->wonderWordsAnimal()),
         );
     }
 

@@ -19,6 +19,8 @@ services:
             SERVER_NAME: localhost
             XDEBUG_MODE: "off"
             MERCURE_JWT_SECRET: ${MERCURE_JWT_SECRET}
+            VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
+            VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
             CADDY_SERVER_LOG_OPTIONS: level ERROR
         volumes:
             - ./var/:/srv/var
