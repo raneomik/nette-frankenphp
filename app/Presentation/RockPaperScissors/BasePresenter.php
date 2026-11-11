@@ -12,10 +12,13 @@ use App\Model\RockPaperScissors\Value\WaitingRoom;
 use App\Model\Service\Messenger;
 use App\Model\Service\Randomiser;
 use App\Presentation\RockPaperScissors\TemplateData\GameTemplate;
-use JetBrains\PhpStorm\NoReturn;
 use Nette;
+use Nette\Application\Attributes\Requires;
 use Nette\DI\Attributes\Inject;
 use Nette\Security\SimpleIdentity;
+use Raneomik\NettePWA\Push\Notification;
+use Raneomik\NettePWA\Push\PushSender;
+use Tracy\Debugger;
 
 /**
  * @property GameTemplate $template
@@ -23,13 +26,16 @@ use Nette\Security\SimpleIdentity;
 final class BasePresenter extends Nette\Application\UI\Presenter
 {
     #[Inject]
+    public GameFacade $game;
+
+    #[Inject]
     public Randomiser $randomiser;
 
     #[Inject]
     public Messenger $messenger;
 
     #[Inject]
-    public GameFacade $game;
+    public PushSender $push;
 
     protected function startup(): void
     {
@@ -64,31 +70,6 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         $this->template->newRoom = $this->randomiser->id();
     }
 
-    public function actionGame(string $room): void
-    {
-        if (null !== $this->getSignal()) { // signals (play! via ajax or not, leave! via beacon) come through here too: only opening the page counts as an arrival
-            return;
-        }
-
-        $this->room = $room;
-        $myId = (string) $this->me->id;
-        $this->template->pageId = $this->randomiser->id();
-        $arrived = $this->game->join($room, $myId, $this->me->identity->username, $this->template->pageId);
-        if (! $arrived) { // reload: already in the room, nothing new for the opponent
-            return;
-        }
-
-        $opponent = $this->game->opponent($room, $myId);
-
-        $this->messenger->toOthers($room, $myId, __DIR__ . '/template/joined.stream.latte', [
-            'player' => $this->me->identity->username,
-            'availableHands' => Hand::cases(),
-            'state' => $this->game->duelState($room, $opponent->userId ?? ''), // as seen by the opponent
-        ]);
-
-        $this->refreshWaitingRoomList();
-    }
-
     public function renderDefault(): void
     {
         $this->template->initData();
@@ -101,6 +82,34 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         ));
     }
 
+    public function actionGame(string $room): void
+    {
+        if (null !== $this->getSignal()) { // signals (play! via ajax or not, leave! via beacon) come through here too: only opening the page counts as an arrival
+            return;
+        }
+
+        $this->room = $room;
+        $myId = (string) $this->me->id;
+        $this->template->pageId = $this->randomiser->id();
+        $arrived = $this->game->join($room, $myId, $this->username(), $this->template->pageId);
+        if (! $arrived) { // reload: already in the room, nothing new for the opponent
+            return;
+        }
+
+        $opponent = $this->game->opponent($room, $myId);
+
+        $this->messenger->toOthers($room, $myId, __DIR__ . '/template/joined.stream.latte', [
+            'player' => $this->username(),
+            'availableHands' => Hand::cases(),
+            'state' => $this->game->duelState($room, $opponent->userId ?? ''), // as seen by the opponent
+        ]);
+
+        // the waiting player may have closed the tab: Mercure would not reach them
+        $opponent && $this->notifyJoined($opponent->userId, $room);
+
+        $this->refreshWaitingRoomList();
+    }
+
     public function renderGame(): void
     {
         $this->template->initData();
@@ -109,7 +118,7 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         $this->template->duelState ??= $this->game->duelState($this->room, (string) $this->me->id); // already set by handlePlay in solo mode
     }
 
-    public function formatTemplateClass(): ?string
+    public function formatTemplateClass(): string
     {
         return GameTemplate::class;
     }
@@ -117,22 +126,22 @@ final class BasePresenter extends Nette\Application\UI\Presenter
     /**
      * called by sendBeacon when the page closes: leave the room and the opponent goes back to waiting
      */
-    #[NoReturn]
     public function handleLeave(string $room, string $page): void
     {
         $myId = (string) $this->me->id;
-        $other = $this->game->opponent($room, $myId);
 
-        $this->game->leave($room, $myId, $page) && $other && $this->messenger->toOthers($room, $myId, __DIR__ . '/template/left.stream.latte', [
-            'player' => $this->me->identity->username,
-            'state' => $this->game->duelState($room, $other->userId), // as seen by the one who stays
-        ]);
+        $this->game->leave($room, $myId, $page)
+            && $this->messenger->toOthers($room, $myId, __DIR__ . '/template/left.stream.latte', [
+                'player' => $this->username(),
+                'state' => new DuelState(), // as seen by the one who stays
+            ]);
 
         $this->refreshWaitingRoomList();
 
         $this->terminate();
     }
 
+    #[Requires(methods: 'POST')]
     public function handlePlay(string $hand, string $room): void
     {
         $this->room = $room;
@@ -149,24 +158,26 @@ final class BasePresenter extends Nette\Application\UI\Presenter
             $hands = Hand::cases();
             $this->template->duelState = new DuelState('Computer', revealed: $hands[array_rand($hands)], mine: $move, solo: true);
             $this->redrawControl('opponent');
+
             $this->isAjax() || $this->redirect('this'); // shortcut: without JS, the redirect loses the solo result; it should go through the session
             return;
         }
 
-        if ($myRound > ($opponent ? $this->game->round($room, $opponent->userId) : 0)) {
+        if ($myRound > $this->game->round($room, $opponent->userId)) {
             $this->flashMessage('Your opponent hasn\'t played yet.', 'warning');
             $this->redrawControl('toasts');
+
             $this->isAjax() || $this->redirect('this');
             return;
         }
 
-        $this->game->record(new GameRecord($room, $myId, $me->identity->username, $move->value, $myRound + 1));
-        $this->game->join($room, $myId, $me->identity->username); // refreshes joinedAt: an active player is not stale for cleanRooms
+        $this->game->record(new GameRecord($room, $myId, $this->username(), $move->value, $myRound + 1));
+        $this->game->join($room, $myId, $this->username()); // refreshes joinedAt: an active player is not stale for cleanRooms
 
         // to the others: "X played" + their opponent card from their side
         // (with no known opponent, '' = a spectator who has not played yet)
         $this->messenger->toOthers($room, $myId, __DIR__ . '/template/played.stream.latte', [
-            'player' => $me->identity->username,
+            'player' => $this->username(),
             'availableHands' => Hand::cases(),
             'state' => $this->game->duelState($room, $opponent->userId ?? ''),
         ]);
@@ -177,6 +188,44 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         $this->redrawControl('opponent');
 
         $this->isAjax() || $this->redirect('this'); // without JS: Post/Redirect/Get, the signal URL does not stay in the address bar
+    }
+
+    #[Requires(methods: 'POST')]
+    public function handleCleanAll(): void
+    {
+        Debugger::$productionMode && $this->error();
+
+        $this->game->cleanRooms(-1);
+        $this->refreshWaitingRoomList();
+
+        $this->redirect('this');
+    }
+
+    /**
+     * never throws: a push failure must not break the arrival in the room
+     */
+    private function notifyJoined(string $playerId, string $room): void
+    {
+        try {
+            $failures = $this->push->send("player/{$playerId}", new Notification(
+                "{$this->username()} joined your room",
+                'Your opponent is here, time to play!',
+                $this->link('//game', $room),
+            ));
+            foreach ($failures as $failure) {
+                Debugger::log("Web push failed: {$failure->getReason()}", Debugger::WARNING);
+            }
+        } catch (\Throwable $e) {
+            Debugger::log($e, Debugger::EXCEPTION);
+        }
+    }
+
+    private function username(): string
+    {
+        $identity = $this->me->getIdentity();
+        \assert($identity instanceof SimpleIdentity); // startup() logs every visitor in
+
+        return (string) $identity->username;
     }
 
     private function refreshWaitingRoomList(): void

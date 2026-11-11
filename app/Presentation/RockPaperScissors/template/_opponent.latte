@@ -3,7 +3,7 @@
 {var $outcome = $state->outcome()}
 {var $won = $outcome instanceof App\Model\RockPaperScissors\Enum\WinType}
 
-<div class="card-body items-center gap-4">
+<div class="card-body items-center gap-4" n:attr="data-waiting: (!$state->opponent || $state->solo) ?: null">
     <h2 class="card-title">
         {$state->opponent ?? 'Waiting for an opponent…'}
         <span n:if="$state->opponentPlayed" class="badge badge-success">ready</span>
@@ -32,19 +32,24 @@
                 {* told from the winner's side: "Paper covers rock", not "Rock covered by paper" *}
                 You lose. {$state->revealed->label()|firstUpper} {$state->revealed->game($state->mine)?->value} {$state->mine->label()}.
             {/if}
+        {elseif $state->opponent}
+            {$state->opponent} {$state->opponentPlayed ? 'has played.' : 'is thinking…'}
         {/if}
     </p>
 
+    {* 2. nothing else tells that a new round starts just by picking again *}
+    <p n:if="$state->revealed && $state->mine && !$state->solo" class="text-sm opacity-60">Pick a hand to play the next round.</p>
+
     <p n:if="!$state->opponent || $state->solo" class="text-sm opacity-60">Pick a hand to play against the computer while you wait.</p>
 
-    <div n:if="$state->opponent && !$state->solo" class="stats bg-base-200">
+    <div n:if="$state->opponent && !$state->solo" class="stats bg-base-100">
         <div class="stat place-items-center px-6 py-2">
             <div class="stat-title">You</div>
             <div class="stat-value text-primary">{$state->myScore}</div>
         </div>
         <div class="stat place-items-center px-6 py-2">
             <div class="stat-title max-w-32">{$state->opponent}</div>
-            <div class="stat-value text-secondary">{$state->theirScore}</div>
+            <div class="stat-value">{$state->theirScore}</div>
         </div>
     </div>
 </div>

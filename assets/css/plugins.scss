@@ -1,0 +1,31 @@
+@plugin "daisyui" {
+    include:
+        hover3d,
+        card,
+        stat,
+        badge,
+        list,
+        list-row,
+        loading,
+        button,
+        input,
+        select,
+        checkbox,
+        toggle,
+        tooltip,
+        collapse,
+        swap,
+        carousel,
+        navbar,
+        footer,
+        hero,
+        alert,
+        color,
+        toast,
+        divider,
+        textrotate,
+        link,
+        rootcolor, /* page background and text color from the theme (base-100 / base-content) */
+;
+    themes: light --default, night --prefersdark;
+}

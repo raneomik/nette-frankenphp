@@ -12,8 +12,8 @@ use Raneomik\NetteMercure\Core\Subscribe\AuthorizationInterface;
 final class HomePresenter extends Nette\Application\UI\Presenter
 {
 	public function __construct(
-	    private BroadcasterInterface $broadcaster,
-	    private AuthorizationInterface $authorization,
+	    private readonly BroadcasterInterface $broadcaster,
+	    private readonly AuthorizationInterface $authorization,
 	) {
     }
 

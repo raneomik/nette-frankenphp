@@ -50,6 +50,8 @@ latte:
 
 extensions:
     mercure: Raneomik\NetteMercure\Bridge\DI\MercureExtension(%debugMode%)
+    pwa: Raneomik\NettePWA\Bridge\DI\PWAExtension
+    # packages of require-dev: config/dev.neon
 
 mercure:
     one:
@@ -63,6 +65,23 @@ mercure:
         url: '%baseUrl%/.well-known/mercure'
         jwt:
             key: %mercureJwtSecret%
+
+# /manifest.webmanifest, /sw.js, /pwa/push/subscribe: POST on, DELETE off, PUT rotation (libs/nette-pwa)
+pwa:
+    manifest:
+        name: frankenette
+        shortName: frankenette
+        description: 'Nette + FrankenPHP + Mercure: rock paper scissors'
+        backgroundColor: '#11161c'
+        themeColor: '#11161c'
+        icons:  # make pwa-icon
+            - {src: 'img:pwa-icon', sizes: any, type: image/svg+xml, purpose: any}
+            - {src: 'img:pwa-icon', sizes: any, type: image/svg+xml, purpose: maskable}
+    push:
+        vapid:  # empty (Bootstrap: VAPID_* env) = push off, the opt-in button stays hidden
+            publicKey: %vapidPublicKey%
+            privateKey: %vapidPrivateKey%
+        ttl: 600  # "X joined" is worthless after 10 minutes
 
 assets:
     mapping:

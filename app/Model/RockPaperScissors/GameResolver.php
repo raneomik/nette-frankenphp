@@ -2,6 +2,7 @@
 
 namespace App\Model\RockPaperScissors;
 
+use App\Model\RockPaperScissors\Enum\Hand;
 use App\Model\RockPaperScissors\Enum\Result;
 use App\Model\RockPaperScissors\Value\DuelState;
 use Nette\Database\Table\ActiveRow;
@@ -10,6 +11,8 @@ final class GameResolver
 {
     /**
      * Duel state as seen by $viewerId: the opponent, whether they already played the current round, and their hand once the round is complete.
+     *
+     * @param array<int, array<string, Hand>> $rounds round => userId => hand
      */
     public function resolveDuel(
         array $rounds,

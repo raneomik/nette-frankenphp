@@ -1,35 +1,5 @@
 @import "tailwindcss";
-@source inline("alert-{info,success,warning,error}");
-@plugin "daisyui" {
-    include:
-        hover3d,
-        card,
-        stat,
-        badge,
-        list,
-        list-row,
-        loading,
-        button,
-        input,
-        select,
-        checkbox,
-        toggle,
-        tooltip,
-        collapse,
-        swap,
-        carousel,
-        navbar,
-        footer,
-        hero,
-        alert,
-        color,
-        toast,
-        divider,
-        textrotate,
-        link,
-    ;
-    themes: light --default, night --prefersdark;
-}
-
-/* rounded buttons in every theme; inputs and selects keep the theme's --radius-field */
-.btn { --radius-field: 9999px; }
+@import "./css/plugins.scss";
+@import "./css/theme.scss";
+@import "./css/toast.scss";
+@import "./css/push-switch.scss";

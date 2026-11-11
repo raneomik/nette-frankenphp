@@ -4,38 +4,30 @@ declare(strict_types=1);
 
 namespace App\Presentation\Subscribe;
 
+use App\Model\Service\TopicAccess;
 use Nette;
 use Nette\Application\Attributes\Parameter;
 use Nette\Http\IResponse;
-use Raneomik\NetteMercure\Core\Subscribe\AuthorizationInterface;
 use Raneomik\NetteMercure\SubscriberInterface;
 
 /**
- * Issues the subscriber JWT for the topics a page listens to (assets/js/turbo-client.js).
- * Only topics the visitor may read are granted: anyone could otherwise ask for "*" or for
- * another player's private "player/<id>" topic.
+ * Issues the subscriber JWT for the topics a page listens to (assets/js/turbo-client.js):
+ * only those the visitor may read (TopicAccess).
  */
 final class SubscribePresenter extends Nette\Application\UI\Presenter
 {
-    /**
-     * topics readable by every visitor
-     */
-    private const array PublicTopics = ['chat', 'turbo-test-topic', 'room/lobby'];
-
-    /**
-     * rooms are public: the lobby lists them
-     */
-    private const string RoomTopic = '~^room/[A-Za-z0-9-]{1,64}$~D';
-
     #[Parameter]
     public ?string $hub = null;
 
+    /**
+     * @var string|array<mixed> one topic or several, as sent: filtered by renderDefault()
+     */
     #[Parameter]
     public string|array $topics = [];
 
     public function __construct(
-        private readonly AuthorizationInterface $authorization,
         private readonly SubscriberInterface $subscriber,
+        private readonly TopicAccess $topicAccess,
     ) {
     }
 
@@ -45,9 +37,7 @@ final class SubscribePresenter extends Nette\Application\UI\Presenter
             return;
         }
 
-//        $this->authorization->setCookie($this->topics, hub: $this->hub);
-
-        $topics = array_values(array_unique(array_filter((array) $this->topics, $this->isAllowed(...))));
+        $topics = array_values(array_unique(array_filter((array) $this->topics, fn (mixed $topic): bool => \is_string($topic) && $this->topicAccess->isAllowed($topic))));
         if ([] === $topics) {
             $this->error('No topic you may subscribe to.', IResponse::S403_Forbidden);
         }
@@ -55,17 +45,5 @@ final class SubscribePresenter extends Nette\Application\UI\Presenter
         $this->sendJson(
             $this->subscriber->subscribe($topics, $this->hub),
         );
-    }
-
-    private function isAllowed(mixed $topic): bool
-    {
-        if (! \is_string($topic)) {
-            return false;
-        }
-        $user = $this->getUser();
-
-        return \in_array($topic, self::PublicTopics, true)
-            || 1 === preg_match(self::RoomTopic, $topic)
-            || ($user->isLoggedIn() && $topic === 'player/' . $user->getId());
     }
 }

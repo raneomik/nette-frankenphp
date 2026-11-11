@@ -19,8 +19,8 @@ final class LatteExtension extends Extension
 	{
 		return [
 		    'runnerName' => fn(): string => $this->runner->value,
-		    'runnerIconAsset' => fn(): string => $this->runner->faviconAsset(),
-		    'runnerImageAsset' => fn(): string => $this->runner->imageAsset(),
+		    'runnerIconAsset' => $this->runner->faviconAsset(...),
+		    'runnerImageAsset' => $this->runner->imageAsset(...),
 		    'hotReloadUrl' => fn(): ?string => $this->hotReloadUrl,
 		    'tRoot' => fn(string $layout): string => dirname(__DIR__) . '/' . $layout,
 		];

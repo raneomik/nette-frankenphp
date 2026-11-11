@@ -1,0 +1,69 @@
+@plugin "daisyui/theme" {
+    name: "light";
+    default: true;
+    --color-base-100: #f3f6f1;
+    --color-base-200: #e4ebe1;
+    --color-base-300: #cbd7c7;
+    --color-base-content: #16211a;
+    --color-primary: #1f7a3a;
+    --color-primary-content: #ffffff;
+    --color-secondary: #f2c200;
+    --color-secondary-content: #241c00;
+    --color-accent: #f2c200;
+    --color-accent-content: #241c00;
+    --color-neutral: #16211a;
+    --color-neutral-content: #e4ede6;
+    /* info is the everyday toast ("X has played"): inverted ink, so green/yellow/red keep a meaning */
+    --color-info: #16211a;
+    --color-info-content: #e4ede6;
+    --color-success: #1f7a3a;
+    --color-success-content: #ffffff;
+    --color-warning: #f2c200;
+    --color-warning-content: #241c00;
+    --color-error: #c23a2b;
+    --color-error-content: #ffffff;
+}
+@plugin "daisyui/theme" {
+    name: "night";
+    prefersdark: true;
+    --color-base-100: #11161c; /* same as the PWA themeColor and icon background */
+    --color-base-200: #182329;
+    --color-base-300: #26353d;
+    --color-base-content: #e4ede6;
+    --color-primary: #8fe04a;
+    --color-primary-content: #0d1a08;
+    --color-secondary: #ffd83d;
+    --color-secondary-content: #1c1600;
+    --color-accent: #ffd83d;
+    --color-accent-content: #1c1600;
+    --color-neutral: #0a0e12;
+    --color-neutral-content: #e4ede6;
+    --color-info: #e4ede6;
+    --color-info-content: #11161c;
+    --color-success: #8fe04a;
+    --color-success-content: #0d1a08;
+    --color-warning: #ffd83d;
+    --color-warning-content: #1c1600;
+    --color-error: #ff7a6b;
+    --color-error-content: #2a0703;
+}
+
+@theme {
+    --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+h1, h2, .stat-value { font-family: var(--font-display); letter-spacing: -0.02em; }
+
+/* rounded buttons in every theme; inputs and selects keep the theme's --radius-field */
+.btn { --radius-field: 9999px; }
+
+/* daisyUI already calms text-rotate, and x-confetti checks the same media query */
+@media (prefers-reduced-motion: reduce) {
+    .hover-3d > :first-child { transform: none; transition: none; }
+}
+
+/* topstitch: a dashed line sewn just inside the edge of a card, like a patch */
+.stitched {
+    outline: 2px dashed color-mix(in srgb, var(--color-base-content) 40%, transparent);
+    outline-offset: -9px;
+}

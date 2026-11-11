@@ -6,7 +6,7 @@ class XCarousel extends HTMLElement {
     prev!: HTMLButtonElement | null;
     next!: HTMLButtonElement | null;
     dots!: HTMLElement | null;
-    #tipSlot: HTMLElement | null = null;
+    #tipSlots: HTMLElement[] = []; // tooltip on wide screens, inline panel on small ones
     #tipIndex = -1;
 
     connectedCallback(): void {
@@ -18,7 +18,7 @@ class XCarousel extends HTMLElement {
         this.prev = this.querySelector<HTMLButtonElement>('[data-prev]');
         this.next = this.querySelector<HTMLButtonElement>('[data-next]');
         this.dots = this.querySelector<HTMLElement>('[data-dots]');
-        this.#tipSlot = this.querySelector<HTMLElement>('[data-tip-slot]');
+        this.#tipSlots = [...this.querySelectorAll<HTMLElement>('[data-tip-slot]')];
         this.#tipIndex = -1;
 
         this.prev?.addEventListener('click', () => this.go(-1), {signal});
@@ -112,12 +112,12 @@ class XCarousel extends HTMLElement {
 
     // shortcut: assumes one position per card (full-width cards); if trailing cards merge in #positions, the tooltip follows the wrong one
     #syncTip(i: number) {
-        if (!this.#tipSlot || i === this.#tipIndex) return; // #update runs on every scroll: only copy on change
+        if (!this.#tipSlots.length || i === this.#tipIndex) return; // #update runs on every scroll: only copy on change
         this.#tipIndex = i;
         const tpl = this.track
             .querySelectorAll(':scope > .carousel-item')[i]
             ?.querySelector<HTMLTemplateElement>('template[data-tip]');
-        this.#tipSlot.replaceChildren(...(tpl ? [tpl.content.cloneNode(true)] : []));
+        for (const slot of this.#tipSlots) slot.replaceChildren(...(tpl ? [tpl.content.cloneNode(true)] : []));
     }
 }
 

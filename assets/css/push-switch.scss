@@ -1,0 +1,37 @@
+/* push opt-in: a switch drawn on the button itself, because push-client.js rewrites its text (no inner markup survives).
+   No aria-pressed (still loading, blocked, unsupported) = no switch, only the message. */
+.push-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.25rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+
+    &[aria-pressed]::after {
+        content: "";
+        flex: none;
+        width: 2.25rem;
+        height: 1.25rem;
+        border-radius: 9999px;
+        background: radial-gradient(circle closest-side, var(--color-base-100) 70%, transparent 75%) left / 1.25rem 100% no-repeat;
+        background-color: color-mix(in srgb, var(--color-base-content) 55%, transparent);
+        transition: background-position 0.2s, background-color 0.2s;
+    }
+
+    &[aria-pressed="true"]::after {
+        background-position: right;
+        background-color: var(--color-primary);
+    }
+
+    &:disabled {
+        cursor: default;
+        opacity: 0.6;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+        border-radius: 0.5rem;
+    }
+}

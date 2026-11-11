@@ -13,7 +13,7 @@ use Tracy;
 final readonly class StderrLogger implements Tracy\ILogger
 {
     // Tracy levels → levels recognised by Dozzle / Loki
-    private const Levels = [
+    private const array Levels = [
         self::WARNING => 'warn',
         self::EXCEPTION => 'error',
         self::CRITICAL => 'fatal',

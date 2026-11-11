@@ -13,7 +13,7 @@ WORKDIR /srv
 
 RUN <<-EOF
 	set -eux
-	install-php-extensions apcu intl opcache zip zlib
+	install-php-extensions apcu gmp intl opcache zip zlib
 
 	groupadd --gid "${GROUP_ID}" app
 	useradd --uid "${USER_ID}" --gid app --create-home --shell /usr/sbin/nologin app

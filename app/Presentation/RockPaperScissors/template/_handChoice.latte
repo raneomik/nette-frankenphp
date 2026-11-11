@@ -1,32 +1,43 @@
-<x-carousel class="mx-auto block w-72">
+{* playable (default): each card posts its hand; in the lobby the carousel only shows the rules *}
+{default $playable = true}
+<x-carousel class="mx-auto block w-72 lg:pt-10">
     <div class="relative">
-        <div class="tooltip tooltip-bottom block">
-            <div class="carousel carousel-center w-full justify-center-safe gap-3 px-10 py-2"
+        <div class="md:tooltip md:tooltip-bottom block [--tt-bg:var(--color-base-100)]">
+            {* gap-10 = px-10: the next card starts at the track edge, a smaller gap lets it show through the padding *}
+            <div class="carousel carousel-center w-full justify-center-safe gap-10 px-10"
                  tabindex="0">
                 {foreach $availableHands as $hand}
-                    <a n:href="play!, $hand->value, $room"
-                        data-naja-history="off"
-                        class="ajax carousel-item card w-full"
-                    >
-                        <div class="card-body items-center p-5">
-                            {include '_hand.latte', hand: $hand}
+                    {if $playable}
+                        {* POST: playing changes state, a link could be followed by a prefetcher *}
+                        <form method="post" action="{link play!, $hand->value, $room}"
+                            data-naja-history="off"
+                            class="ajax carousel-item card w-full"
+                        >
+                            <button type="submit" class="card-body w-full cursor-pointer"
+                                    aria-label="Play {$hand->label()}">
+                                {include '_hand.latte', hand: $hand}
+                            </button>
+                        </form>
+                    {else}
+                        <div class="carousel-item card w-full">
+                            <div class="card-body p-5">
+                                {include '_hand.latte', hand: $hand}
+                            </div>
                         </div>
-                    </a>
+                    {/if}
                 {/foreach}
             </div>
-
-            <span class="md:hidden cursor-pointer float-end" role="img" aria-label="Rules">
-                {include tRoot('_icon/info.svg.latte'), class: 'size-12'}
-            </span>
-            <div class="tooltip-content" data-tip-slot></div>
+            <div class="tooltip-content max-md:hidden text-base-content border border-base-300 shadow-lg" data-tip-slot></div>
         </div>
-        <button type="button" data-prev aria-label="Previous"
-                class="btn btn-circle md:btn-sm btn-xl absolute left-0 top-1/2 -translate-y-1/2 disabled:invisible">
+        <button type="button" data-prev aria-label="Previous" n:attr="disabled: $playable"
+                class="btn btn-circle lg:btn-sm btn-xl absolute left-0 top-1/2 -translate-y-1/2 disabled:invisible">
             ❮
         </button>
-        <button type="button" data-next aria-label="Next"
-                class="btn btn-circle md:btn-sm btn-xl absolute right-0 top-1/2 -translate-y-1/2 disabled:invisible">
+        <button type="button" data-next aria-label="Next" n:attr="disabled: $playable"
+                class="btn btn-circle lg:btn-sm btn-xl absolute right-0 top-1/2 -translate-y-1/2 disabled:invisible">
             ❯
         </button>
     </div>
+    {* small screens have no hover: the rules of the current hand stay visible under it *}
+    <div class="md:hidden" data-tip-slot></div>
 </x-carousel>

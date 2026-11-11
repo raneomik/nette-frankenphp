@@ -6,8 +6,14 @@ use App\Model\RockPaperScissors\Enum\Hand;
 use App\Model\RockPaperScissors\Enum\Result;
 use Traversable;
 
+/**
+ * @implements \IteratorAggregate<int, Rule>
+ */
 readonly class RulesMap implements \IteratorAggregate
 {
+    /**
+     * @var list<Rule>
+     */
     public array $rules;
 
     public function __construct()
@@ -15,6 +21,9 @@ readonly class RulesMap implements \IteratorAggregate
         $this->rules = $this->populate();
     }
 
+    /**
+     * @return list<Rule>
+     */
     private function populate(): array
     {
         $rules = [];

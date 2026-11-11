@@ -1,11 +1,16 @@
-<turbo-stream action="append" target="snippet--toasts" data-sender={$sender}>
-    <template>{capture $message}<b>{$player}</b> joined.{/capture}{include tRoot('_toast.latte'), type: 'info', message: $message}</template>
-</turbo-stream>
+{block append}
+    <turbo-stream action="append" target="snippet--toasts" data-sender={$sender}>
+        <template>{capture $message}
+                <b>{$player}</b> joined.{/capture}{include tRoot('_toast.latte'), type: 'info', message: $message}
+        </template>
+    </turbo-stream>
+{/block}
 
-{* from the game page only: updates the opponent card for the others *}
-<turbo-stream n:ifset="$availableHands" action="update" target="snippet--opponent" data-sender={$sender}>
-    <template>{include '_opponent.latte',
-        state: $state,
-        availableHands: $availableHands
-    }</template>
-</turbo-stream>
+{block update}
+    <turbo-stream n:ifset="$availableHands" action="update" target="snippet--opponent" data-sender={$sender}>
+        <template>{include '_opponent.latte',
+            state: $state,
+            availableHands: $availableHands
+            }</template>
+    </turbo-stream>
+{/block}

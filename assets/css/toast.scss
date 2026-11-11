@@ -1,0 +1,6 @@
+
+@source inline("alert-{info,success,warning,error}");
+
+/* each toast as wide as its own text, against the container's side (a flex column stretches them all to the widest) */
+.toast-end { align-items: flex-end; }
+.toast-start { align-items: flex-start; }

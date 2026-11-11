@@ -2,8 +2,8 @@
 {parameters array $rooms}
 {varType App\Model\RockPaperScissors\Value\WaitingRoom $waitingRoom}
 
-<li n:foreach="$rooms as $waitingRoom" class="list-row">
-    <a n:href=":RockPaperScissors:Base:game $waitingRoom->id" class="btn w-90">
+<li n:foreach="$rooms as $waitingRoom" class="list-row grid-cols-1">
+    <a n:href=":RockPaperScissors:Base:game $waitingRoom->id" class="btn w-full">
         Play against {$waitingRoom->lonelyPlayer}
     </a>
 </li>
