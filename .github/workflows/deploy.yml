@@ -93,7 +93,7 @@ jobs:
     timeout-minutes: 10
     environment:
       name: production
-      url: ${{ vars.APP_URL }} # environment variable, e.g. https://rpsls.example.fr
+      url: https://frankenette.raneomik.fr
     env:
       VPS_USER: ${{ secrets.VPS_USER }}
       VPS_HOST: ${{ secrets.VPS_HOST }}

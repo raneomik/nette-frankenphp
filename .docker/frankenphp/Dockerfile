@@ -60,8 +60,8 @@ COPY --link .docker/frankenphp/conf.d/20-app.dev.ini $PHP_INI_DIR/app.conf.d/
 
 USER app
 # dbmate also updates db/schema.sql (full schema, to commit: it shows the diff)
-CMD mkdir -p var/data && dbmate up; \
-    exec frankenphp run --config /etc/frankenphp/Caddyfile --watch
+CMD ["sh", "-c", "mkdir -p var/data && dbmate up; \
+    exec frankenphp run --config /etc/frankenphp/Caddyfile --watch"]
 
 
 # ---------- Assets (Tailwind + Vite) ----------
@@ -134,7 +134,7 @@ HEALTHCHECK --interval=10s --timeout=5s --start-period=60s --start-interval=2s -
 # "healthy", and docker rollout keeps previous version.
 # Without the Mercure secret the hub refuses every token, yet /health still answers: stop
 # here so that the container is never "healthy" and docker rollout keeps the previous version.
-CMD test -n "$MERCURE_JWT_SECRET" || { echo 'MERCURE_JWT_SECRET is not set (app.env)' >&2; exit 1; }; \
+CMD ["sh", "-c", "test -n \"$MERCURE_JWT_SECRET\" || { echo 'MERCURE_JWT_SECRET is not set (app.env)' >&2; exit 1; }; \
     rm -rf var/temp/cache; \
     dbmate up || exit 1; \
-    exec frankenphp run --config /etc/frankenphp/Caddyfile
+    exec frankenphp run --config /etc/frankenphp/Caddyfile"]
