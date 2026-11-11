@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "81a14057f2dbd4adade7d7fb6e8b37d1",
+    "content-hash": "54bdc822f9670573ee39ba2715e962a8",
     "packages": [
         {
             "name": "brick/math",
@@ -4188,6 +4188,64 @@
             "time": "2026-11-11T00:11:02+00:00"
         },
         {
+            "name": "rector/rector",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rectorphp/rector.git",
+                "reference": "1be7b7916c500b9d8060bb4a01d26d00012554ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/1be7b7916c500b9d8060bb4a01d26d00012554ff",
+                "reference": "1be7b7916c500b9d8060bb4a01d26d00012554ff",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4|^8.0",
+                "phpstan/phpstan": "^2.3.5"
+            },
+            "conflict": {
+                "rector/rector-doctrine": "*",
+                "rector/rector-downgrade-php": "*",
+                "rector/rector-phpunit": "*",
+                "rector/rector-symfony": "*"
+            },
+            "default-branch": true,
+            "bin": [
+                "bin/rector"
+            ],
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Instant Upgrade and Automated Refactoring of any PHP code",
+            "homepage": "https://getrector.com/",
+            "keywords": [
+                "automation",
+                "dev",
+                "migration",
+                "refactoring"
+            ],
+            "support": {
+                "issues": "https://github.com/rectorphp/rector/issues",
+                "source": "https://github.com/rectorphp/rector/tree/main"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/tomasvotruba",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-11-09T23:40:21+00:00"
+        },
+        {
             "name": "symfony/thanks",
             "version": "dev-main",
             "source": {
@@ -4307,7 +4365,8 @@
     "stability-flags": {
         "raneomik/nette-mercure": 20,
         "raneomik/nette-pwa": 20,
-        "raneomik/tracy-dark-mode": 20
+        "raneomik/tracy-dark-mode": 20,
+        "rector/rector": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

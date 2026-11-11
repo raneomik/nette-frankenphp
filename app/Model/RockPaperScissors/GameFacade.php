@@ -8,7 +8,7 @@ use App\Model\RockPaperScissors\Value\GameRecord;
 use App\Model\RockPaperScissors\Value\WaitingRoom;
 use Nette;
 
-final class GameFacade
+final readonly class GameFacade
 {
     public function __construct(
         private Nette\Database\Explorer $database,

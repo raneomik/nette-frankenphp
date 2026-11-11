@@ -51,6 +51,14 @@ monitor: ## Start Prometheus, Grafana (:3000, admin/admin) & Dozzle (:8888)
 monitor-down: ## Stop monitor services
 	docker compose --profile monitor stop prometheus grafana dozzle
 
+ecs: ## Run easy coding standards
+	@vendor/bin/ecs --fix
+rector: ## Run rector
+	@vendor/bin/rector
+stan: ## Run phpstan
+	@vendor/bin/phpstan
+ci: ecs rector stan
+
 #Deploy
 tag:
 	git tag $(tag) && git push origin $(tag)

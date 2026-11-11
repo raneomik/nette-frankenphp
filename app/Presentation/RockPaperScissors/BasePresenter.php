@@ -129,13 +129,11 @@ final class BasePresenter extends Nette\Application\UI\Presenter
     public function handleLeave(string $room, string $page): void
     {
         $myId = (string) $this->me->id;
-        $other = $this->game->opponent($room, $myId);
 
         $this->game->leave($room, $myId, $page)
-            && $other
             && $this->messenger->toOthers($room, $myId, __DIR__ . '/template/left.stream.latte', [
                 'player' => $this->username(),
-                'state' => $this->game->duelState($room, $other->userId), // as seen by the one who stays
+                'state' => new DuelState(), // as seen by the one who stays
             ]);
 
         $this->refreshWaitingRoomList();

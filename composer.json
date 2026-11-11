@@ -41,7 +41,8 @@
     "phpstan/phpstan-nette": "^2",
     "symfony/thanks": "^1",
     "symplify/easy-coding-standard": "^13.0",
-    "raneomik/tracy-dark-mode": "dev-main"
+    "raneomik/tracy-dark-mode": "dev-main",
+    "rector/rector": "dev-main"
   },
   "autoload": {
     "psr-4": {

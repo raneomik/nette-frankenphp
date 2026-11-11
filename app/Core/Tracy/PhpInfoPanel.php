@@ -19,7 +19,7 @@ final readonly class PhpInfoPanel implements Tracy\IBarPanel
 	{
 		$html = <<<'HTML'
             %style%
-            <h1>Php Info</h1>
+            <h1>phpinfo();</h1>
             <div class="tracy-inner phpinfo">
                 <div class="tracy-inner-container">
                     %info%
@@ -43,10 +43,12 @@ final readonly class PhpInfoPanel implements Tracy\IBarPanel
 
 		$style->nodeValue = $this->transformCss($style->nodeValue ?: '')
 			. <<<'CSS'
-                #tracy-debug .tracy-inner.phpinfo {
-                    min-width: unset;
+                #tracy-debug #tracy-debug-panel-App-Core-Tracy-PhpInfoPanel {
+                    min-width: fit-content;
                 }
-                .phpinfo .tracy-inner-container hr {
+                #tracy-debug .tracy-inner.phpinfo,
+                .phpinfo .tracy-inner-container hr
+                    min-width: unset;
                     width: unset;
                 }
             CSS;
@@ -77,7 +79,7 @@ final readonly class PhpInfoPanel implements Tracy\IBarPanel
 		$css = preg_replace_callback(
 		    '~(^|})\s*([^{@}][^{]*)\{~m',
 		    function ($m) {
-				$selectors = array_map('trim', explode(',', $m[2]));
+				$selectors = array_map(trim(...), explode(',', $m[2]));
 				$selectors = array_map(
 				    fn($s) => str_starts_with($s, '.phpinfo')
 						? $s
