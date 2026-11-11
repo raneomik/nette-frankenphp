@@ -35,7 +35,8 @@
                 <div class="navbar-start">
                     <a n:href=":Home:" class="font-display inline-flex items-center gap-3 text-xl font-extrabold">
                         {include tRoot('_icon/app.svg.latte'), class: 'size-10'}
-                        frankenette
+                        {* small screens: the name gives way to a section title in the middle of the navbar *}
+                        <span class="max-sm:[.navbar:has(.navbar-center)_&]:sr-only">frankenette</span>
                     </a>
                 </div>
                 {block navbarContent}{/block}

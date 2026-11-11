@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c151e7306429ec04b4830a4f2f2e5a58",
+    "content-hash": "81a14057f2dbd4adade7d7fb6e8b37d1",
     "packages": [
         {
             "name": "brick/math",
@@ -2415,12 +2415,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/raneomik/nette-mercure.git",
-                "reference": "63c6f12da21eca21bf70f5b522bc329c7a7d7785"
+                "reference": "6ca18f935347bdbe3b4fe03d356d604297624112"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/raneomik/nette-mercure/zipball/63c6f12da21eca21bf70f5b522bc329c7a7d7785",
-                "reference": "63c6f12da21eca21bf70f5b522bc329c7a7d7785",
+                "url": "https://api.github.com/repos/raneomik/nette-mercure/zipball/6ca18f935347bdbe3b4fe03d356d604297624112",
+                "reference": "6ca18f935347bdbe3b4fe03d356d604297624112",
                 "shasum": ""
             },
             "require": {
@@ -2492,7 +2492,7 @@
                 "issues": "https://github.com/raneomik/nette-mercure/issues",
                 "source": "https://github.com/raneomik/nette-mercure/tree/main"
             },
-            "time": "2026-11-09T23:54:35+00:00"
+            "time": "2026-11-11T00:11:50+00:00"
         },
         {
             "name": "raneomik/nette-pwa",
@@ -2500,12 +2500,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/raneomik/nette-pwa.git",
-                "reference": "6626620853dcb26d75fdc4f5405d882daed19c17"
+                "reference": "d927c17e71e20534f4b1d22bd38de649676fe618"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/raneomik/nette-pwa/zipball/6626620853dcb26d75fdc4f5405d882daed19c17",
-                "reference": "6626620853dcb26d75fdc4f5405d882daed19c17",
+                "url": "https://api.github.com/repos/raneomik/nette-pwa/zipball/d927c17e71e20534f4b1d22bd38de649676fe618",
+                "reference": "d927c17e71e20534f4b1d22bd38de649676fe618",
                 "shasum": ""
             },
             "require": {
@@ -2576,69 +2576,7 @@
                 "issues": "https://github.com/raneomik/nette-pwa/issues",
                 "source": "https://github.com/raneomik/nette-pwa/tree/main"
             },
-            "time": "2026-11-10T01:17:22+00:00"
-        },
-        {
-            "name": "raneomik/tracy-dark-mode",
-            "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/raneomik/tracy-dark-mode.git",
-                "reference": "8f67619a4aedf59d60158e47f109e56171c46d85"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/raneomik/tracy-dark-mode/zipball/8f67619a4aedf59d60158e47f109e56171c46d85",
-                "reference": "8f67619a4aedf59d60158e47f109e56171c46d85",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.3",
-                "tracy/tracy": "^2.11.4"
-            },
-            "conflict": {
-                "nette/di": "<3.2"
-            },
-            "require-dev": {
-                "nette/di": "^3.2",
-                "phpstan/phpstan-nette": "^2.0@stable"
-            },
-            "suggest": {
-                "nette/di": "To enable it with one line of NEON, through DarkTracyExtension"
-            },
-            "default-branch": true,
-            "type": "library",
-            "extra": {
-                "nette": {
-                    "di-extensions": {
-                        "tracyDarkMode": {
-                            "class": "Raneomik\\TracyDarkMode\\DarkTracyExtension"
-                        }
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Raneomik\\TracyDarkMode\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Dark theme for the Tracy bar, its panels and the bluescreen, with a toggle",
-            "keywords": [
-                "css",
-                "darkmode",
-                "debug",
-                "nette-extension",
-                "tracy"
-            ],
-            "support": {
-                "issues": "https://github.com/raneomik/tracy-dark-mode/issues",
-                "source": "https://github.com/raneomik/tracy-dark-mode/tree/v0.1.0"
-            },
-            "time": "2026-11-10T01:21:07+00:00"
+            "time": "2026-11-11T00:13:11+00:00"
         },
         {
             "name": "spomky-labs/base64url",
@@ -3767,12 +3705,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-library.git",
-                "reference": "62408605aa2016cfc23b495cfe071fa858f5b45a"
+                "reference": "e2fb882fd0710ad73c63d6f936765aeceb6c17a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-token/jwt-library/zipball/62408605aa2016cfc23b495cfe071fa858f5b45a",
-                "reference": "62408605aa2016cfc23b495cfe071fa858f5b45a",
+                "url": "https://api.github.com/repos/web-token/jwt-library/zipball/e2fb882fd0710ad73c63d6f936765aeceb6c17a5",
+                "reference": "e2fb882fd0710ad73c63d6f936765aeceb6c17a5",
                 "shasum": ""
             },
             "require": {
@@ -3850,7 +3788,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-11-09T09:58:30+00:00"
+            "time": "2026-11-10T15:44:22+00:00"
         },
         {
             "name": "web-token/jwt-rsa15",
@@ -4063,8 +4001,8 @@
             "version": "2.3.x-dev",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/24ba68cb5ec6345764e49b5eb34065d23ab28f32",
-                "reference": "24ba68cb5ec6345764e49b5eb34065d23ab28f32",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/a6c4f96eb0e240f792f346d805d35a51e4c09e30",
+                "reference": "a6c4f96eb0e240f792f346d805d35a51e4c09e30",
                 "shasum": ""
             },
             "require": {
@@ -4121,7 +4059,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-09T22:01:06+00:00"
+            "time": "2026-11-10T18:26:43+00:00"
         },
         {
             "name": "phpstan/phpstan-nette",
@@ -4186,6 +4124,68 @@
                 "source": "https://github.com/phpstan/phpstan-nette/tree/2.0.x"
             },
             "time": "2026-11-07T10:26:25+00:00"
+        },
+        {
+            "name": "raneomik/tracy-dark-mode",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/raneomik/tracy-dark-mode.git",
+                "reference": "4cf23f6c6b88846e2e81c71af92770e8e0aea70a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/raneomik/tracy-dark-mode/zipball/4cf23f6c6b88846e2e81c71af92770e8e0aea70a",
+                "reference": "4cf23f6c6b88846e2e81c71af92770e8e0aea70a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.3",
+                "tracy/tracy": "^2.11.4"
+            },
+            "conflict": {
+                "nette/di": "<3.2"
+            },
+            "require-dev": {
+                "nette/di": "^3.2",
+                "phpstan/phpstan-nette": "^2.0@stable"
+            },
+            "suggest": {
+                "nette/di": "To enable it with one line of NEON, through DarkTracyExtension"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "nette": {
+                    "di-extensions": {
+                        "tracyDarkMode": {
+                            "class": "Raneomik\\TracyDarkMode\\DarkTracyExtension"
+                        }
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Raneomik\\TracyDarkMode\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Dark theme for the Tracy bar, its panels and the bluescreen, with a toggle",
+            "keywords": [
+                "css",
+                "darkmode",
+                "debug",
+                "nette-extension",
+                "tracy"
+            ],
+            "support": {
+                "issues": "https://github.com/raneomik/tracy-dark-mode/issues",
+                "source": "https://github.com/raneomik/tracy-dark-mode/tree/main"
+            },
+            "time": "2026-11-11T00:11:02+00:00"
         },
         {
             "name": "symfony/thanks",

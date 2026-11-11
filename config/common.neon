@@ -51,7 +51,7 @@ latte:
 extensions:
     mercure: Raneomik\NetteMercure\Bridge\DI\MercureExtension(%debugMode%)
     pwa: Raneomik\NettePWA\Bridge\DI\PWAExtension
-    tracyDarkMode: Raneomik\TracyDarkMode\DarkTracyExtension
+    # packages of require-dev: config/dev.neon
 
 mercure:
     one:

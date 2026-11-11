@@ -16,19 +16,23 @@
                 {include 'template/_opponent.latte', state: $duelState, availableHands: $availableHands}
             </div>
             {* outside the snippet: Mercure streams render _opponent from the other player's side (their user id, no page link);
-               shown only while the card says [data-waiting] *}
-            <div class="hidden flex-col items-center gap-2 px-6 pb-8 group-has-[[data-waiting]]:flex">
+               the invite link is the main button while the card says [data-waiting], then a discreet link
+               (a departure can go unnoticed: crashed tab, lost beacon); the push switch stays, to turn it off mid-duel *}
+            <div class="flex flex-col items-center gap-2 px-6 pb-8">
                 <x-clipboard type="button" data-clipboard-text="{link Base:game $room|absoluteUrl}"
                              data-copied="Link copied!"
-                        class="clipboard tooltip btn btn-primary">
+                        class="clipboard tooltip btn btn-primary hidden group-has-[[data-waiting]]:inline-flex">
+                    📋 Copy invite link
+                </x-clipboard>
+                <x-clipboard type="button" data-clipboard-text="{link Base:game $room|absoluteUrl}"
+                             data-copied="Link copied!"
+                        class="clipboard tooltip link link-hover text-sm opacity-70 group-has-[[data-waiting]]:hidden">
                     📋 Copy invite link
                 </x-clipboard>
                 {* push-client.js (nette-pwa) hides it while push is off or unsupported, asks to install on iOS;
-                   a toggle: clicked while on (aria-pressed="true", data-pwa-on label), it turns notifications off *}
-                <button type="button" class="btn btn-ghost btn-sm aria-pressed:btn-active" data-pwa-push="player/{$user->id}"
-                        data-pwa-on="🔕 Stop notifying me">
-                    🔔 Notify me when someone joins
-                </button>
+                   a setting more than an action: same label on and off, the switch (.push-switch, app.css) shows aria-pressed *}
+                <button type="button" class="push-switch" data-pwa-push="player/{$user->id}"
+                        data-pwa-on="🔔 Notify me when someone joins">🔔 Notify me when someone joins</button>
             </div>
         </section>
     </div>
@@ -36,7 +40,7 @@
     <div class="mt-6 flex w-full flex-col">
         <div class="divider"></div>
         <div class="grid h-20 place-items-center">
-            <a n:href="Base:default" class="btn btn-ghost">Back to lobby</a>
+            <a n:href="Base:default" class="link link-hover inline-block py-2">← Back to lobby</a>
         </div>
     </div>
 {/block}

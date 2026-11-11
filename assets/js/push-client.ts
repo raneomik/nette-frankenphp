@@ -1,35 +1,50 @@
-const meta = (name) => document.querySelector(`meta[name="${name}"]`)?.content;
+type Push = {
+    buttons: HTMLButtonElement[],
+    key: string,
+    topics: string[],
+    subscribeUrl: string,
+    swUrl: string,
+};
+
+const meta = (name: string) => document.querySelector<HTMLMetaElement>(`meta[name="${name}"]`)?.content;
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const buttons = [...document.querySelectorAll('[data-pwa-push]')];
+    const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-pwa-push]')];
     const key = meta('pwa-vapid-key');
-    if (!buttons.length) {
-        return;
-    }
-    if (!key || !('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
-        // navigator.standalone exists only on iOS: there, Web Push needs the installed app
-        const install = 'standalone' in navigator && !navigator.standalone;
-        buttons.forEach((button) => install && key ? disable(button, button.dataset.pwaInstall ?? '📲 Add to Home Screen to get notifications') : button.hidden = true);
-        return;
-    }
+    const subscribeUrl = meta('pwa-subscribe-url');
 
-    const push = {
-        buttons,
-        key,
-        topics: [...new Set(buttons.flatMap((button) => button.dataset.pwaPush.split(/\s+/).filter(Boolean)))],
-        subscribeUrl: meta('pwa-subscribe-url'),
-        // the service worker reads its subscribe URL from its own query string (pushsubscriptionchange)
-        swUrl: `${meta('pwa-sw-url') ?? '/sw.js'}?subscribe=${encodeURIComponent(meta('pwa-subscribe-url'))}`,
-    };
-    buttons.forEach((button) => {
-        button.dataset.pwaOff ??= button.textContent;
-        button.addEventListener('click', () => button.getAttribute('aria-pressed') === 'true' ? unsubscribe(push) : subscribe(push));
-    });
+    if (0 >= buttons.length) {
+        return;
+    }
 
     if (Notification.permission === 'denied') {
         buttons.forEach((button) => disable(button, button.dataset.pwaBlocked ?? '🔕 Notifications blocked'));
         return;
     }
+
+    if (!key || !subscribeUrl || !('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
+        // navigator.standalone exists only on iOS: there, Web Push needs the installed app
+        const install = 'standalone' in navigator && !navigator.standalone;
+        buttons.forEach((button) => install && key
+            ? disable(button, button.dataset.pwaInstall ?? '📲 Add to Home Screen to get notifications')
+            : button.hidden = true)
+        ;
+        return;
+    }
+
+    const push: Push = {
+        buttons,
+        key,
+        topics: [...new Set(buttons.flatMap((button) => button.dataset.pwaPush?.split(/\s+/).filter(Boolean) ?? []))],
+        subscribeUrl,
+        // the service worker reads its subscribe URL from its own query string (pushsubscriptionchange)
+        swUrl: `${meta('pwa-sw-url') ?? '/sw.js'}?subscribe=${encodeURIComponent(subscribeUrl)}`,
+    };
+
+    buttons.forEach((button) => {
+        button.dataset.pwaOff ??= button.textContent;
+        button.addEventListener('click', () => button.getAttribute('aria-pressed') === 'true' ? unsubscribe(push) : subscribe(push));
+    });
 
     // already on: refresh silently (the topics may have changed, e.g. a new session).
     // Granted but no subscription = the visitor turned it off: do not subscribe again behind their back.
@@ -42,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-async function subscribe(push) {
+async function subscribe(push: Push) {
     if (await Notification.requestPermission() !== 'granted') {
         push.buttons.forEach((button) => disable(button, button.dataset.pwaBlocked ?? '🔕 Notifications blocked'));
         return;
@@ -62,7 +77,7 @@ async function subscribe(push) {
     }
 }
 
-async function unsubscribe(push) {
+async function unsubscribe(push: Push) {
     try {
         const registration = await navigator.serviceWorker.getRegistration();
         const subscription = await registration?.pushManager.getSubscription();
@@ -78,7 +93,7 @@ async function unsubscribe(push) {
     }
 }
 
-async function send(url, method, body) {
+async function send(url: string, method: 'PUT'|'DELETE'|'POST', body: object) {
     const response = await fetch(url, {
         method,
         headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
@@ -89,19 +104,21 @@ async function send(url, method, body) {
     }
 }
 
-function toggle(button, on) {
-    button.textContent = on ? button.dataset.pwaOn ?? '🔔 Notifications on' : button.dataset.pwaOff;
+function toggle(button: HTMLButtonElement, on: boolean) {
+    button.textContent = on
+        ? (button.dataset.pwaOn ?? '🔔 Notifications on')
+        : button.dataset.pwaOff ?? '🔕 Notifications off';
     button.setAttribute('aria-pressed', String(on));
     button.disabled = false;
 }
 
-function disable(button, label) {
+function disable(button: HTMLButtonElement, label: string) {
     button.textContent = label;
     button.removeAttribute('aria-pressed');
     button.disabled = true;
 }
 
-function base64UrlToBytes(value) {
+function base64UrlToBytes(value: string) {
     const base64 = (value + '='.repeat((4 - value.length % 4) % 4)).replace(/-/g, '+').replace(/_/g, '/');
 
     return Uint8Array.from(atob(base64), (char) => char.charCodeAt(0));

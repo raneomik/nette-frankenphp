@@ -3,7 +3,7 @@
 {var $outcome = $state->outcome()}
 {var $won = $outcome instanceof App\Model\RockPaperScissors\Enum\WinType}
 
-<div class="card-body items-center gap-4" n:attr="data-waiting: !$state->opponent || $state->solo">
+<div class="card-body items-center gap-4" n:attr="data-waiting: (!$state->opponent || $state->solo) ?: null">
     <h2 class="card-title">
         {$state->opponent ?? 'Waiting for an opponent…'}
         <span n:if="$state->opponentPlayed" class="badge badge-success">ready</span>

@@ -20,10 +20,14 @@
             <summary class="collapse-title font-semibold">
                 Join a waiting player
             </summary>
-            <div class="collapse-content flex justify-center">
+            <div class="collapse-content flex flex-col gap-2">
                 <ul id="waiting-room-list" class="list w-full" data-refetch-on-connect>
                     {include 'template/_waitingRooms.latte', rooms: $rooms}
                 </ul>
+                {* debug mode only; POST: it changes state for everyone *}
+                <form n:if="$debug" method="post" action="{link cleanAll!}" class="px-4">
+                    <button type="submit" class="btn btn-dash btn-sm w-full">Clean all</button>
+                </form>
             </div>
         </details>
 </div>

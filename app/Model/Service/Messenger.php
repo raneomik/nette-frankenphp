@@ -3,7 +3,6 @@
 namespace App\Model\Service;
 
 use Raneomik\NetteMercure\BroadcasterInterface;
-use Raneomik\NetteMercure\Core\Publish\Latte\TurboStreamAction;
 
 final readonly class Messenger
 {
@@ -49,8 +48,11 @@ final readonly class Messenger
     {
         $options = [
             'private' => $private,
-            $params['action'] ?? TurboStreamAction::Append,
         ];
+
+        if ($params['action'] ?? false) {
+            $options['action'] = $params['action'];
+        }
 
         $this->broadcaster->broadcast(
             $topic,

@@ -1,6 +1,6 @@
 <x-toast data-timeout="{$timeout ?? 3000}" role="status"
          class="alert alert-{$type ?? 'info'} relative flex items-start overflow-hidden shadow-lg">
     {$message}
-    <button data-dismiss class="btn btn-ghost btn-xs btn-circle text-inherit" aria-label="Close">✕</button>
+    <button data-dismiss class="grid size-6 shrink-0 cursor-pointer place-items-center rounded-full opacity-70 hover:bg-current/15 hover:opacity-100" aria-label="Close">✕</button>
     <span data-progress class="absolute inset-x-0 bottom-0 h-1 origin-left bg-current opacity-30"></span>
 </x-toast>

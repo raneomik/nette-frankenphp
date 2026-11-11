@@ -9,6 +9,7 @@ use App\Model\RockPaperScissors\Value\DuelState;
 use App\Model\RockPaperScissors\Value\RulesMap;
 use App\Model\RockPaperScissors\Value\WaitingRoom;
 use Nette;
+use Tracy\Debugger;
 
 final class GameTemplate extends Nette\Bridges\ApplicationLatte\Template
 {
@@ -40,8 +41,11 @@ final class GameTemplate extends Nette\Bridges\ApplicationLatte\Template
     // duel: stay empty until the opponent state is read from the database (step 3)
     public DuelState|null $duelState = null;
 
+    public bool $debug = false; // dev-only controls (Clean all)
+
     public function initData(): void
     {
+        $this->debug = ! Debugger::$productionMode;
         $this->availableHands = Hand::cases();
         $this->rulesMap = new RulesMap();
     }

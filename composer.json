@@ -34,14 +34,14 @@
     "fakerphp/faker": "^1.24",
     "minishlink/web-push": "^11.0",
     "nyholm/psr7": "^1.8",
-    "raneomik/nette-pwa": "dev-main",
-    "raneomik/tracy-dark-mode": "dev-main"
+    "raneomik/nette-pwa": "dev-main"
   },
   "require-dev": {
     "nette/tester": "^2.5",
     "phpstan/phpstan-nette": "^2",
     "symfony/thanks": "^1",
-    "symplify/easy-coding-standard": "^13.0"
+    "symplify/easy-coding-standard": "^13.0",
+    "raneomik/tracy-dark-mode": "dev-main"
   },
   "autoload": {
     "psr-4": {

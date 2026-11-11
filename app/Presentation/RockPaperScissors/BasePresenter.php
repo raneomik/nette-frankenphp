@@ -26,13 +26,13 @@ use Tracy\Debugger;
 final class BasePresenter extends Nette\Application\UI\Presenter
 {
     #[Inject]
+    public GameFacade $game;
+
+    #[Inject]
     public Randomiser $randomiser;
 
     #[Inject]
     public Messenger $messenger;
-
-    #[Inject]
-    public GameFacade $game;
 
     #[Inject]
     public PushSender $push;
@@ -70,6 +70,18 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         $this->template->newRoom = $this->randomiser->id();
     }
 
+    public function renderDefault(): void
+    {
+        $this->template->initData();
+        $this->template->room = $this->room;
+
+        // rendered before the leave beacon of the game page just left: never list my own room(s)
+        $this->template->rooms = array_values(array_filter(
+            $this->template->rooms,
+            fn(WaitingRoom $waitingRoom) => $waitingRoom->userId !== (string) $this->me->id,
+        ));
+    }
+
     public function actionGame(string $room): void
     {
         if (null !== $this->getSignal()) { // signals (play! via ajax or not, leave! via beacon) come through here too: only opening the page counts as an arrival
@@ -98,18 +110,6 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         $this->refreshWaitingRoomList();
     }
 
-    public function renderDefault(): void
-    {
-        $this->template->initData();
-        $this->template->room = $this->room;
-
-        // rendered before the leave beacon of the game page just left: never list my own room(s)
-        $this->template->rooms = array_values(array_filter(
-            $this->template->rooms,
-            fn(WaitingRoom $waitingRoom) => $waitingRoom->userId !== (string) $this->me->id,
-        ));
-    }
-
     public function renderGame(): void
     {
         $this->template->initData();
@@ -131,10 +131,12 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         $myId = (string) $this->me->id;
         $other = $this->game->opponent($room, $myId);
 
-        $this->game->leave($room, $myId, $page) && $other && $this->messenger->toOthers($room, $myId, __DIR__ . '/template/left.stream.latte', [
-            'player' => $this->username(),
-            'state' => $this->game->duelState($room, $other->userId), // as seen by the one who stays
-        ]);
+        $this->game->leave($room, $myId, $page)
+            && $other
+            && $this->messenger->toOthers($room, $myId, __DIR__ . '/template/left.stream.latte', [
+                'player' => $this->username(),
+                'state' => $this->game->duelState($room, $other->userId), // as seen by the one who stays
+            ]);
 
         $this->refreshWaitingRoomList();
 
@@ -158,6 +160,7 @@ final class BasePresenter extends Nette\Application\UI\Presenter
             $hands = Hand::cases();
             $this->template->duelState = new DuelState('Computer', revealed: $hands[array_rand($hands)], mine: $move, solo: true);
             $this->redrawControl('opponent');
+
             $this->isAjax() || $this->redirect('this'); // shortcut: without JS, the redirect loses the solo result; it should go through the session
             return;
         }
@@ -165,6 +168,7 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         if ($myRound > $this->game->round($room, $opponent->userId)) {
             $this->flashMessage('Your opponent hasn\'t played yet.', 'warning');
             $this->redrawControl('toasts');
+
             $this->isAjax() || $this->redirect('this');
             return;
         }
@@ -186,6 +190,17 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         $this->redrawControl('opponent');
 
         $this->isAjax() || $this->redirect('this'); // without JS: Post/Redirect/Get, the signal URL does not stay in the address bar
+    }
+
+    #[Requires(methods: 'POST')]
+    public function handleCleanAll(): void
+    {
+        Debugger::$productionMode && $this->error();
+
+        $this->game->cleanRooms(-1);
+        $this->refreshWaitingRoomList();
+
+        $this->redirect('this');
     }
 
     /**

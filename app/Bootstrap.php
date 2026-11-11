@@ -73,7 +73,14 @@ final readonly class Bootstrap
 
         $this->configurator
             ->addConfig($configDir . '/common.neon')
-            ->addConfig($configDir . '/services.neon')
+            ->addConfig($configDir . '/services.neon');
+
+        // require-dev packages are configured there; absent with composer install --no-dev (prod image)
+        if (self::devPackagesInstalled()) {
+            $this->configurator->addConfig($configDir . '/dev.neon');
+        }
+
+        $this->configurator
             ->addDynamicParameters([
                 'runner' => RunnerType::from(getenv('APP_RUNNER') ?: 'nette'),
                 // same secret as the one verifying JWTs on the hub side (Caddyfile)
@@ -85,6 +92,14 @@ final readonly class Bootstrap
                 'vapidPublicKey' => (string) getenv('VAPID_PUBLIC_KEY'),
                 'vapidPrivateKey' => (string) getenv('VAPID_PRIVATE_KEY'),
             ]);
+    }
+
+    /**
+     * Whether composer installed the require-dev packages (false after install --no-dev).
+     */
+    private static function devPackagesInstalled(): bool
+    {
+        return \Composer\InstalledVersions::getRootPackage()['dev'];
     }
 
     /**
