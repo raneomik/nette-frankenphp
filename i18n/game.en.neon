@@ -1,0 +1,81 @@
+title: Rock Paper Scissors
+description: "Play Rock Paper Scissors Lizard Spock online, against a friend or the computer."
+lobbyTitle: Rock Paper Scissors - Lobby
+you: You
+vs: VS
+computer: Computer
+
+hand:
+    rock: rock
+    paper: paper
+    scissors: scissors
+    lizard: lizard
+    spock: Spock
+
+# tooltip grid, <my hand>.<other hand>: verb and noun both change with the pair (cs: tupí nůžky / drtí ještěra)
+beats:
+    rock:
+        scissors: {verb: "crushes", hand: "scissors"}
+        lizard: {verb: "crushes", hand: "lizard"}
+    paper:
+        rock: {verb: "covers", hand: "rock"}
+        spock: {verb: "disproves", hand: "Spock"}
+    scissors:
+        paper: {verb: "cuts", hand: "paper"}
+        lizard: {verb: "decapitates", hand: "lizard"}
+    lizard:
+        paper: {verb: "eats", hand: "paper"}
+        spock: {verb: "poisons", hand: "Spock"}
+    spock:
+        scissors: {verb: "smashes", hand: "scissors"}
+        rock: {verb: "vaporizes", hand: "rock"}
+beatenBy:
+    rock:
+        paper: {verb: "covered by", hand: "paper"}
+        spock: {verb: "vaporized by", hand: "Spock"}
+    paper:
+        scissors: {verb: "cut by", hand: "scissors"}
+        lizard: {verb: "eaten by", hand: "lizard"}
+    scissors:
+        rock: {verb: "crushed by", hand: "rock"}
+        spock: {verb: "smashed by", hand: "Spock"}
+    lizard:
+        rock: {verb: "crushed by", hand: "rock"}
+        scissors: {verb: "decapitated by", hand: "scissors"}
+    spock:
+        paper: {verb: "disproved by", hand: "paper"}
+        lizard: {verb: "poisoned by", hand: "lizard"}
+
+rules: The rules
+rulesHint: "Five hands, each beats two others."
+newGame: Start a new game
+join: Join a waiting player
+cleanAll: Clean all
+playAgainst: Play against %player%
+
+copyInvite: 📋 Copy invite link
+copied: Link copied!
+notify: 🔔 Notify me when someone joins
+backToLobby: ← Back to lobby
+playHand: Play %hand%
+previous: Previous
+next: Next
+
+waiting: Waiting for an opponent…
+ready: ready
+hiddenHand: hidden hand
+draw: Draw! You both played the same hand.
+win: You win!
+lose: You lose.
+# these follow the player's name
+hasPlayed: has played.
+thinking: is thinking…
+joined: joined.
+playerJoined: %username% joined your room
+notification: 'Your opponent is here, time to play!'
+left: left.
+nextRound: Pick a hand to play the next round.
+soloHint: Pick a hand to play against the computer while you wait.
+
+notYet: Your opponent hasn't played yet.
+moveIn: Your move is in.

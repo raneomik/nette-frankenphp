@@ -1,0 +1,20 @@
+and: and
+close: Close
+language: Language
+lightTheme: Light theme
+source: Source on GitHub
+backHome: Back to the home page
+error:
+    code: error %code%
+    4xx:
+        title: Oops...
+        text: Your browser sent a request that this server could not understand or process.
+    403:
+        title: Access Denied
+        text: "You do not have permission to view this page. Please try contact the web site administrator if you believe you should be able to view this page."
+    404:
+        title: Page Not Found
+        text: "The page you requested could not be found. The address may be wrong, or the page no longer exists."
+    410:
+        title: Page Not Found
+        text: The page you requested has been taken off the site. We apologize for the inconvenience.

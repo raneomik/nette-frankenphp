@@ -52,12 +52,19 @@ monitor-down: ## Stop monitor services
 	docker compose --profile monitor stop prometheus grafana dozzle
 
 ecs: ## Run easy coding standards
-	@vendor/bin/ecs --fix
+	@vendor/bin/ecs --fix -c .ecs.php
 rector: ## Run rector
-	@vendor/bin/rector
+	@vendor/bin/rector -c .rector.php
 stan: ## Run phpstan
-	@vendor/bin/phpstan
-ci: ecs rector stan
+	@vendor/bin/phpstan analyse -c .phpstan.neon
+ts: ## Run typescript validation
+	@npm run validate && echo 'typescript ok'
+ci: ecs rector stan ts
+
+assets.dev: ## Run dev npm script
+	@npm run dev
+assets.build: ## Build assets with npm build
+	@npm run build
 
 #Deploy
 tag:

@@ -1,0 +1,80 @@
+title: Pierre Papier Ciseaux
+description: "Jouez à Pierre Papier Ciseaux Lézard Spock en ligne, contre un ami ou contre l'ordinateur."
+lobbyTitle: Pierre Papier Ciseaux - Salon
+you: Vous
+vs: VS
+computer: Ordinateur
+
+hand:
+    rock: pierre
+    paper: papier
+    scissors: ciseaux
+    lizard: lézard
+    spock: Spock
+
+# tooltip grid, <my hand>.<other hand>: verb and noun both change with the pair (cs: tupí nůžky / drtí ještěra)
+beats:
+    rock:
+        scissors: {verb: "écrase", hand: "les ciseaux"}
+        lizard: {verb: "écrase", hand: "le lézard"}
+    paper:
+        rock: {verb: "recouvre", hand: "la pierre"}
+        spock: {verb: "réfute", hand: "Spock"}
+    scissors:
+        paper: {verb: "coupent", hand: "le papier"}
+        lizard: {verb: "décapitent", hand: "le lézard"}
+    lizard:
+        paper: {verb: "mange", hand: "le papier"}
+        spock: {verb: "empoisonne", hand: "Spock"}
+    spock:
+        scissors: {verb: "écrabouille", hand: "les ciseaux"}
+        rock: {verb: "vaporise", hand: "la pierre"}
+beatenBy:
+    rock:
+        paper: {verb: "recouverte par", hand: "le papier"}
+        spock: {verb: "vaporisée par", hand: "Spock"}
+    paper:
+        scissors: {verb: "découpé par", hand: "les ciseaux"}
+        lizard: {verb: "mangé par", hand: "le lézard"}
+    scissors:
+        rock: {verb: "écrasés par", hand: "la pierre"}
+        spock: {verb: "écrabouillés par", hand: "Spock"}
+    lizard:
+        rock: {verb: "écrasé par", hand: "la pierre"}
+        scissors: {verb: "décapité par", hand: "les ciseaux"}
+    spock:
+        paper: {verb: "réfuté par", hand: "le papier"}
+        lizard: {verb: "empoisonné par", hand: "le lézard"}
+
+rules: Les règles
+rulesHint: "Cinq mains, chacune en bat deux autres."
+newGame: Commencer une nouvelle partie
+join: Rejoindre un joueur en attente
+cleanAll: Tout nettoyer
+playAgainst: Jouer contre %player%
+
+copyInvite: 📋 Copier le lien d'invitation
+copied: Lien copié !
+notify: 🔔 Me prévenir quand quelqu'un rejoint
+backToLobby: ← Retour au salon
+playHand: "Jouer : %hand%"
+previous: Précédent
+next: Suivant
+
+waiting: En attente d'un adversaire…
+ready: prêt
+hiddenHand: main cachée
+draw: Égalité ! Vous avez joué la même main.
+win: Gagné !
+lose: Perdu.
+hasPlayed: a joué.
+thinking: réfléchit…
+joined: a rejoint la partie.
+playerJoined: %username% a rejoint ta partie
+notification: 'Ton adversaire est là, bonne partie !'
+left: est parti.
+nextRound: Choisissez une main pour jouer la manche suivante.
+soloHint: Choisissez une main pour jouer contre l'ordinateur en attendant.
+
+notYet: Votre adversaire n'a pas encore joué.
+moveIn: Votre coup est enregistré.

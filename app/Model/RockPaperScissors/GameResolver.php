@@ -46,4 +46,9 @@ final class GameResolver
             $theirScore,
         );
     }
+
+    public function resetState(): DuelState
+    {
+        return new DuelState();
+    }
 }

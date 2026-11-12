@@ -1,15 +1,15 @@
 {block append}
-    <turbo-stream action="append" target="snippet--toasts" data-sender={$sender}>
+    <turbo-stream action="append" target="snippet--toasts" data-sender={$sender} data-lang={$lang}>
         {* capture = HTML fragment: {$player} stays escaped, and _toast prints it without escaping it again *}
         <template>{capture $message}
-                <b>{$player}</b> has played.{/capture}{include tRoot('_toast.latte'), type: 'info', message: $message}
+                <b>{$player}</b> {_'game.hasPlayed'}{/capture}{include tRoot('_toast.latte'), type: 'info', message: $message}
         </template>
     </turbo-stream>
 {/block}
 
 {* updates the opponent card for the other player (absent from the lobby: Turbo ignores the missing target) *}
 {block update}
-    <turbo-stream action="update" target="snippet--opponent" data-sender={$sender}>
+    <turbo-stream action="update" target="snippet--opponent" data-sender={$sender} data-lang={$lang}>
         <template>{include '_opponent.latte',
             state: $state,
             availableHands: $availableHands

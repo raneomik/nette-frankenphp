@@ -1,0 +1,81 @@
+title: "Kámen, nůžky, papír"
+description: "Zahrajte si online Kámen, nůžky, papír, ještěr, Spock proti kamarádovi nebo počítači."
+lobbyTitle: "Kámen, nůžky, papír - Lobby"
+you: Ty
+vs: VS
+computer: Počítač
+
+hand:
+    rock: kámen
+    scissors: nůžky
+    paper: papír
+    lizard: ještěr
+    spock: Spock
+
+# tooltip grid, <my hand>.<other hand>: verb and noun both change with the pair (cs: tupí nůžky / drtí ještěra)
+beats:
+    rock:
+        scissors: {verb: "tupí", hand: "nůžky"}
+        lizard: {verb: "drtí", hand: "ještěra"}
+    paper:
+        rock: {verb: "balí", hand: "kámen"}
+        spock: {verb: "usvědčuje", hand: "Spocka"}
+    scissors:
+        paper: {verb: "stříhají", hand: "papír"}
+        lizard: {verb: "stínají hlavu", hand: "ještěrovi"}
+    lizard:
+        paper: {verb: "žere", hand: "papír"}
+        spock: {verb: "tráví", hand: "Spocka"}
+    spock:
+        scissors: {verb: "rozbíjí", hand: "nůžky"}
+        rock: {verb: "vypaří", hand: "kámen"}
+
+beatenBy:
+    rock:
+        paper: {verb: "zabalen", hand: "papírem"}
+        spock: {verb: "vypařen", hand: "Spockem"}
+    paper:
+        scissors: {verb: "rozstříhán", hand: "nůžkami"}
+        lizard: {verb: "sežrán", hand: "ještěrem"}
+    scissors:
+        rock: {verb: "ztupené", hand: "kamenem"}
+        spock: {verb: "rozbité", hand: "Spockem"}
+    lizard:
+        rock: {verb: "rozdrcen", hand: "kamenem"}
+        scissors: {verb: "sťat", hand: "nůžkami"}
+    spock:
+        paper: {verb: "usvědčen", hand: "papírem"}
+        lizard: {verb: "otráven", hand: "ještěrem"}
+
+rules: Pravidla
+rulesHint: "Pět gest, každé poráží dvě jiná."
+newGame: Začít novou hru
+join: Připojit se k čekajícímu hráči
+cleanAll: Vymazat vše
+playAgainst: Hrát proti hráči %player%
+
+copyInvite: 📋 Zkopírovat odkaz s pozvánkou
+copied: Odkaz zkopírován!
+notify: "🔔 Upozornit mě, až se někdo připojí"
+backToLobby: ← Zpět do lobby
+playHand: "Zahrát: %hand%"
+previous: Předchozí
+next: Další
+
+waiting: Čekání na soupeře…
+ready: připraven
+hiddenHand: skrytý tah
+draw: Remíza! Oba jste zahráli totéž.
+win: Vyhráváš!
+lose: Prohráváš.
+hasPlayed: má odehráno.
+thinking: přemýšlí…
+joined: se připojuje.
+playerJoined: %username% se připojil do síně
+notification: 'Tvůj soupeř je tu, zahrajte si !'
+left: odchází.
+nextRound: Vyber gesto a zahraj další kolo.
+soloHint: "Než někdo přijde, vyber gesto a zahraj si proti počítači."
+
+notYet: Soupeř ještě nehrál.
+moveIn: Tvůj tah je zaznamenán.

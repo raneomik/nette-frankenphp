@@ -2,6 +2,7 @@ type Push = {
     buttons: HTMLButtonElement[],
     key: string,
     topics: string[],
+    locale: string,
     subscribeUrl: string,
     swUrl: string,
 };
@@ -36,6 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         buttons,
         key,
         topics: [...new Set(buttons.flatMap((button) => button.dataset.pwaPush?.split(/\s+/).filter(Boolean) ?? []))],
+        locale: document.documentElement.lang,
         subscribeUrl,
         // the service worker reads its subscribe URL from its own query string (pushsubscriptionchange)
         swUrl: `${meta('pwa-sw-url') ?? '/sw.js'}?subscribe=${encodeURIComponent(subscribeUrl)}`,
@@ -69,7 +71,7 @@ async function subscribe(push: Push) {
         const subscription = await registration.pushManager.getSubscription()
             ?? await registration.pushManager.subscribe({userVisibleOnly: true, applicationServerKey: base64UrlToBytes(push.key)});
 
-        await send(push.subscribeUrl, 'POST', {subscription, topics: push.topics});
+        await send(push.subscribeUrl, 'POST', {subscription, topics: push.topics, locale: push.locale});
         push.buttons.forEach((button) => toggle(button, true));
     } catch (error) {
         console.error(error);

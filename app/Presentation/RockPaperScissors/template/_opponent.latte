@@ -1,50 +1,55 @@
 {parameters App\Model\RockPaperScissors\Value\DuelState $state}
 
 {var $outcome = $state->outcome()}
-{var $won = $outcome instanceof App\Model\RockPaperScissors\Enum\WinType}
+{var $won = $outcome === App\Model\RockPaperScissors\Enum\Result::Win}
+{var $lost = $outcome === App\Model\RockPaperScissors\Enum\Result::Lose}
 
 <div class="card-body items-center gap-4" n:attr="data-waiting: (!$state->opponent || $state->solo) ?: null">
     <h2 class="card-title">
-        {$state->opponent ?? 'Waiting for an opponent…'}
-        <span n:if="$state->opponentPlayed" class="badge badge-success">ready</span>
+        {$state->opponent ?? ('game.waiting'|translate)}
+        <span n:if="$state->opponentPlayed" class="badge badge-success">{_'game.ready'}</span>
     </h2>
 
     <div class="flex h-42 items-center justify-center gap-6 text-8xl">
         {if $state->revealed && $state->mine}
-            <span n:class="$outcome && !$won ? opacity-30" title="You: {$state->mine->label()}">{$state->mine->emoji()}</span>
-            <span class="text-xl font-bold opacity-50">VS</span>
-            <span n:class="$won ? opacity-30" title="{$state->opponent}: {$state->revealed->label()}">{$state->revealed->emoji()}</span>
+            <span n:class="$lost ? opacity-30" title="{_'game.you'}: {_"game.hand.{$state->mine->value}"}">{$state->mine->emoji()}</span>
+            <span class="text-xl font-bold opacity-50">{_'game.vs'}</span>
+            <span n:class="$won ? opacity-30" title="{$state->opponent}: {_"game.hand.{$state->revealed->value}"}">{$state->revealed->emoji()}</span>
         {elseif $state->opponent}
-            <span title="hidden hand">{$state->opponentPlayed ? '❕' : '❓'}</span>
+            <span title="{_'game.hiddenHand'}">{$state->opponentPlayed ? '❕' : '❓'}</span>
         {else}
             <span class="loading loading-dots loading-lg"></span>
         {/if}
     </div>
 
-    <p n:class="min-h-7, text-lg, font-bold, $won ? text-success : ($outcome ? text-error)">
+    <p n:class="min-h-7, text-lg, font-bold, $won ? text-success : ($lost ? text-error)">
         {if $state->revealed && $state->mine}
-            {if $outcome === null}
-                Draw! You both played {$state->mine->label()}.
+            {if !$won && !$lost}
+                {_'game.draw'}
             {elseif $won}
-                You win! {$state->mine->label()|firstUpper} {$outcome->value} {$state->revealed->label()}.
+                {_'game.win'}
+                {var $stateKey = "game.beats.{$state->mine->value}.{$state->revealed->value}"}
+                {_"game.hand.{$state->mine->value}"|firstUpper} {_"$stateKey.verb"} {_"$stateKey.hand"}.
                 <x-confetti emoji="{$state->mine->emoji()}"></x-confetti>
             {else}
                 {* told from the winner's side: "Paper covers rock", not "Rock covered by paper" *}
-                You lose. {$state->revealed->label()|firstUpper} {$state->revealed->game($state->mine)?->value} {$state->mine->label()}.
+                {_'game.lose'}
+                {var $stateKey = "game.beatenBy.{$state->mine->value}.{$state->revealed->value}"}
+                {_"game.hand.{$state->mine->value}"|firstUpper} {_"$stateKey.verb"} {_"$stateKey.hand"}.
             {/if}
         {elseif $state->opponent}
-            {$state->opponent} {$state->opponentPlayed ? 'has played.' : 'is thinking…'}
+            {$state->opponent} {=($state->opponentPlayed ? 'game.hasPlayed' : 'game.thinking')|translate}
         {/if}
     </p>
 
     {* 2. nothing else tells that a new round starts just by picking again *}
-    <p n:if="$state->revealed && $state->mine && !$state->solo" class="text-sm opacity-60">Pick a hand to play the next round.</p>
+    <p n:if="$state->revealed && $state->mine && !$state->solo" class="text-sm opacity-60">{_'game.nextRound'}</p>
 
-    <p n:if="!$state->opponent || $state->solo" class="text-sm opacity-60">Pick a hand to play against the computer while you wait.</p>
+    <p n:if="!$state->opponent || $state->solo" class="text-sm opacity-60">{_'game.soloHint'}</p>
 
     <div n:if="$state->opponent && !$state->solo" class="stats bg-base-100">
         <div class="stat place-items-center px-6 py-2">
-            <div class="stat-title">You</div>
+            <div class="stat-title">{_'game.you'}</div>
             <div class="stat-value text-primary">{$state->myScore}</div>
         </div>
         <div class="stat place-items-center px-6 py-2">

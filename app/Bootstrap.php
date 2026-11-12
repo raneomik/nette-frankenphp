@@ -56,9 +56,6 @@ final readonly class Bootstrap
                 'dataDir' => $this->rootDir . '/var/data',
             ])
 
-            ->addDynamicParameters([
-                'hotReloadUrl' => $_SERVER['FRANKENPHP_HOT_RELOAD'] ?? null,
-            ])
             ->enableTracy($this->rootDir . '/var/log')
         ;
 
