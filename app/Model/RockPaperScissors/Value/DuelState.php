@@ -3,8 +3,7 @@
 namespace App\Model\RockPaperScissors\Value;
 
 use App\Model\RockPaperScissors\Enum\Hand;
-use App\Model\RockPaperScissors\Enum\LoseType;
-use App\Model\RockPaperScissors\Enum\WinType;
+use App\Model\RockPaperScissors\Enum\Result;
 
 readonly class DuelState
 {
@@ -20,10 +19,10 @@ readonly class DuelState
     }
 
     /**
-     * how my hand won (WinType) or lost (LoseType) in the last round; null = draw or nothing revealed
+     * my result in the last round; null = nothing revealed
      */
-    public function outcome(): null|WinType|LoseType
+    public function outcome(): ?Result
     {
-        return $this->mine && $this->revealed ? $this->mine->game($this->revealed) : null;
+        return $this->mine && $this->revealed ? Result::fromGame($this->mine, $this->revealed) : null;
     }
 }

@@ -1,5 +1,5 @@
 {block update}
-<turbo-stream action="update" target="waiting-room-list">
+<turbo-stream action="update" target="waiting-room-list" data-lang={$lang}>
     <template>
         {include '_waitingRooms.latte', rooms: $rooms}
     </template>

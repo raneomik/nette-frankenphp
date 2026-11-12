@@ -1,7 +1,6 @@
 {block error}
-<h1 n:block=title>Page Not Found</h1>
+<h1 n:block=title>{_'app.error.404.title'}</h1>
 
-<p>The page you requested could not be found. The address may be wrong, or the page
-no longer exists.</p>
+<p>{_'app.error.404.text'}</p>
 
-<p><small>error 404</small></p>
+<p><small>{_'app.error.code', [code => 404]}</small></p>

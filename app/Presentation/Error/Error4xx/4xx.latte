@@ -1,6 +1,6 @@
 {block error}
-<h1 n:block=title>Oops...</h1>
+<h1 n:block=title>{_'app.error.4xx.title'}</h1>
 
-<p>Your browser sent a request that this server could not understand or process.</p>
+<p>{_'app.error.4xx.text'}</p>
 
-<p><small>error {$httpCode}</small></p>
+<p><small>{_'app.error.code', [code => $httpCode]}</small></p>

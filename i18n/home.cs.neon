@@ -1,0 +1,12 @@
+intro: "Nette apka běžící na FrankenPHP, s aktualizacemi v reálném čase přes Mercure."
+learnMore: Více informací níže
+logo: "Logo %name%"
+poweredBy: Využívá rozšíření
+devMode: v režimu dev/debug
+play: "👊 Hrát Kámen, nůžky, papír 🖖"
+demos: Živé ukázky
+newTab: Otevřete novou kartu a sledujte živé aktualizace ↗
+toastAll: Poslat toast všem
+toastTurbo: Poslat toast přes Turbo Streams
+hello: Zdravím z Mercure!
+helloTurbo: "Zdravím z Mercure, přes Turbo Streams!"

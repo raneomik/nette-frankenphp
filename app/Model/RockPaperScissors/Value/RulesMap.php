@@ -33,12 +33,7 @@ readonly class RulesMap implements \IteratorAggregate
                     continue;
                 }
 
-                $game = $player->game($opponent);
-                if (null === $game) {
-                    continue;
-                }
-
-                $rules[] = new Rule($player, $game, $opponent);
+                $rules[] = new Rule($player, $opponent);
             }
         }
 

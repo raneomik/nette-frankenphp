@@ -9,7 +9,7 @@ import './js/components/xclipboard';
 
 import './js/mercure-client';
 import './js/turbo-client';
-import './js/turbo-user-rule';
+import './js/turbo-user-filter';
 import './js/mercure-fixes';
 import './js/push-client';
 

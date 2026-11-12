@@ -11,6 +11,7 @@ use App\Model\RockPaperScissors\Value\GameRecord;
 use App\Model\RockPaperScissors\Value\WaitingRoom;
 use App\Model\Service\Messenger;
 use App\Model\Service\Randomiser;
+use App\Presentation\Accessory\Localized;
 use App\Presentation\RockPaperScissors\TemplateData\GameTemplate;
 use Nette;
 use Nette\Application\Attributes\Requires;
@@ -25,6 +26,8 @@ use Tracy\Debugger;
  */
 final class BasePresenter extends Nette\Application\UI\Presenter
 {
+    use Localized;
+
     #[Inject]
     public GameFacade $game;
 
@@ -82,6 +85,17 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         ));
     }
 
+    /**
+     * shared links (invite, push) carry no language: each visitor lands in their own
+     */
+    public function actionJoin(string $room): void
+    {
+        $this->redirect('game', [
+            'room' => $room,
+            'locale' => $this->preferredLocale(),
+        ]);
+    }
+
     public function actionGame(string $room): void
     {
         if (null !== $this->getSignal()) { // signals (play! via ajax or not, leave! via beacon) come through here too: only opening the page counts as an arrival
@@ -97,12 +111,6 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         }
 
         $opponent = $this->game->opponent($room, $myId);
-
-        $this->messenger->toOthers($room, $myId, __DIR__ . '/template/joined.stream.latte', [
-            'player' => $this->username(),
-            'availableHands' => Hand::cases(),
-            'state' => $this->game->duelState($room, $opponent->userId ?? ''), // as seen by the opponent
-        ]);
 
         // the waiting player may have closed the tab: Mercure would not reach them
         $opponent && $this->notifyJoined($opponent->userId, $room);
@@ -156,7 +164,7 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         // solo while waiting for an opponent: the computer draws a hand, nothing is stored (no rounds or score to mix with the future duel)
         if (null === $opponent) {
             $hands = Hand::cases();
-            $this->template->duelState = new DuelState('Computer', revealed: $hands[array_rand($hands)], mine: $move, solo: true);
+            $this->template->duelState = new DuelState($this->translate('game.computer'), revealed: $hands[array_rand($hands)], mine: $move, solo: true);
             $this->redrawControl('opponent');
 
             $this->isAjax() || $this->redirect('this'); // shortcut: without JS, the redirect loses the solo result; it should go through the session
@@ -164,7 +172,7 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         }
 
         if ($myRound > $this->game->round($room, $opponent->userId)) {
-            $this->flashMessage('Your opponent hasn\'t played yet.', 'warning');
+            $this->flashMessage($this->translate('game.notYet'), 'warning');
             $this->redrawControl('toasts');
 
             $this->isAjax() || $this->redirect('this');
@@ -183,7 +191,7 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         ]);
 
         // local: confirmation for me only + my opponent card (hand revealed if the round is complete)
-        $this->flashMessage('Your move is in.', 'success');
+        $this->flashMessage($this->translate('game.moveIn'), 'success');
         $this->redrawControl('toasts');
         $this->redrawControl('opponent');
 
@@ -206,12 +214,34 @@ final class BasePresenter extends Nette\Application\UI\Presenter
      */
     private function notifyJoined(string $playerId, string $room): void
     {
+        $this->messenger->toOthers($room, (string) $this->me->id, __DIR__ . '/template/joined.stream.latte', [
+            'player' => $this->username(),
+            'availableHands' => Hand::cases(),
+            'state' => $this->game->duelState($room, $playerId), // as seen by the opponent
+        ]);
+
         try {
-            $failures = $this->push->send("player/{$playerId}", new Notification(
-                "{$this->username()} joined your room",
-                'Your opponent is here, time to play!',
-                $this->link('//game', $room),
-            ));
+            $failures = $this->push->send(
+                "player/{$playerId}",
+                fn (string $locale) => new Notification(
+                    $this->translate(
+                        'game.playerJoined',
+                        [
+                            'username' => $this->username(),
+                        ],
+                        locale: $locale,
+                    ),
+                    $this->translate(
+                        'game.notification',
+                        locale: $locale,
+                    ),
+                    $this->link('//join', [
+                        'room' => $room,
+                        'locale' => null,
+                    ]),
+                )
+            );
+
             foreach ($failures as $failure) {
                 Debugger::log("Web push failed: {$failure->getReason()}", Debugger::WARNING);
             }

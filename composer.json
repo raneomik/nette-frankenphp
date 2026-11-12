@@ -34,7 +34,8 @@
     "fakerphp/faker": "^1.24",
     "minishlink/web-push": "^11.0",
     "nyholm/psr7": "^1.8",
-    "raneomik/nette-pwa": "dev-main"
+    "raneomik/nette-pwa": "dev-main",
+    "contributte/translation": "^2.0@dev"
   },
   "require-dev": {
     "nette/tester": "^2.5",

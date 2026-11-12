@@ -1,0 +1,20 @@
+and: a
+close: Zavřít
+language: Jazyk
+lightTheme: Světlý motiv
+source: Zdrojový kód na GitHubu
+backHome: Zpět na úvodní stránku
+error:
+    code: chyba %code%
+    4xx:
+        title: Jejda...
+        text: "Váš prohlížeč odeslal požadavek, kterému server nerozumí nebo jej nedokáže zpracovat."
+    403:
+        title: Přístup odepřen
+        text: "Nemáte oprávnění k zobrazení této stránky. Pokud se domníváte, že byste ji měli vidět, kontaktujte správce webu."
+    404:
+        title: Stránka nenalezena
+        text: "Požadovaná stránka nebyla nalezena. Adresa může být chybná, nebo stránka již neexistuje."
+    410:
+        title: Stránka nenalezena
+        text: Požadovaná stránka byla z webu odstraněna. Omlouváme se za potíže.

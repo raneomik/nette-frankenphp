@@ -1,0 +1,12 @@
+intro: "Appli Nette tournant sur FrankenPHP, avec des mises à jour en temps réel via Mercure."
+learnMore: En savoir plus ci-dessous
+logo: "Logo %name%"
+poweredBy: Propulsé par les extensions
+devMode: en mode dev/debug
+play: 👊 Jouer à Pierre Papier Ciseaux 🖖
+demos: Démos en direct
+newTab: Ouvrez un nouvel onglet pour voir les mises à jour en direct ↗
+toastAll: Envoyer un toast à tous
+toastTurbo: Envoyer un toast avec Turbo Streams
+hello: Bonjour de la part de Mercure !
+helloTurbo: "Bonjour de la part de Mercure, via Turbo Streams !"

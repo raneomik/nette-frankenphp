@@ -87,7 +87,7 @@ final readonly class GameFacade
     {
         $opponent = $this->opponent($room, $currentUserId);
         if (null === $opponent) {
-            return new DuelState();
+            return $this->gameResolver->resetState();
         }
 
         $me = $currentUserId;

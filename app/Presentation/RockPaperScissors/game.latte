@@ -1,11 +1,13 @@
-{block title}Rock Paper Scissors{/block}
+{block title}{_'game.title'}{/block}
+{* rooms have random addresses: nothing to index *}
+{block seo}<meta name="robots" content="noindex">{/block}
 
 {block content}
     {* read by app.js: leave! signal sent when the page closes (outside the snippet, so it does not depend on a redraw) *}
     <div class="grid gap-6 lg:grid-cols-2" data-leave-url="{link leave!, $room, $pageId}">
         <section class="card stitched min-w-0 bg-base-200">
             <div class="card-body items-center gap-4">
-                <h2 class="card-title">You</h2>
+                <h2 class="card-title">{_'game.you'}</h2>
                 {include 'template/_handChoice.latte'}
             </div>
         </section>
@@ -19,20 +21,20 @@
                the invite link is the main button while the card says [data-waiting], then a discreet link
                (a departure can go unnoticed: crashed tab, lost beacon); the push switch stays, to turn it off mid-duel *}
             <div class="flex flex-col items-center gap-2 px-6 pb-8">
-                <x-clipboard type="button" data-clipboard-text="{link Base:game $room|absoluteUrl}"
-                             data-copied="Link copied!"
+                <x-clipboard type="button" data-clipboard-text="{link Base:join $room, locale: null|absoluteUrl}"
+                             data-copied="{_'game.copied'}"
                         class="clipboard tooltip btn btn-primary hidden group-has-[[data-waiting]]:inline-flex">
-                    📋 Copy invite link
+                    {_'game.copyInvite'}
                 </x-clipboard>
-                <x-clipboard type="button" data-clipboard-text="{link Base:game $room|absoluteUrl}"
-                             data-copied="Link copied!"
+                <x-clipboard type="button" data-clipboard-text="{link Base:join $room, locale: null|absoluteUrl}"
+                             data-copied="{_'game.copied'}"
                         class="clipboard tooltip link link-hover text-sm opacity-70 group-has-[[data-waiting]]:hidden">
-                    📋 Copy invite link
+                    {_'game.copyInvite'}
                 </x-clipboard>
                 {* push-client.js (nette-pwa) hides it while push is off or unsupported, asks to install on iOS;
                    a setting more than an action: same label on and off, the switch (.push-switch, app.css) shows aria-pressed *}
                 <button type="button" class="push-switch" data-pwa-push="player/{$user->id}"
-                        data-pwa-on="🔔 Notify me when someone joins">🔔 Notify me when someone joins</button>
+                        data-pwa-on="{_'game.notify'}">{_'game.notify'}</button>
             </div>
         </section>
     </div>
@@ -40,7 +42,7 @@
     <div class="mt-6 flex w-full flex-col">
         <div class="divider"></div>
         <div class="grid h-20 place-items-center">
-            <a n:href="Base:default" class="link link-hover inline-block py-2">← Back to lobby</a>
+            <a n:href="Base:default" class="link link-hover inline-block py-2">{_'game.backToLobby'}</a>
         </div>
     </div>
 {/block}

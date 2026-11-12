@@ -2,6 +2,13 @@
 parameters:
 
 
+extensions:
+    mercure: Raneomik\NetteMercure\Bridge\DI\MercureExtension(%debugMode%)
+    pwa: Raneomik\NettePWA\Bridge\DI\PWAExtension
+    translation: Contributte\Translation\DI\TranslationExtension
+    # packages of require-dev: config/dev.neon
+
+
 application:
     debugger: %debugMode%
     errorPresenter:
@@ -46,25 +53,25 @@ latte:
     strictTypes: yes
     strictParsing: yes
     extensions:
-        - App\Presentation\Accessory\LatteExtension(%runner%, %hotReloadUrl%)
+        - App\Presentation\Accessory\LatteExtension(%runner%)
 
-extensions:
-    mercure: Raneomik\NetteMercure\Bridge\DI\MercureExtension(%debugMode%)
-    pwa: Raneomik\NettePWA\Bridge\DI\PWAExtension
-    # packages of require-dev: config/dev.neon
+translation:
+    locales:
+        whitelist: [en, fr, cs]
+        default: en
+        fallback: [en]
+    dirs: [%rootDir%/i18n]
+    localeResolvers:
+        - Contributte\Translation\LocalesResolvers\Router # the URL decides (RouterFactory)
+        - Contributte\Translation\LocalesResolvers\Header # no route matched: error pages
 
 mercure:
-    one:
-        url: '%baseUrl%/.well-known/mercure'
-        jwt:
-            key: %mercureJwtSecret%
+    url: '%baseUrl%/.well-known/mercure'
+    jwt:
+        key: %mercureJwtSecret%
 
-        autoDiscovery: yes
+    autoDiscovery: yes
 
-    legacy:
-        url: '%baseUrl%/.well-known/mercure'
-        jwt:
-            key: %mercureJwtSecret%
 
 # /manifest.webmanifest, /sw.js, /pwa/push/subscribe: POST on, DELETE off, PUT rotation (libs/nette-pwa)
 pwa:
@@ -97,7 +104,6 @@ assets:
 
 tracy:
     strictMode: yes
-    dumpTheme: dark
     bar:
         - App\Core\Tracy\RunnerPanel('%runner%')
         - App\Core\Tracy\PhpInfoPanel

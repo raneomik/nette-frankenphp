@@ -2,12 +2,14 @@
 
 namespace App\Model\Service;
 
+use Contributte\Translation\Translator;
 use Raneomik\NetteMercure\BroadcasterInterface;
 
 final readonly class Messenger
 {
     public function __construct(
         private BroadcasterInterface $broadcaster,
+        private Translator $translator,
     ) {
     }
 
@@ -54,11 +56,22 @@ final readonly class Messenger
             $options['action'] = $params['action'];
         }
 
-        $this->broadcaster->broadcast(
-            $topic,
-            $params,
-            $options,
-            $template,
-        );
+        // the recipients' locales are unknown: one rendering per locale, each page keeps its own (data-lang, turbo-user-filter.ts)
+        $current = $this->translator->getLocale();
+        try {
+            foreach ($this->translator->getLocalesWhitelist() ?? [$current] as $locale) {
+                $this->translator->setLocale($locale);
+                $this->broadcaster->broadcast(
+                    $topic,
+                    [
+                        'lang' => $locale,
+                    ] + $params,
+                    $options,
+                    $template,
+                );
+            }
+        } finally {
+            $this->translator->setLocale($current);
+        }
     }
 }
