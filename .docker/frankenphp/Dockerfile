@@ -127,8 +127,10 @@ USER app
 # Probes /health ("PHP  worker responds"), not only Caddy.
 # redirects are followed and local certificate is accepted to work
 # with SERVER_NAME=localhost (compose.yml) and SERVER_NAME=:80 (behind proxy).
+# On failure it prints what it got (HTTP status or connection error): shown by docker inspect
+# and by docker rollout, instead of an empty "Output".
 HEALTHCHECK --interval=10s --timeout=5s --start-period=60s --start-interval=2s --retries=3 \
-    CMD php -r 'exit(false === @file_get_contents("http://localhost/health", context: stream_context_create(["http" => ["timeout" => 4], "ssl" => ["verify_peer" => false, "verify_peer_name" => false]])) ? 1 : 0);'
+    CMD php -r '$ok = false !== @file_get_contents("http://localhost/health", context: stream_context_create(["http" => ["timeout" => 4], "ssl" => ["verify_peer" => false, "verify_peer_name" => false]])); $ok || print((http_get_last_response_headers()[0] ?? error_get_last()["message"] ?? "no answer") . " (the cause is in the php.tracy lines of the container logs)\n"); exit($ok ? 0 : 1);'
 
 # Migrate before start : container stops on fail, is never
 # "healthy", and docker rollout keeps previous version.

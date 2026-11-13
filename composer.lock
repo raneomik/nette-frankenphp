@@ -2500,12 +2500,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/raneomik/nette-pwa.git",
-                "reference": "d927c17e71e20534f4b1d22bd38de649676fe618"
+                "reference": "4c6cb67cf4dc27bd0bd56bf53312309df26d243d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/raneomik/nette-pwa/zipball/d927c17e71e20534f4b1d22bd38de649676fe618",
-                "reference": "d927c17e71e20534f4b1d22bd38de649676fe618",
+                "url": "https://api.github.com/repos/raneomik/nette-pwa/zipball/4c6cb67cf4dc27bd0bd56bf53312309df26d243d",
+                "reference": "4c6cb67cf4dc27bd0bd56bf53312309df26d243d",
                 "shasum": ""
             },
             "require": {
@@ -2517,6 +2517,7 @@
                 "php": ">=8.3"
             },
             "require-dev": {
+                "contributte/translation": "^2.0",
                 "infection/infection": "^0.35.8",
                 "latte/latte": "^3.0",
                 "minishlink/web-push": "^11.0",
@@ -2535,6 +2536,7 @@
                 "tracy/tracy": "^2.10"
             },
             "suggest": {
+                "contributte/translation": "push: a subscription keeps the locale of its page, to send each browser its language",
                 "latte/latte": "{pwaHead()} function",
                 "minishlink/web-push": "Web Push (push: section), with ext-gmp for speed",
                 "nette/assets": "Versioned icon URLs in the manifest (src: 'img:icon')",
@@ -2576,7 +2578,7 @@
                 "issues": "https://github.com/raneomik/nette-pwa/issues",
                 "source": "https://github.com/raneomik/nette-pwa/tree/main"
             },
-            "time": "2026-11-11T00:13:11+00:00"
+            "time": "2026-11-12T19:57:18+00:00"
         },
         {
             "name": "spomky-labs/base64url",
@@ -2833,12 +2835,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client.git",
-                "reference": "bc6195f4f705a134615914165cd013cf438b8415"
+                "reference": "9c2a800d7b183344fafce33cde602ffe86f7ac92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client/zipball/bc6195f4f705a134615914165cd013cf438b8415",
-                "reference": "bc6195f4f705a134615914165cd013cf438b8415",
+                "url": "https://api.github.com/repos/symfony/http-client/zipball/9c2a800d7b183344fafce33cde602ffe86f7ac92",
+                "reference": "9c2a800d7b183344fafce33cde602ffe86f7ac92",
                 "shasum": ""
             },
             "require": {
@@ -2929,7 +2931,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-06T16:44:18+00:00"
+            "time": "2026-11-12T17:41:34+00:00"
         },
         {
             "name": "symfony/http-client-contracts",
@@ -3020,12 +3022,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "e68314f68f954a637d1f9a3914a441671d71dfee"
+                "reference": "6cb384befdd0d2490e21b9f0fef45bfa76547265"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/e68314f68f954a637d1f9a3914a441671d71dfee",
-                "reference": "e68314f68f954a637d1f9a3914a441671d71dfee",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/6cb384befdd0d2490e21b9f0fef45bfa76547265",
+                "reference": "6cb384befdd0d2490e21b9f0fef45bfa76547265",
                 "shasum": ""
             },
             "require": {
@@ -3095,7 +3097,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-10T01:09:09+00:00"
+            "time": "2026-11-12T16:19:10+00:00"
         },
         {
             "name": "symfony/mercure",
@@ -4001,8 +4003,8 @@
             "version": "2.3.x-dev",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/a6c4f96eb0e240f792f346d805d35a51e4c09e30",
-                "reference": "a6c4f96eb0e240f792f346d805d35a51e4c09e30",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/47fa53ebd25b3c7ac376d7fd2c9a71f8b8d9cafc",
+                "reference": "47fa53ebd25b3c7ac376d7fd2c9a71f8b8d9cafc",
                 "shasum": ""
             },
             "require": {
@@ -4059,7 +4061,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-10T18:26:43+00:00"
+            "time": "2026-11-13T10:58:41+00:00"
         },
         {
             "name": "phpstan/phpstan-nette",
@@ -4067,12 +4069,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-nette.git",
-                "reference": "e9aadf3b754daf5c56d1bfe9cfe2bbab9b8ba99c"
+                "reference": "a1513ac0a63b8059902862c8eb23c4218e43e061"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-nette/zipball/e9aadf3b754daf5c56d1bfe9cfe2bbab9b8ba99c",
-                "reference": "e9aadf3b754daf5c56d1bfe9cfe2bbab9b8ba99c",
+                "url": "https://api.github.com/repos/phpstan/phpstan-nette/zipball/a1513ac0a63b8059902862c8eb23c4218e43e061",
+                "reference": "a1513ac0a63b8059902862c8eb23c4218e43e061",
                 "shasum": ""
             },
             "require": {
@@ -4123,7 +4125,7 @@
                 "issues": "https://github.com/phpstan/phpstan-nette/issues",
                 "source": "https://github.com/phpstan/phpstan-nette/tree/2.0.x"
             },
-            "time": "2026-11-07T10:26:25+00:00"
+            "time": "2026-11-12T17:00:05+00:00"
         },
         {
             "name": "raneomik/tracy-dark-mode",
@@ -4193,12 +4195,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "1be7b7916c500b9d8060bb4a01d26d00012554ff"
+                "reference": "2b75bcd02ca997ca484148e12a4ff7c2339a12f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/1be7b7916c500b9d8060bb4a01d26d00012554ff",
-                "reference": "1be7b7916c500b9d8060bb4a01d26d00012554ff",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/2b75bcd02ca997ca484148e12a4ff7c2339a12f2",
+                "reference": "2b75bcd02ca997ca484148e12a4ff7c2339a12f2",
                 "shasum": ""
             },
             "require": {
@@ -4243,7 +4245,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-09T23:40:21+00:00"
+            "time": "2026-11-12T18:09:46+00:00"
         },
         {
             "name": "symfony/thanks",
@@ -4313,16 +4315,16 @@
         },
         {
             "name": "symplify/easy-coding-standard",
-            "version": "13.3.15",
+            "version": "13.3.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ecsphp/ecs.git",
-                "reference": "4a975bfa3cee8b4ddb3b1fae9934e8ffde155271"
+                "reference": "d40557d3d0992de7b4e50625989478900ab282d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ecsphp/ecs/zipball/4a975bfa3cee8b4ddb3b1fae9934e8ffde155271",
-                "reference": "4a975bfa3cee8b4ddb3b1fae9934e8ffde155271",
+                "url": "https://api.github.com/repos/ecsphp/ecs/zipball/d40557d3d0992de7b4e50625989478900ab282d3",
+                "reference": "d40557d3d0992de7b4e50625989478900ab282d3",
                 "shasum": ""
             },
             "require": {
@@ -4355,9 +4357,9 @@
             ],
             "support": {
                 "issues": "https://github.com/ecsphp/ecs/issues",
-                "source": "https://github.com/ecsphp/ecs/tree/13.3.15"
+                "source": "https://github.com/ecsphp/ecs/tree/13.3.17"
             },
-            "time": "2026-11-07T20:02:40+00:00"
+            "time": "2026-11-12T18:43:17+00:00"
         }
     ],
     "aliases": [],
@@ -4374,5 +4376,5 @@
         "php": "8.4 - 8.5"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }

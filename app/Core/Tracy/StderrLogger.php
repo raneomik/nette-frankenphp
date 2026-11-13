@@ -26,7 +26,13 @@ final readonly class StderrLogger implements Tracy\ILogger
 
     public function log(mixed $value, string $level = self::INFO): mixed
     {
-        $bluescreen = $this->inner->log($value, $level); // path of the .html for an exception
+        // the stderr line must not depend on Tracy's files: var/log missing or read-only, Tracy not
+        // enabled yet... would otherwise lose the error altogether (Tracy swallows logging failures)
+        try {
+            $bluescreen = $this->inner->log($value, $level); // path of the .html for an exception
+        } catch (\Throwable $failure) {
+            $bluescreen = null;
+        }
 
         file_put_contents('php://stderr', json_encode([
             'level' => self::Levels[$level] ?? $level,
@@ -36,7 +42,12 @@ final readonly class StderrLogger implements Tracy\ILogger
             'exception' => $value instanceof \Throwable ? $value::class : null,
             'file' => $value instanceof \Throwable ? $value->getFile() . ':' . $value->getLine() : null,
             'bluescreen' => is_string($bluescreen) ? basename($bluescreen) : null,
+            'log_failure' => isset($failure) ? $failure->getMessage() : null, // why var/log got nothing
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE) . PHP_EOL);
+
+        if (isset($failure)) {
+            throw $failure; // Tracy's contract: its callers decide what a failed log means
+        }
 
         return $bluescreen;
     }

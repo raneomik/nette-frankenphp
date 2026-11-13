@@ -24,8 +24,7 @@ final readonly class FrankenphpRunner
                 ? $this->developmentHandler($bootstrap)
                 : $this->productionHandler($bootstrap);
         } catch (\Throwable $e) {
-            Debugger::log($e);
-            Debugger::exceptionHandler($e);
+            self::report($e); // Tracy may not be enabled yet: StderrLogger still writes its line
             frankenphp_finish_request();
 
             exit;
@@ -42,15 +41,46 @@ final readonly class FrankenphpRunner
     {
         $bootstrap->prepare();
         return static function () use ($bootstrap): void {
-            $application = $bootstrap->createContainer()->getByType(Application::class);
+            try {
+                $application = $bootstrap->createContainer()->getByType(Application::class);
 
-            $application->onShutdown[] = function (): void {
-                gc_collect_cycles();
-                frankenphp_finish_request();
-            };
+                $application->onShutdown[] = function (): void {
+                    gc_collect_cycles();
+                    frankenphp_finish_request();
+                };
 
-            $application->run();
+                $application->run();
+            } catch (\Throwable $e) {
+                self::report($e);
+            }
         };
+    }
+
+    /**
+     * Logs an exception that left the request handler and answers 500.
+     *
+     * Nothing else would: FrankenPHP reports such an exception itself as an engine error, which
+     * bypasses set_exception_handler() (so Tracy never sees it) and keeps the worker running (so
+     * Tracy's shutdown handler does not run either), while Tracy::enable() has switched PHP's own
+     * log_errors off. Result without this: a 500 with an empty body and not a single log line,
+     * e.g. when the DI container cannot be compiled.
+     */
+    private static function report(\Throwable $e): void
+    {
+        $logFailure = Debugger::tryLog($e, Debugger::EXCEPTION);
+
+        if (headers_sent()) {
+            return;
+        }
+
+        http_response_code(500);
+        header('Content-Type: text/html; charset=UTF-8');
+
+        // Tracy's own page, rendered here: Debugger::exceptionHandler() shows it only for the
+        // first exception of a process, and a worker serves many requests
+        $template = Debugger::$errorTemplate
+            ?? \dirname((string) new \ReflectionClass(Debugger::class)->getFileName()) . '/dist/error.500.phtml';
+        (static fn (bool $logged) => require $template)(null === $logFailure);
     }
 
     private function developmentHandler(Bootstrap $bootstrap): \Closure

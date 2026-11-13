@@ -98,8 +98,7 @@ final readonly class GameFacade
         foreach ($this->database
             ->table('game_records')
             ->where('room', $room)
-            ->where('userId', [$me, $them])
-         as $row) {
+            ->where('userId', [$me, $them]) as $row) {
             $rounds[$row->round][$row->userId] = Hand::from($row->move);
         }
 
