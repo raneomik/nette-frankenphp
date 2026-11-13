@@ -2,8 +2,9 @@
 {parameters array $rooms}
 {varType App\Model\RockPaperScissors\Value\WaitingRoom $waitingRoom}
 
+{* locale: locale(): the Mercure rendering has no presenter to carry the persistent locale *}
 <li n:foreach="$rooms as $waitingRoom" class="list-row grid-cols-1">
-    <a n:href=":RockPaperScissors:Base:game $waitingRoom->id" class="btn w-full">
-        Play against {$waitingRoom->lonelyPlayer}
+    <a n:href=":RockPaperScissors:Base:game $waitingRoom->id, locale: locale()" class="btn w-full">
+        {_'game.playAgainst', [player => $waitingRoom->lonelyPlayer]}
     </a>
 </li>

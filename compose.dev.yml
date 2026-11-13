@@ -13,7 +13,7 @@ services:
             PHP_IDE_CONFIG: "serverName=docker"
             # Server config with hot reloading
             FRANKENPHP_SITE_CONFIG: |
-                hot_reload app/** assets/** www/** config/**
+                hot_reload app/** assets/** www/** config/** i18n/**
                 worker {
                     file /srv/www/index.php
                 }

@@ -1,0 +1,20 @@
+and: et
+close: Fermer
+language: Langue
+lightTheme: Thème clair
+source: Code source sur GitHub
+backHome: Retour à l'accueil
+error:
+    code: erreur %code%
+    4xx:
+        title: Oups...
+        text: Votre navigateur a envoyé une requête que ce serveur n'a pas pu comprendre ou traiter.
+    403:
+        title: Accès refusé
+        text: "Vous n'avez pas la permission de voir cette page. Contactez l'administrateur du site si vous pensez que vous devriez y avoir accès."
+    404:
+        title: Page introuvable
+        text: "La page demandée est introuvable. L'adresse est peut-être erronée, ou la page n'existe plus."
+    410:
+        title: Page introuvable
+        text: La page demandée a été retirée du site. Veuillez nous excuser pour la gêne occasionnée.

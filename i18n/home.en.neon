@@ -1,0 +1,12 @@
+intro: "Nette app running on FrankenPHP, with real-time updates through Mercure."
+learnMore: Learn more below
+logo: "%name% logo"
+poweredBy: Powered by the extensions
+devMode: in dev/debug mode
+play: 👊 Play Rock Paper Scissors 🖖
+demos: Live demos
+newTab: Open a new tab to watch live updates ↗
+toastAll: Send a toast to everyone
+toastTurbo: Send a toast with Turbo Streams
+hello: Hello from Mercure!
+helloTurbo: "Hello from Mercure, via Turbo Streams!"

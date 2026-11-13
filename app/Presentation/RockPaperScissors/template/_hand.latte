@@ -2,13 +2,15 @@
 
 <template data-tip>
     <div class="text-center p-3">
-    <p class="font-bold mb-3">{$hand->label()|firstUpper}</p>
+    <p class="font-bold mb-3">{_"game.hand.{$hand->value}"|firstUpper}</p>
     {foreach $rulesMap as $rule}
         <div n:if="$rule->player === $hand" class="grid grid-cols-3 items-center justify-center-safe">
             {var $textColor = $rule->isAWin() ? 'text-success': 'text-error'}
-            <span class="text-end {$textColor}">{$rule->game->value}</span>
+            {var $verb = 'game.' . ($rule->isAWin() ? 'beats' : 'beatenBy')}
+            {var $state = $verb . ".{$rule->player->value}.{$rule->opponent->value}"}
+            <span class="text-end {$textColor}">{_"$state.verb"|firstUpper}</span>
             <span class="text-3xl">{$rule->opponent->emoji()}</span>
-            <span class="text-start">{$rule->opponent->label()}</span>
+            <span class="text-start">{_"$state.hand"}</span>
         </div>
     {/foreach}
     </div>

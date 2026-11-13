@@ -3,7 +3,7 @@
 {block append}
     <turbo-stream action="append" target="{$target ?? 'stream-container'}">
         <template>
-            {include tRoot('_toast.latte'), type: 'success', message: $data}
+            {include tRoot('_toast.latte'), type: 'success', message: ($data|translate)}
         </template>
     </turbo-stream>
 {/block}
