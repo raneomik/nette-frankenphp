@@ -4,6 +4,8 @@ language: Language
 lightTheme: Light theme
 source: Source on GitHub
 backHome: Back to the home page
+copy: Copy
+copied: copied !
 error:
     code: error %code%
     4xx:

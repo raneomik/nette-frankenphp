@@ -60,6 +60,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function subscribe(push: Push) {
+    push.buttons.forEach((button) => disable(button, button.dataset.pwaWaiting ?? '⏳ Checking for permissions...'));
+
     if (await Notification.requestPermission() !== 'granted') {
         push.buttons.forEach((button) => disable(button, button.dataset.pwaBlocked ?? '🔕 Notifications blocked'));
         return;

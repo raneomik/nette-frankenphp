@@ -1,6 +1,6 @@
 import ClipboardJS from 'clipboard';
 
-/** <x-clipboard data-clipboard-text="…" data-copied="…">: copies the text on click and shows a tooltip for 1.5 s */
+/** <x-clipboard data-clipboard-text|-target="…" data-copied="…">: copies the text on click and shows a tooltip for 1.5 s */
 class XClipboard extends HTMLElement {
     connectedCallback(): void {
         new ClipboardJS(this).on('success', (e: ClipboardJS.Event) => {

@@ -5,6 +5,8 @@ poweredBy: Powered by the extensions
 devMode: in dev/debug mode
 play: 👊 Play Rock Paper Scissors 🖖
 demos: Live demos
+codePieces: pieces of code
+liveWarning: toasts will appear to every visitor currently seeing this page
 newTab: Open a new tab to watch live updates ↗
 toastAll: Send a toast to everyone
 toastTurbo: Send a toast with Turbo Streams

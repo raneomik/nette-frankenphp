@@ -37,7 +37,10 @@ final class SubscribePresenter extends Nette\Application\UI\Presenter
             return;
         }
 
-        $topics = array_values(array_unique(array_filter((array) $this->topics, fn (mixed $topic): bool => \is_string($topic) && $this->topicAccess->isAllowed($topic))));
+        $topics = array_values(array_unique(array_filter(
+            (array) $this->topics,
+            fn (mixed $topic): bool => \is_string($topic) && $this->topicAccess->isAllowed($topic),
+        )));
         if ([] === $topics) {
             $this->error('No topic you may subscribe to.', IResponse::S403_Forbidden);
         }

@@ -1,0 +1,83 @@
+<details class="collapse collapse-arrow stitched mx-auto w-xl max-sm:hidden">
+    <summary class="collapse-title font-semibold">
+        {_'home.codePieces'}
+    </summary>
+    <div class="collapse-content flex flex-col gap-2 px-5 pb-5">
+        <div class="tabs tabs-lift">
+            <input type="radio" name="turbo-example" class="tab" aria-label="turbo" checked/>
+            <div class="tab-content relative bg-base-100 border-base-300">
+                {include copyButton, target: 'turbo-snippet'}
+                <x-code
+                    data-lang="javascript"
+                    id="turbo-snippet"
+                >{file_get_contents(tRoot('../../assets/js/turbo-client.ts'))}</x-code>
+            </div>
+
+            <input type="radio" name="turbo-example" class="tab" aria-label="config"/>
+            <div class="tab-content relative bg-base-100 border-base-300">
+                {include copyButton, target: 'config-snippet'}
+                <x-code data-lang="yaml" id="config-snippet">
+                    mercure:
+                    url: '%baseUrl%/.well-known/mercure'
+                    jwt:
+                    key: %mercureJwtSecret%
+                    autoDiscovery: true
+                </x-code>
+            </div>
+
+            <input type="radio" name="turbo-example" class="tab" aria-label="@layout.latte"/>
+            <div class="tab-content relative bg-base-100 border-base-300">
+                {include copyButton, target: 'turbo-latte-snippet'}
+                <x-code data-lang="xml" id="turbo-latte-snippet" n:syntax="off">
+                    &lt;div data-turbo-listen="turbo-test-topic">
+                        &lt;div id="toast-container" class="toast toast-end">
+                        &lt;/div>
+                    &lt;/div>
+                </x-code>
+            </div>
+
+            <input type="radio" name="turbo-example" class="tab" aria-label="presenter"/>
+            <div class="tab-content relative bg-base-100 border-base-300">
+                {include copyButton, target: 'turbo-php-snippet'}
+                <x-code data-lang="php" id="turbo-php-snippet" n:syntax="off">
+                    use Raneomik\NetteMercure\BroadcasterInterface;
+                    use Raneomik\NetteMercure\Core\Publish\Latte\TurboStreamAction;
+
+                    #[Inject]
+                    public BroadcasterInterface $broadcaster;
+
+                    public function someAction(): void
+                    {
+                        $this->broadcaster->broadcast(
+                            topics: ['turbo-test-topic'],
+                            data: 'home.helloTurbo',
+                            options: [
+                                'template' => 'test.stream.latte',
+                                'target' => 'toast-container',
+                                'action' => TurboStreamAction::Append,
+                            ],
+                        );
+                    }
+                </x-code>
+            </div>
+
+            <input type="radio" name="turbo-example" class="tab" aria-label="test.stream.latte"/>
+            <div class="tab-content relative bg-base-100 border-base-300">
+                {include copyButton, target: 'stream-snippet'}
+                <x-code data-lang="latte" id="stream-snippet" n:syntax="off">
+                    {contentType $contentType ?? 'text/html'}
+
+                    {block append}
+                        &lt;turbo-stream action="append" target="{$target ?? 'stream-container'}">
+                            &lt;template>
+                                &lt;span class="alert alert-success"&gt;
+                                    {$data|translate}
+                                &lt;/span&gt;
+                            &lt;/template>
+                        &lt;/turbo-stream>
+                    {/block}
+                </x-code>
+            </div>
+        </div>
+    </div>
+</details>

@@ -70,7 +70,7 @@ mercure:
     jwt:
         key: %mercureJwtSecret%
 
-    autoDiscovery: yes
+    autoDiscovery: true
 
 
 # /manifest.webmanifest, /sw.js, /pwa/push/subscribe: POST on, DELETE off, PUT rotation (libs/nette-pwa)

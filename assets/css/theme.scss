@@ -13,7 +13,7 @@
     --color-accent-content: #241c00;
     --color-neutral: #16211a;
     --color-neutral-content: #e4ede6;
-    /* info is the everyday toast ("X has played"): inverted ink, so green/yellow/red keep a meaning */
+    /* info is the everyday toast: inverted ink, so green/yellow/red keep a meaning */
     --color-info: #16211a;
     --color-info-content: #e4ede6;
     --color-success: #1f7a3a;
@@ -67,3 +67,6 @@ h1, h2, .stat-value { font-family: var(--font-display); letter-spacing: -0.02em;
     outline: 2px dashed color-mix(in srgb, var(--color-base-content) 40%, transparent);
     outline-offset: -9px;
 }
+
+/* the lifted tab stays above its panel when the panel is positioned, so it still blends into the panel's border */
+.tabs-lift > .tab:checked { z-index: 1; }

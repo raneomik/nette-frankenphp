@@ -4,6 +4,8 @@ language: Jazyk
 lightTheme: Světlý motiv
 source: Zdrojový kód na GitHubu
 backHome: Zpět na úvodní stránku
+copy: Kopírovat
+copied: zkopírováno !
 error:
     code: chyba %code%
     4xx:

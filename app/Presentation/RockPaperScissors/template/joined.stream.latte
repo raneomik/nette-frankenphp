@@ -1,5 +1,5 @@
 {block append}
-    <turbo-stream action="append" target="snippet--toasts" data-sender={$sender} data-lang={$lang}>
+    <turbo-stream action="append" target="snippet--toasts" data-sender={$sender}>
         <template>{capture $message}
                 <b>{$player}</b> {_'game.joined'}{/capture}{include tRoot('_toast.latte'), type: 'info', message: $message}
         </template>
@@ -7,7 +7,7 @@
 {/block}
 
 {block update}
-    <turbo-stream n:ifset="$availableHands" action="update" target="snippet--opponent" data-sender={$sender} data-lang={$lang}>
+    <turbo-stream n:ifset="$availableHands" action="update" target="snippet--opponent" data-sender={$sender}>
         <template>{include '_opponent.latte',
             state: $state,
             availableHands: $availableHands

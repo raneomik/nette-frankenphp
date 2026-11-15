@@ -54,7 +54,6 @@ cleanAll: Clean all
 playAgainst: Play against %player%
 
 copyInvite: 📋 Copy invite link
-copied: Link copied!
 notify: 🔔 Notify me when someone joins
 backToLobby: ← Back to lobby
 playHand: Play %hand%

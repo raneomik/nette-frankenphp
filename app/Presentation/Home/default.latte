@@ -3,7 +3,7 @@
 {block content}
     <div class="hero">
         <div class="hero-content text-center">
-            <div class="max-w-md">
+            <div class="max-w-xxl">
                 <p class="m-3">
                     {_'home.intro'}
                 </p>
@@ -15,18 +15,18 @@
                         <div class="hover-3d">
                             <!-- content -->
                             <figure class="w-20 rounded-4xl sm:w-25">
-                                <img n:asset="img:nette" alt="{_'home.logo', [name => Nette]}"/>
+                                <img n:asset="img:nette" alt="{_'home.logo', name: Nette}"/>
                             </figure>
-                            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
                         </div>
                     </a>
                     <a href="//frankenphp.dev" target="_blank" class="tooltip tooltip-bottom" data-tip="FrankenPHP">
                         <div class="hover-3d">
                             <!-- content -->
                             <figure class="w-20 rounded-4xl sm:w-25">
-                                <img n:asset="img:frankenphp" alt="{_'home.logo', [name => FrankenPHP]}"/>
+                                <img n:asset="img:frankenphp" alt="{_'home.logo', name: FrankenPHP}"/>
                             </figure>
-                            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
                         </div>
                     </a>
                     <a href="//mercure.rocks" target="_blank" class="tooltip tooltip-bottom" data-tip="Mercure">
@@ -35,7 +35,7 @@
                             <figure class="w-20 rounded-4xl sm:w-25">
                                 <img n:asset="img:mercure" alt="{_'home.logo', [name => Mercure]}"/>
                             </figure>
-                            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
                         </div>
                     </a>
                 </div>
@@ -46,22 +46,23 @@
                        target="_blank"
                        class="inline-flex items-center gap-1 text-primary underline hover:no-underline"
                     >
-                        nette-mercure
-                        {include tRoot('_icon/github.svg.latte'), class: 'size-5'}
+                            nette-mercure
+                            {include tRoot('_icon/github.svg.latte'), class: 'size-5'}
                     </a> {_'app.and'}
                     <a href="//github.com/raneomik/nette-pwa"
                        target="_blank"
                        class="inline-flex items-center gap-1 text-primary underline hover:no-underline"
                     >
-                        nette-pwa
-                        {include tRoot('_icon/github.svg.latte'), class: 'size-5'}
+                            nette-pwa
+                            {include tRoot('_icon/github.svg.latte'), class: 'size-5'}
                     </a>
+                    <br>
                     ({_'app.and'} <a href="//github.com/raneomik/tracy-dark-mode"
-                       target="_blank"
-                       class="inline-flex items-center gap-1 text-primary underline hover:no-underline"
+                                     target="_blank"
+                                     class="inline-flex items-center gap-1 text-primary underline hover:no-underline"
                     >
-                        tracy-dark-mode
-                        {include tRoot('_icon/github.svg.latte'), class: 'size-5'}
+                            tracy-dark-mode
+                            {include tRoot('_icon/github.svg.latte'), class: 'size-5'}
                     </a>
                     {_'home.devMode'})
                 </p>
@@ -69,12 +70,15 @@
         </div>
     </div>
 
-    <div class="flex justify-center text-center m-10">
-        <div class="grid grid-cols-1 gap-4 max-w-100">
+    <div class="flex justify-center text-center mt-10 mb-5">
+        <div class="grid grid-cols-1 gap-4">
             <a n:href="RockPaperScissors:Base:default" class="btn btn-primary btn-lg">
                 {_'home.play'}
             </a>
+
             <p class="mt-4 text-xs tracking-widest uppercase opacity-60">{_'home.demos'}</p>
+            <p class="text-xs tracking-widest opacity-60">⚠️{_'home.liveWarning'}</p>
+
             <a n:href="Home:default" target="_blank" class="link link-hover inline-block py-2">
                 {_'home.newTab'}
             </a>
@@ -82,6 +86,8 @@
             <a n:href="dispatch!" class="btn btn-dash ajax">
                 {_'home.toastAll'}
             </a>
+
+
             <a n:href="dispatch! 'turbo'" class="btn btn-dash ajax">
                 {_'home.toastTurbo'}
             </a>
@@ -95,7 +101,7 @@
         data-mercure="test-topic"
         class="toast toast-start">
     </div>
-    <div class="flex justify-center" data-turbo-listen="turbo-test-topic">
+    <div data-turbo-listen="turbo-test-topic">
         <div id="toast-container" class="toast toast-end">
         </div>
     </div>

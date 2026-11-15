@@ -1,0 +1,84 @@
+
+{* one copy button for every snippet: sits in the top right corner of its (relative) tab panel *}
+{define copyButton, string $target}
+    <x-clipboard
+        type="button"
+        role="button"
+        aria-label="{_'app.copy'}"
+        class="tooltip tooltip-left btn btn-sm btn-square absolute top-2 right-2 opacity-70 hover:opacity-100"
+        data-clipboard-target="#{$target}"
+        data-copied="{_'app.copied'}"
+    >{include tRoot('_icon/copy.svg.latte'), class: 'size-4'}</x-clipboard>
+{/define}
+
+<details class="collapse collapse-arrow stitched mx-auto w-xl max-sm:hidden mb-10">
+    <summary class="collapse-title font-semibold">
+        {_'home.codePieces'}
+    </summary>
+    <div class="collapse-content flex flex-col gap-2 px-5 pb-5">
+        <div class="tabs tabs-lift">
+            <input type="radio" name="mercure-example" class="tab" aria-label="js" checked/>
+            <div class="tab-content relative bg-base-100 border-base-300">
+                {include copyButton, target: 'js-snippet'}
+                <x-code data-lang="javascript" id="js-snippet">
+                    {file_get_contents(tRoot('../../assets/js/mercure-client.ts'))}
+                </x-code>
+            </div>
+
+            <input type="radio" name="mercure-example" class="tab" aria-label="config"/>
+            <div class="tab-content relative bg-base-100 border-base-300">
+                {include copyButton, target: 'min-config-snippet'}
+                <x-code data-lang="yaml" id="min-config-snippet">
+                    mercure:
+                        url: '%baseUrl%/.well-known/mercure'
+                        jwt:
+                            key: %mercureJwtSecret%
+                </x-code>
+            </div>
+
+            <input type="radio" name="mercure-example" class="tab" aria-label="@layout.latte"/>
+            <div class="tab-content relative bg-base-100 border-base-300">
+                {include copyButton, target: 'latte-snippet'}
+                <x-code data-lang="latte" id="latte-snippet" n:syntax="off">
+                    &lt;div
+                        data-mercure-url="{mercure('test-topic')}"
+                        data-mercure="test-topic"
+                        class="toast toast-start">
+                    &lt;/div>
+                </x-code>
+            </div>
+
+            <input type="radio" name="mercure-example" class="tab" aria-label="presenter"/>
+            <div class="tab-content relative bg-base-100 border-base-300">
+                {include copyButton, target: 'php-snippet'}
+                <x-code data-lang="php" id="php-snippet" n:syntax="off">
+                    use Raneomik\NetteMercure\BroadcasterInterface;
+
+                    #[Inject]
+                    public BroadcasterInterface $broadcaster;
+
+                    public function someAction(): void
+                    {
+                        $this->broadcaster->broadcast(
+                            topics: ['test-topic'],
+                            data: 'home.hello',
+                            template: 'test.latte',
+                        );
+                    }
+                </x-code>
+            </div>
+
+            <input type="radio" name="mercure-example" class="tab" aria-label="test.latte"/>
+            <div class="tab-content relative bg-base-100 border-base-300">
+                {include copyButton, target: 'template-snippet'}
+                <x-code data-lang="latte" id="template-snippet" n:syntax="off">
+                    {block content}
+                        &lt;span class="alert alert-info"&gt;
+                            {$data|translate}
+                        &lt;/span&gt;
+                    {/block}
+                </x-code>
+            </div>
+        </div>
+    </div>
+</details>
