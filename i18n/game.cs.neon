@@ -56,7 +56,6 @@ playAgainst: Hrát proti hráči %player%
 
 copyInvite: 📋 Zkopírovat odkaz s pozvánkou
 copied: Odkaz zkopírován!
-notify: "🔔 Upozornit mě, až se někdo připojí"
 backToLobby: ← Zpět do lobby
 playHand: "Zahrát: %hand%"
 previous: Předchozí

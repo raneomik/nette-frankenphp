@@ -33,8 +33,15 @@
                 </x-clipboard>
                 {* push-client.js (nette-pwa) hides it while push is off or unsupported, asks to install on iOS;
                    a setting more than an action: same label on and off, the switch (.push-switch, app.css) shows aria-pressed *}
-                <button type="button" class="push-switch" data-pwa-push="player/{$user->id}"
-                        data-pwa-on="{_'game.notify'}">{_'game.notify'}</button>
+                <button type="button" class="push-switch"
+                        data-pwa-push="player/{$user->id}"
+                        data-pwa-waiting="{_'app.push.waiting'}"
+                        data-pwa-blocked="{_'app.push.blocked'}"
+                        data-pwa-error="{_'app.push.error'}"
+                        data-pwa-on="{_'app.push.notify'}"
+                >
+                    {_'app.push.notify'}
+                </button>
             </div>
         </section>
     </div>

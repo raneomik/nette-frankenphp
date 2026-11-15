@@ -6,6 +6,12 @@ source: Zdrojový kód na GitHubu
 backHome: Zpět na úvodní stránku
 copy: Kopírovat
 copied: zkopírováno !
+push:
+    notify: '🔔 Upozornit mě, až se někdo připojí'
+    waiting: ⏳ Ověřování povolení...
+    blocked: 🔕 Upozornění blokováno
+    error: 🔕 Upozornění nedostupné
+
 error:
     code: chyba %code%
     4xx:

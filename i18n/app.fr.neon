@@ -6,6 +6,13 @@ source: Code source sur GitHub
 backHome: Retour à l'accueil
 copy: Copier
 copied: copié !
+
+push:
+    notify: 🔔 Me prévenir quand quelqu'un rejoint
+    waiting: ⏳ Vérification des permissions...
+    blocked: 🔕 Notifications bloquées
+    error: 🔕 Notifications indisponibles
+
 error:
     code: erreur %code%
     4xx:
