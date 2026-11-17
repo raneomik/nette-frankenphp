@@ -5,7 +5,7 @@ lightTheme: Světlý motiv
 source: Zdrojový kód na GitHubu
 backHome: Zpět na úvodní stránku
 copy: Kopírovat
-copied: zkopírováno !
+copied: zkopírováno!
 push:
     notify: '🔔 Upozornit mě, až se někdo připojí'
     waiting: ⏳ Ověřování povolení...

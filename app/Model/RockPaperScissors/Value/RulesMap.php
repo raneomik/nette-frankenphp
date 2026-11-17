@@ -3,7 +3,6 @@
 namespace App\Model\RockPaperScissors\Value;
 
 use App\Model\RockPaperScissors\Enum\Hand;
-use App\Model\RockPaperScissors\Enum\Result;
 use Traversable;
 
 /**
@@ -26,31 +25,28 @@ readonly class RulesMap implements \IteratorAggregate
      */
     private function populate(): array
     {
-        $rules = [];
+        $winningRules = [];
+        $losingRules = [];
         foreach (Hand::cases() as $player) {
             foreach (Hand::cases() as $opponent) {
                 if ($opponent === $player) {
                     continue;
                 }
 
-                $rules[] = new Rule($player, $opponent);
+                $rule = new Rule($player, $opponent);
+                if ($rule->isAWin()) {
+                    $winningRules[] = $rule;
+                } else {
+                    $losingRules[] = $rule;
+                }
             }
         }
 
-        usort(
-            $rules,
-            fn (Rule $a, Rule $b): int => match (Result::fromGame($a->player, $a->opponent)) {
-                Result::Win => -1,
-                Result::Lose => 1,
-                Result::Draw => 0,
-            }
-        );
-
-        return $rules;
+        return array_merge($winningRules, $losingRules);
     }
 
     public function getIterator(): Traversable
     {
-        return new \ArrayIterator($this->rules);
+        yield from $this->rules;
     }
 }

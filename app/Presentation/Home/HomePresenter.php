@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Presentation\Home;
 
 use App\Presentation\Accessory\Localized;
-use Contributte\Translation\LocalesResolvers\Header;
 use Nette;
 use Raneomik\NetteMercure\BroadcasterInterface;
 use Raneomik\NetteMercure\Core\Publish\Latte\TurboStreamAction;
@@ -18,7 +17,6 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	public function __construct(
 	    private readonly BroadcasterInterface $broadcaster,
 	    private readonly AuthorizationInterface $authorization,
-	    private readonly Header $browserLocale,
 	) {
     }
 
@@ -42,12 +40,9 @@ final class HomePresenter extends Nette\Application\UI\Presenter
         }
 
         $this->getHttpResponse()->addHeader('Vary', 'Accept-Language');
-        $preferred = $this->browserLocale->resolve($this->translator);
-        if (null !== $preferred && $preferred !== $this->translator->getDefaultLocale()) {
-            $this->redirect('this', [
-                'locale' => $preferred,
-            ]);
-        }
+        $this->redirect('this', [
+            'locale' => $this->preferredLocale(),
+        ]);
     }
 
 	public function handleDispatch(string $type = 'plain'): void

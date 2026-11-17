@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0960612ff6c3d32ec24882e5614a92b2",
+    "content-hash": "c70a0ed0a9e2389903c6abba09917e05",
     "packages": [
         {
             "name": "brick/math",
@@ -3075,12 +3075,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client.git",
-                "reference": "c976097074649e71d4ac3ab76dbe344e5bfe4271"
+                "reference": "753e712cea315bad874eb85de39ca1c2d7ab51db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client/zipball/c976097074649e71d4ac3ab76dbe344e5bfe4271",
-                "reference": "c976097074649e71d4ac3ab76dbe344e5bfe4271",
+                "url": "https://api.github.com/repos/symfony/http-client/zipball/753e712cea315bad874eb85de39ca1c2d7ab51db",
+                "reference": "753e712cea315bad874eb85de39ca1c2d7ab51db",
                 "shasum": ""
             },
             "require": {
@@ -3171,7 +3171,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-14T13:58:34+00:00"
+            "time": "2026-11-16T12:56:42+00:00"
         },
         {
             "name": "symfony/http-client-contracts",
@@ -3179,12 +3179,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client-contracts.git",
-                "reference": "acd218f8723054e791c6e4cce57b2c83a5f2dbb7"
+                "reference": "e221106e1a274d1002e526cf987eac508b6d4a8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client-contracts/zipball/acd218f8723054e791c6e4cce57b2c83a5f2dbb7",
-                "reference": "acd218f8723054e791c6e4cce57b2c83a5f2dbb7",
+                "url": "https://api.github.com/repos/symfony/http-client-contracts/zipball/e221106e1a274d1002e526cf987eac508b6d4a8d",
+                "reference": "e221106e1a274d1002e526cf987eac508b6d4a8d",
                 "shasum": ""
             },
             "require": {
@@ -3254,7 +3254,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-06T11:00:24+00:00"
+            "time": "2026-11-16T12:56:42+00:00"
         },
         {
             "name": "symfony/http-foundation",
@@ -3262,12 +3262,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "6cb384befdd0d2490e21b9f0fef45bfa76547265"
+                "reference": "3cc9a327311e658d2fb50e38c8ad3d6b93ab5f25"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/6cb384befdd0d2490e21b9f0fef45bfa76547265",
-                "reference": "6cb384befdd0d2490e21b9f0fef45bfa76547265",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/3cc9a327311e658d2fb50e38c8ad3d6b93ab5f25",
+                "reference": "3cc9a327311e658d2fb50e38c8ad3d6b93ab5f25",
                 "shasum": ""
             },
             "require": {
@@ -3337,7 +3337,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-12T16:19:10+00:00"
+            "time": "2026-11-17T10:53:38+00:00"
         },
         {
             "name": "symfony/mercure",
@@ -3516,12 +3516,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-deepclone.git",
-                "reference": "82274308b59f6e96f53a3fb37fc40877d843e5a5"
+                "reference": "096ec106d0e7f069d8fdb5db29d31a06bca15143"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-deepclone/zipball/82274308b59f6e96f53a3fb37fc40877d843e5a5",
-                "reference": "82274308b59f6e96f53a3fb37fc40877d843e5a5",
+                "url": "https://api.github.com/repos/symfony/polyfill-deepclone/zipball/096ec106d0e7f069d8fdb5db29d31a06bca15143",
+                "reference": "096ec106d0e7f069d8fdb5db29d31a06bca15143",
                 "shasum": ""
             },
             "require": {
@@ -3596,7 +3596,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-14T07:17:09+00:00"
+            "time": "2026-11-16T17:44:57+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -3859,12 +3859,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "c0eaf4fb5b2b929419eb911f5e4c0fdbf3dc53dc"
+                "reference": "a77754eb5ce670374615de2acbbc6641ad6f88b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/c0eaf4fb5b2b929419eb911f5e4c0fdbf3dc53dc",
-                "reference": "c0eaf4fb5b2b929419eb911f5e4c0fdbf3dc53dc",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/a77754eb5ce670374615de2acbbc6641ad6f88b5",
+                "reference": "a77754eb5ce670374615de2acbbc6641ad6f88b5",
                 "shasum": ""
             },
             "require": {
@@ -3951,7 +3951,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-14T13:58:34+00:00"
+            "time": "2026-11-16T12:56:42+00:00"
         },
         {
             "name": "symfony/translation-contracts",
@@ -4510,8 +4510,8 @@
             "version": "2.3.x-dev",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/441799e16c03746bea20cac5a9cb8a6a3177cf33",
-                "reference": "441799e16c03746bea20cac5a9cb8a6a3177cf33",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/0d2c43a7f1933d994e6c6d53d7dc7471b9a67310",
+                "reference": "0d2c43a7f1933d994e6c6d53d7dc7471b9a67310",
                 "shasum": ""
             },
             "require": {
@@ -4568,7 +4568,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-14T22:56:21+00:00"
+            "time": "2026-11-17T10:52:32+00:00"
         },
         {
             "name": "phpstan/phpstan-nette",
@@ -4576,12 +4576,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-nette.git",
-                "reference": "a1513ac0a63b8059902862c8eb23c4218e43e061"
+                "reference": "190c1384a22212c4dd49e00d19400d75100a1e96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-nette/zipball/a1513ac0a63b8059902862c8eb23c4218e43e061",
-                "reference": "a1513ac0a63b8059902862c8eb23c4218e43e061",
+                "url": "https://api.github.com/repos/phpstan/phpstan-nette/zipball/190c1384a22212c4dd49e00d19400d75100a1e96",
+                "reference": "190c1384a22212c4dd49e00d19400d75100a1e96",
                 "shasum": ""
             },
             "require": {
@@ -4632,7 +4632,7 @@
                 "issues": "https://github.com/phpstan/phpstan-nette/issues",
                 "source": "https://github.com/phpstan/phpstan-nette/tree/2.0.x"
             },
-            "time": "2026-11-12T17:00:05+00:00"
+            "time": "2026-11-16T12:05:47+00:00"
         },
         {
             "name": "raneomik/tracy-dark-mode",
@@ -4702,12 +4702,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "de26d6a141c94acfd7cbdb7a16a07e23b5392a76"
+                "reference": "0cfa88766ffb10b9e07b1fd69657146c02e64b4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/de26d6a141c94acfd7cbdb7a16a07e23b5392a76",
-                "reference": "de26d6a141c94acfd7cbdb7a16a07e23b5392a76",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/0cfa88766ffb10b9e07b1fd69657146c02e64b4c",
+                "reference": "0cfa88766ffb10b9e07b1fd69657146c02e64b4c",
                 "shasum": ""
             },
             "require": {
@@ -4752,7 +4752,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-14T23:59:30+00:00"
+            "time": "2026-11-17T11:43:10+00:00"
         },
         {
             "name": "symfony/thanks",
@@ -4822,16 +4822,16 @@
         },
         {
             "name": "symplify/easy-coding-standard",
-            "version": "13.3.17",
+            "version": "13.3.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ecsphp/ecs.git",
-                "reference": "d40557d3d0992de7b4e50625989478900ab282d3"
+                "reference": "bec5d95d35e378f8769a69d3c871b4ae5e758a52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ecsphp/ecs/zipball/d40557d3d0992de7b4e50625989478900ab282d3",
-                "reference": "d40557d3d0992de7b4e50625989478900ab282d3",
+                "url": "https://api.github.com/repos/ecsphp/ecs/zipball/bec5d95d35e378f8769a69d3c871b4ae5e758a52",
+                "reference": "bec5d95d35e378f8769a69d3c871b4ae5e758a52",
                 "shasum": ""
             },
             "require": {
@@ -4864,15 +4864,14 @@
             ],
             "support": {
                 "issues": "https://github.com/ecsphp/ecs/issues",
-                "source": "https://github.com/ecsphp/ecs/tree/13.3.17"
+                "source": "https://github.com/ecsphp/ecs/tree/13.3.18"
             },
-            "time": "2026-11-12T18:43:17+00:00"
+            "time": "2026-11-17T09:55:33+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "contributte/translation": 20,
         "raneomik/nette-mercure": 20,
         "raneomik/nette-pwa": 20,
         "raneomik/tracy-dark-mode": 20,
@@ -4884,5 +4883,5 @@
         "php": "8.4 - 8.5"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
