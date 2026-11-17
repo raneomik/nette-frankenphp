@@ -29,20 +29,21 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 
     public function actionDefault(): void
     {
-        // direct arrival on "/" (typed, bookmark): go to the browser's language; search engines send no Accept-Language and stay here
-        // shortcut: "no Referer" tells an arrival from a click on the site (language menu, logo), which must stay; remember an explicit choice in a cookie if that proves too coarse
         $request = $this->getHttpRequest();
-        if (
-            $request->getUrl()->getPath() !== $request->getUrl()->getBasePath()
-            || null !== $request->getHeader('Referer')
-        ) {
+        if ($request->getUrl()->getPath() !== $request->getUrl()->getBasePath()) {
             return;
         }
 
-        $this->getHttpResponse()->addHeader('Vary', 'Accept-Language');
-        $this->redirect('this', [
-            'locale' => $this->preferredLocale(),
-        ]);
+        $this->getHttpResponse()->addHeader('Vary', 'Accept-Language, Cookie');
+
+        $preferred = $this->preferredLocale();
+        if (null === $request->getHeader('Referer')
+            && $preferred !== $this->translator->getLocale()
+        ) {
+            $this->redirect('this', [
+                'locale' => $preferred,
+            ]);
+        }
     }
 
 	public function handleDispatch(string $type = 'plain'): void

@@ -27,6 +27,10 @@ trait Localized
     {
         parent::beforeRender();
 
+        if ($this->translator->getLocale() === $this->preferredLocale()) {
+            return;
+        }
+
         $this->getHttpResponse()->setCookie('locale', $this->translator->getLocale(), '1 year');
     }
 

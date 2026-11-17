@@ -38,7 +38,7 @@ beatenBy:
         scissors: {verb: "je rozstříhán", hand: "nůžkami"}
         lizard: {verb: "je sežrán", hand: "ještěrem"}
     scissors:
-        rock: {verb: "json ztupené", hand: "kamenem"}
+        rock: {verb: "jsou ztupené", hand: "kamenem"}
         spock: {verb: "jsou rozbité", hand: "Spockem"}
     lizard:
         rock: {verb: "je rozdrcen", hand: "kamenem"}
@@ -62,7 +62,7 @@ previous: Předchozí
 next: Další
 
 waiting: Čekání na soupeře…
-ready: připraven
+ready: připraven(a)
 hiddenHand: skrytý tah
 draw: Remíza! Oba jste zahráli totéž.
 win: Vyhráváš!

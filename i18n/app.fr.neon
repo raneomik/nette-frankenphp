@@ -25,5 +25,5 @@ error:
         title: Page introuvable
         text: "La page demandée est introuvable. L'adresse est peut-être erronée, ou la page n'existe plus."
     410:
-        title: Page introuvable
+        title: Page supprimée
         text: La page demandée a été retirée du site. Veuillez nous excuser pour la gêne occasionnée.
