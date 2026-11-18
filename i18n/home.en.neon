@@ -3,6 +3,7 @@ learnMore: Learn more below
 logo: "%name% logo"
 poweredBy: Powered by the extensions
 devMode: in dev/debug mode
+madePossible: 'Made possible by %repo% – huge thanks to %author%'
 play: 👊 Play Rock Paper Scissors 🖖
 demos: Live demos
 codePieces: pieces of code

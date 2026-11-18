@@ -222,12 +222,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/latte.git",
-                "reference": "9fcfa2e3f1c31d47e28889a0ee7481b9f1718935"
+                "reference": "4534338eeafdc3475f184449403396ce29ceea58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/latte/zipball/9fcfa2e3f1c31d47e28889a0ee7481b9f1718935",
-                "reference": "9fcfa2e3f1c31d47e28889a0ee7481b9f1718935",
+                "url": "https://api.github.com/repos/nette/latte/zipball/4534338eeafdc3475f184449403396ce29ceea58",
+                "reference": "4534338eeafdc3475f184449403396ce29ceea58",
                 "shasum": ""
             },
             "require": {
@@ -303,7 +303,7 @@
                 "issues": "https://github.com/nette/latte/issues",
                 "source": "https://github.com/nette/latte/tree/master"
             },
-            "time": "2026-11-06T02:03:52+00:00"
+            "time": "2026-11-18T16:10:24+00:00"
         },
         {
             "name": "lcobucci/jwt",
@@ -1007,16 +1007,16 @@
         },
         {
             "name": "nette/di",
-            "version": "v3.3.x-dev",
+            "version": "v3.4.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/di.git",
-                "reference": "802dcdb06845f9f6bcb8dfde4713bcb9b50524e5"
+                "reference": "5bb4869afac0abfb00e141d4cb86d216282caba2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/di/zipball/802dcdb06845f9f6bcb8dfde4713bcb9b50524e5",
-                "reference": "802dcdb06845f9f6bcb8dfde4713bcb9b50524e5",
+                "url": "https://api.github.com/repos/nette/di/zipball/5bb4869afac0abfb00e141d4cb86d216282caba2",
+                "reference": "5bb4869afac0abfb00e141d4cb86d216282caba2",
                 "shasum": ""
             },
             "require": {
@@ -1027,10 +1027,10 @@
                 "nette/robot-loader": "^4.0",
                 "nette/schema": "^1.4 || ^2.0",
                 "nette/utils": "^4.0.6",
-                "php": "8.3 - 8.6"
+                "php": "8.4 - 8.6"
             },
             "require-dev": {
-                "nette/phpstan-rules": "^1.0",
+                "nette/phpstan-rules": "^1.0.8",
                 "nette/tester": "^2.6",
                 "phpstan/extension-installer": "^1.4@stable",
                 "phpstan/phpstan": "^2.1@stable",
@@ -1059,7 +1059,7 @@
                     }
                 },
                 "branch-alias": {
-                    "dev-master": "3.3-dev"
+                    "dev-master": "3.4-dev"
                 }
             },
             "autoload": {
@@ -1099,9 +1099,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/di/issues",
-                "source": "https://github.com/nette/di/tree/v3.3"
+                "source": "https://github.com/nette/di/tree/v3.4"
             },
-            "time": "2026-10-28T21:28:37+00:00"
+            "time": "2026-11-18T03:46:51+00:00"
         },
         {
             "name": "nette/forms",
@@ -3075,12 +3075,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client.git",
-                "reference": "753e712cea315bad874eb85de39ca1c2d7ab51db"
+                "reference": "977379fb53c9bbb3269af44aec6212e957424c29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client/zipball/753e712cea315bad874eb85de39ca1c2d7ab51db",
-                "reference": "753e712cea315bad874eb85de39ca1c2d7ab51db",
+                "url": "https://api.github.com/repos/symfony/http-client/zipball/977379fb53c9bbb3269af44aec6212e957424c29",
+                "reference": "977379fb53c9bbb3269af44aec6212e957424c29",
                 "shasum": ""
             },
             "require": {
@@ -3171,7 +3171,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-16T12:56:42+00:00"
+            "time": "2026-11-18T09:16:18+00:00"
         },
         {
             "name": "symfony/http-client-contracts",
@@ -3859,12 +3859,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "a77754eb5ce670374615de2acbbc6641ad6f88b5"
+                "reference": "e0326edeab15c7f7b8c514446dd920bd33196eb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/a77754eb5ce670374615de2acbbc6641ad6f88b5",
-                "reference": "a77754eb5ce670374615de2acbbc6641ad6f88b5",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/e0326edeab15c7f7b8c514446dd920bd33196eb0",
+                "reference": "e0326edeab15c7f7b8c514446dd920bd33196eb0",
                 "shasum": ""
             },
             "require": {
@@ -3951,7 +3951,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-16T12:56:42+00:00"
+            "time": "2026-11-17T17:46:43+00:00"
         },
         {
             "name": "symfony/translation-contracts",
@@ -4510,8 +4510,8 @@
             "version": "2.3.x-dev",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/0d2c43a7f1933d994e6c6d53d7dc7471b9a67310",
-                "reference": "0d2c43a7f1933d994e6c6d53d7dc7471b9a67310",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/7ddcce8df5773a2ff585d21cc9b64e1b7435222c",
+                "reference": "7ddcce8df5773a2ff585d21cc9b64e1b7435222c",
                 "shasum": ""
             },
             "require": {
@@ -4568,7 +4568,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-17T10:52:32+00:00"
+            "time": "2026-11-18T15:58:34+00:00"
         },
         {
             "name": "phpstan/phpstan-nette",
@@ -4702,12 +4702,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "0cfa88766ffb10b9e07b1fd69657146c02e64b4c"
+                "reference": "9ce2a545ca4db39d9d834eb17b272d6ebede27b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/0cfa88766ffb10b9e07b1fd69657146c02e64b4c",
-                "reference": "0cfa88766ffb10b9e07b1fd69657146c02e64b4c",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/9ce2a545ca4db39d9d834eb17b272d6ebede27b7",
+                "reference": "9ce2a545ca4db39d9d834eb17b272d6ebede27b7",
                 "shasum": ""
             },
             "require": {
@@ -4752,7 +4752,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-17T11:43:10+00:00"
+            "time": "2026-11-18T15:38:16+00:00"
         },
         {
             "name": "symfony/thanks",
@@ -4822,16 +4822,16 @@
         },
         {
             "name": "symplify/easy-coding-standard",
-            "version": "13.3.18",
+            "version": "13.3.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ecsphp/ecs.git",
-                "reference": "bec5d95d35e378f8769a69d3c871b4ae5e758a52"
+                "reference": "0d1f0259bca495a724c27b55a8555c1bfaf16caf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ecsphp/ecs/zipball/bec5d95d35e378f8769a69d3c871b4ae5e758a52",
-                "reference": "bec5d95d35e378f8769a69d3c871b4ae5e758a52",
+                "url": "https://api.github.com/repos/ecsphp/ecs/zipball/0d1f0259bca495a724c27b55a8555c1bfaf16caf",
+                "reference": "0d1f0259bca495a724c27b55a8555c1bfaf16caf",
                 "shasum": ""
             },
             "require": {
@@ -4864,9 +4864,9 @@
             ],
             "support": {
                 "issues": "https://github.com/ecsphp/ecs/issues",
-                "source": "https://github.com/ecsphp/ecs/tree/13.3.18"
+                "source": "https://github.com/ecsphp/ecs/tree/13.3.21"
             },
-            "time": "2026-11-17T09:55:33+00:00"
+            "time": "2026-11-18T16:11:11+00:00"
         }
     ],
     "aliases": [],
@@ -4883,5 +4883,5 @@
         "php": "8.4 - 8.5"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }

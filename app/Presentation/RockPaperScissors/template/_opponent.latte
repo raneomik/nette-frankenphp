@@ -29,13 +29,13 @@
             {elseif $won}
                 {_'game.win'}
                 {var $stateKey = "game.beats.{$state->mine->value}.{$state->revealed->value}"}
-                {_"game.hand.{$state->mine->value}"|firstUpper} {_"$stateKey.verb"} {_"$stateKey.hand"}.
+                {_"game.hand.{$state->mine->value}"|firstUpper} {_"$stateKey.verb"}&nbsp;{_"$stateKey.hand"}.
                 <x-confetti emoji="{$state->mine->emoji()}"></x-confetti>
             {else}
                 {* told from the winner's side: "Paper covers rock", not "Rock covered by paper" *}
                 {_'game.lose'}
                 {var $stateKey = "game.beatenBy.{$state->mine->value}.{$state->revealed->value}"}
-                {_"game.hand.{$state->mine->value}"|firstUpper} {_"$stateKey.verb"} {_"$stateKey.hand"}.
+                {_"game.hand.{$state->mine->value}"|firstUpper} {_"$stateKey.verb"}&nbsp;{_"$stateKey.hand"}.
             {/if}
         {elseif $state->opponent}
             {$state->opponent} {=($state->opponentPlayed ? 'game.hasPlayed' : 'game.thinking')|translate}

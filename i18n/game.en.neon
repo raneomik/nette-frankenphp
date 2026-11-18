@@ -31,20 +31,20 @@ beats:
         rock: {verb: "vaporizes", hand: "rock"}
 beatenBy:
     rock:
-        paper: {verb: "covered by", hand: "paper"}
-        spock: {verb: "vaporized by", hand: "Spock"}
+        paper: {verb: "covered\u00A0by", hand: "paper"}
+        spock: {verb: "vaporized\u00A0by", hand: "Spock"}
     paper:
-        scissors: {verb: "cut by", hand: "scissors"}
-        lizard: {verb: "eaten by", hand: "lizard"}
+        scissors: {verb: "cut\u00A0by", hand: "scissors"}
+        lizard: {verb: "eaten\u00A0by", hand: "lizard"}
     scissors:
-        rock: {verb: "crushed by", hand: "rock"}
-        spock: {verb: "smashed by", hand: "Spock"}
+        rock: {verb: "crushed\u00A0by", hand: "rock"}
+        spock: {verb: "smashed\u00A0by", hand: "Spock"}
     lizard:
-        rock: {verb: "crushed by", hand: "rock"}
-        scissors: {verb: "decapitated by", hand: "scissors"}
+        rock: {verb: "crushed\u00A0by", hand: "rock"}
+        scissors: {verb: "decapitated\u00A0by", hand: "scissors"}
     spock:
-        paper: {verb: "disproved by", hand: "paper"}
-        lizard: {verb: "poisoned by", hand: "lizard"}
+        paper: {verb: "disproved\u00A0by", hand: "paper"}
+        lizard: {verb: "poisoned\u00A0by", hand: "lizard"}
 
 rules: The rules
 rulesHint: "Five hands, each beats two others."

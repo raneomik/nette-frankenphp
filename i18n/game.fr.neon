@@ -31,20 +31,20 @@ beats:
         rock: {verb: "vaporise", hand: "la pierre"}
 beatenBy:
     rock:
-        paper: {verb: "recouverte par", hand: "le papier"}
-        spock: {verb: "vaporisée par", hand: "Spock"}
+        paper: {verb: "recouverte\u00A0par", hand: "le papier"}
+        spock: {verb: "vaporisée\u00A0par", hand: "Spock"}
     paper:
-        scissors: {verb: "découpé par", hand: "les ciseaux"}
-        lizard: {verb: "mangé par", hand: "le lézard"}
+        scissors: {verb: "découpé\u00A0par", hand: "les ciseaux"}
+        lizard: {verb: "mangé\u00A0par", hand: "le lézard"}
     scissors:
-        rock: {verb: "écrasés par", hand: "la pierre"}
-        spock: {verb: "écrabouillés par", hand: "Spock"}
+        rock: {verb: "écrasés\u00A0par", hand: "la pierre"}
+        spock: {verb: "écrabouillés\u00A0par", hand: "Spock"}
     lizard:
-        rock: {verb: "écrasé par", hand: "la pierre"}
-        scissors: {verb: "décapité par", hand: "les ciseaux"}
+        rock: {verb: "écrasé\u00A0par", hand: "la pierre"}
+        scissors: {verb: "décapité\u00A0par", hand: "les ciseaux"}
     spock:
-        paper: {verb: "réfuté par", hand: "le papier"}
-        lizard: {verb: "empoisonné par", hand: "le lézard"}
+        paper: {verb: "réfuté\u00A0par", hand: "le papier"}
+        lizard: {verb: "empoisonné\u00A0par", hand: "le lézard"}
 
 rules: Les règles
 rulesHint: "Cinq mains, chacune en bat deux autres."
@@ -54,23 +54,23 @@ cleanAll: Tout nettoyer
 playAgainst: Jouer contre %player%
 
 copyInvite: 📋 Copier le lien d'invitation
-copied: Lien copié !
+copied: "Lien copié\u202F!"
 backToLobby: ← Retour au salon
-playHand: "Jouer : %hand%"
+playHand: "Jouer\u00A0: %hand%"
 previous: Précédent
 next: Suivant
 
 waiting: En attente d'un adversaire…
 ready: prêt
 hiddenHand: main cachée
-draw: Égalité ! Vous avez joué la même main.
-win: Gagné !
+draw: "Égalité\u202F! Vous avez joué la même main."
+win: "Gagné\u202F!"
 lose: Perdu.
 hasPlayed: a joué.
 thinking: réfléchit…
 joined: a rejoint la partie.
 playerJoined: %username% a rejoint ta partie
-notification: 'Ton adversaire est là, bonne partie !'
+notification: "Ton adversaire est là, bonne partie\u202F!"
 left: est parti.
 nextRound: Choisissez une main pour jouer la manche suivante.
 soloHint: Choisissez une main pour jouer contre l'ordinateur en attendant.

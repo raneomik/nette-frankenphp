@@ -15,7 +15,7 @@
                         <div class="hover-3d">
                             <!-- content -->
                             <figure class="w-20 rounded-4xl sm:w-25">
-                                <img n:asset="img:nette" alt="{_'home.logo', name: Nette}"/>
+                                <img n:asset="img:nette" alt="{_'home.logo', [name => Nette]}"/>
                             </figure>
                             <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
                         </div>
@@ -24,7 +24,7 @@
                         <div class="hover-3d">
                             <!-- content -->
                             <figure class="w-20 rounded-4xl sm:w-25">
-                                <img n:asset="img:frankenphp" alt="{_'home.logo', name: FrankenPHP}"/>
+                                <img n:asset="img:frankenphp" alt="{_'home.logo', [name => FrankenPHP]}"/>
                             </figure>
                             <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
                         </div>
@@ -65,6 +65,25 @@
                             {include tRoot('_icon/github.svg.latte'), class: 'size-5'}
                     </a>
                     {_'home.devMode'})
+                </p>
+
+                <p class="mt-3 text-sm italic opacity-80">
+
+                    {capture $repoLink}
+                        <a href="//github.com/contributte/demo-frankenphp"
+                            target="_blank"
+                            class="inline-flex items-center gap-1 text-primary underline hover:no-underline"
+                        >
+                            contributte/demo-frankenphp
+                            {include tRoot('_icon/github.svg.latte'), class: 'size-4'}
+                        </a>
+                    {/capture}
+
+                    {capture $authorLink}
+                        <a href="//github.com/f3l1x" target="_blank" class="link link-primary">@f3l1x</a>
+                    {/capture}
+
+                    {_'home.madePossible', [repo => $repoLink, author => $authorLink]|noescape}
                 </p>
             </div>
         </div>

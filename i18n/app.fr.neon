@@ -5,7 +5,7 @@ lightTheme: Thème clair
 source: Code source sur GitHub
 backHome: Retour à l'accueil
 copy: Copier
-copied: copié !
+copied: "copié\u202F!"
 
 push:
     notify: 🔔 Me prévenir quand quelqu'un rejoint

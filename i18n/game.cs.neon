@@ -32,20 +32,20 @@ beats:
 
 beatenBy:
     rock:
-        paper: {verb: "je zabalen", hand: "papírem"}
-        spock: {verb: "je vypařen", hand: "Spockem"}
+        paper: {verb: "je\u00A0zabalen", hand: "papírem"}
+        spock: {verb: "je\u00A0vypařen", hand: "Spockem"}
     paper:
-        scissors: {verb: "je rozstříhán", hand: "nůžkami"}
-        lizard: {verb: "je sežrán", hand: "ještěrem"}
+        scissors: {verb: "je\u00A0rozstříhán", hand: "nůžkami"}
+        lizard: {verb: "je\u00A0sežrán", hand: "ještěrem"}
     scissors:
-        rock: {verb: "jsou ztupené", hand: "kamenem"}
-        spock: {verb: "jsou rozbité", hand: "Spockem"}
+        rock: {verb: "jsou\u00A0ztupené", hand: "kamenem"}
+        spock: {verb: "jsou\u00A0rozbité", hand: "Spockem"}
     lizard:
-        rock: {verb: "je rozdrcen", hand: "kamenem"}
-        scissors: {verb: "je sťat", hand: "nůžkami"}
+        rock: {verb: "je\u00A0rozdrcen", hand: "kamenem"}
+        scissors: {verb: "je\u00A0sťat", hand: "nůžkami"}
     spock:
-        paper: {verb: "je usvědčen", hand: "papírem"}
-        lizard: {verb: "je otráven", hand: "ještěrem"}
+        paper: {verb: "je\u00A0usvědčen", hand: "papírem"}
+        lizard: {verb: "je\u00A0otráven", hand: "ještěrem"}
 
 rules: Pravidla
 rulesHint: "Pět gest, každé poráží dvě jiná."

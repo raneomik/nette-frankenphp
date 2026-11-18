@@ -3,6 +3,7 @@ learnMore: En savoir plus ci-dessous
 logo: "Logo %name%"
 poweredBy: Propulsé par les extensions
 devMode: en mode dev/debug
+madePossible: 'Rendu possible grâce à %repo% – un grand merci à %author%'
 play: 👊 Jouer à Pierre Papier Ciseaux 🖖
 demos: Démos en direct
 liveWarning: les toasts appraîtront chez tous les visiteurs de cette page
@@ -10,5 +11,5 @@ codePieces: un peu de code
 newTab: Ouvrez un nouvel onglet pour voir les mises à jour en direct ↗
 toastAll: Envoyer un toast à tous
 toastTurbo: Envoyer un toast avec Turbo Streams
-hello: Bonjour de la part de Mercure !
-helloTurbo: "Bonjour de la part de Mercure, via Turbo Streams !"
+hello: "Bonjour de la part de Mercure\u202F!"
+helloTurbo: "Bonjour de la part de Mercure, via Turbo Streams\u202F!"
