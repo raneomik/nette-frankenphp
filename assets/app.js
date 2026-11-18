@@ -6,10 +6,11 @@ import './js/components/xcarousel';
 import './js/components/xconfetti';
 import './js/components/xtheme-switch';
 import './js/components/xclipboard';
+import './js/components/xcode';
 
 import './js/mercure-client';
 import './js/turbo-client';
-import './js/turbo-user-rule';
+import './js/turbo-user-filter';
 import './js/mercure-fixes';
 import './js/push-client';
 

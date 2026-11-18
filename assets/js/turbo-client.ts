@@ -6,14 +6,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const turboContainers = document.querySelectorAll('[data-turbo-listen]') as NodeListOf<HTMLElement>;
 
-    const subUrl = new URL('/subscribe', window.origin);
+    // locale prefix: the router then sets the translator locale, so the JWT is granted for this page's localized topics
+    const subUrl = new URL(`/${document.documentElement.lang}/subscribe`, window.origin);
     turboContainers.forEach((container: HTMLElement) => {
         const topicToListenTo = container.dataset.turboListen as string;
         // "topics[]": with a repeated "topics", PHP keeps only the last value
         subUrl.searchParams.append('topics[]', topicToListenTo);
     });
 
-    subscribe(subUrl)
+    await subscribe(subUrl)
 });
 
 async function subscribe(subUrl: URL) {

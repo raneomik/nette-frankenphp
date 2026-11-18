@@ -54,11 +54,6 @@ final readonly class Messenger
             $options['action'] = $params['action'];
         }
 
-        $this->broadcaster->broadcast(
-            $topic,
-            $params,
-            $options,
-            $template,
-        );
+        $this->broadcaster->broadcast($topic, $params, $options, $template);
     }
 }

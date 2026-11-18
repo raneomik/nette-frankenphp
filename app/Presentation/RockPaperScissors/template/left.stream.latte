@@ -1,7 +1,7 @@
 {block append}
     <turbo-stream action="append" target="snippet--toasts" data-sender={$sender}>
         <template>
-            {capture $message}<b>{$player}</b> left.{/capture}
+            {capture $message}<b>{$player}</b> {_'game.left'}{/capture}
             {include tRoot('_toast.latte'), type: 'warning', message: $message}</template>
     </turbo-stream>
 {/block}

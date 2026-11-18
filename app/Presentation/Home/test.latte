@@ -1,5 +1,5 @@
 {contentType $contentType ?? 'text/html'}
 
 {block content}
-    {include tRoot('_toast.latte'), type: 'info', message: $data}
+    {include tRoot('_toast.latte'), type: 'info', message: ($data|translate)}
 {/block}

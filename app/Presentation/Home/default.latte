@@ -1,88 +1,95 @@
+{block description}{_'home.intro'}{/block}
+
 {block content}
     <div class="hero">
         <div class="hero-content text-center">
-            <div class="max-w-md">
+            <div class="max-w-xxl">
                 <p class="m-3">
-                    A Nette app running on FrankenPHP, with real-time updates through Mercure.
+                    {_'home.intro'}
                 </p>
                 <p class="m-3">
-                    Learn more below
+                    {_'home.learnMore'}
                 </p>
                 <div class="flex flex-wrap justify-center gap-4 py-10 sm:gap-10">
                     <a href="//nette.org" target="_blank" class="tooltip tooltip-bottom" data-tip="Nette">
                         <div class="hover-3d">
                             <!-- content -->
                             <figure class="w-20 rounded-4xl sm:w-25">
-                                <img n:asset="img:nette" alt="Nette logo"/>
+                                <img n:asset="img:nette" alt="{_'home.logo', name: Nette}"/>
                             </figure>
-                            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
                         </div>
                     </a>
                     <a href="//frankenphp.dev" target="_blank" class="tooltip tooltip-bottom" data-tip="FrankenPHP">
                         <div class="hover-3d">
                             <!-- content -->
                             <figure class="w-20 rounded-4xl sm:w-25">
-                                <img n:asset="img:frankenphp" alt="FrankenPHP logo"/>
+                                <img n:asset="img:frankenphp" alt="{_'home.logo', name: FrankenPHP}"/>
                             </figure>
-                            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
                         </div>
                     </a>
                     <a href="//mercure.rocks" target="_blank" class="tooltip tooltip-bottom" data-tip="Mercure">
                         <div class="hover-3d">
                             <!-- content -->
                             <figure class="w-20 rounded-4xl sm:w-25">
-                                <img n:asset="img:mercure" alt="Mercure logo"/>
+                                <img n:asset="img:mercure" alt="{_'home.logo', [name => Mercure]}"/>
                             </figure>
-                            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
                         </div>
                     </a>
                 </div>
 
                 <p class="mt-5">
-                    Powered by the
+                    {_'home.poweredBy'}
                     <a href="//github.com/raneomik/nette-mercure"
                        target="_blank"
                        class="inline-flex items-center gap-1 text-primary underline hover:no-underline"
                     >
-                        nette-mercure
-                        {include tRoot('_icon/github.svg.latte'), class: 'size-5'}
-                    </a> and
+                            nette-mercure
+                            {include tRoot('_icon/github.svg.latte'), class: 'size-5'}
+                    </a> {_'app.and'}
                     <a href="//github.com/raneomik/nette-pwa"
                        target="_blank"
                        class="inline-flex items-center gap-1 text-primary underline hover:no-underline"
                     >
-                        nette-pwa
-                        {include tRoot('_icon/github.svg.latte'), class: 'size-5'}
+                            nette-pwa
+                            {include tRoot('_icon/github.svg.latte'), class: 'size-5'}
                     </a>
                     <br>
-                    (and <a href="//github.com/raneomik/tracy-dark-mode"
-                       target="_blank"
-                       class="inline-flex items-center gap-1 text-primary underline hover:no-underline"
+                    ({_'app.and'} <a href="//github.com/raneomik/tracy-dark-mode"
+                                     target="_blank"
+                                     class="inline-flex items-center gap-1 text-primary underline hover:no-underline"
                     >
-                        tracy-dark-mode
-                        {include tRoot('_icon/github.svg.latte'), class: 'size-5'}
+                            tracy-dark-mode
+                            {include tRoot('_icon/github.svg.latte'), class: 'size-5'}
                     </a>
-                    in dev/debug mode) extensions
+                    {_'home.devMode'})
                 </p>
             </div>
         </div>
     </div>
 
-    <div class="flex justify-center text-center m-10">
-        <div class="grid grid-cols-1 gap-4 max-w-100">
+    <div class="flex justify-center text-center mt-10 mb-5">
+        <div class="grid grid-cols-1 gap-4">
             <a n:href="RockPaperScissors:Base:default" class="btn btn-primary btn-lg">
-                👊 Play Rock Paper Scissors 🖖
+                {_'home.play'}
             </a>
-            <p class="mt-4 text-xs tracking-widest uppercase opacity-60">Live demos</p>
+
+            <p class="mt-4 text-xs tracking-widest uppercase opacity-60">{_'home.demos'}</p>
+            <p class="text-xs tracking-widest opacity-60">⚠️{_'home.liveWarning'}</p>
+
             <a n:href="Home:default" target="_blank" class="link link-hover inline-block py-2">
-                Open a new tab to watch live updates ↗
+                {_'home.newTab'}
             </a>
 
             <a n:href="dispatch!" class="btn btn-dash ajax">
-                Send a toast to every tab
+                {_'home.toastAll'}
             </a>
+
+
             <a n:href="dispatch! 'turbo'" class="btn btn-dash ajax">
-                Send a toast with Turbo Streams
+                {_'home.toastTurbo'}
             </a>
         </div>
     </div>
@@ -94,7 +101,7 @@
         data-mercure="test-topic"
         class="toast toast-start">
     </div>
-    <div class="flex justify-center" data-turbo-listen="turbo-test-topic">
+    <div data-turbo-listen="turbo-test-topic">
         <div id="toast-container" class="toast toast-end">
         </div>
     </div>

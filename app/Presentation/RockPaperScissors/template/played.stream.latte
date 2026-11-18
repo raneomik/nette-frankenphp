@@ -2,7 +2,7 @@
     <turbo-stream action="append" target="snippet--toasts" data-sender={$sender}>
         {* capture = HTML fragment: {$player} stays escaped, and _toast prints it without escaping it again *}
         <template>{capture $message}
-                <b>{$player}</b> has played.{/capture}{include tRoot('_toast.latte'), type: 'info', message: $message}
+                <b>{$player}</b> {_'game.hasPlayed'}{/capture}{include tRoot('_toast.latte'), type: 'info', message: $message}
         </template>
     </turbo-stream>
 {/block}

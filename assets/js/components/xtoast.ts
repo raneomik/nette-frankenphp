@@ -55,4 +55,3 @@ class XToast extends HTMLElement {
     }
 }
 customElements.define('x-toast', XToast);
-

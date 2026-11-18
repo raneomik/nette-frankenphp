@@ -1,0 +1,34 @@
+/* <x-code>: highlight.js tokens coloured from the daisyUI theme, so light and night both work */
+x-code {
+    @apply block max-h-96 overflow-auto whitespace-pre text-left font-mono text-sm;
+    /* text-left: the parent section centres its text */
+    tab-size: 4; /* browsers default to 8, which misaligns tab-indented sources */
+    width: 100%;
+    padding: 1rem;
+
+    .hljs-comment {
+        opacity: 0.6;
+        font-style: italic;
+    }
+
+    .hljs-keyword, .hljs-name, .hljs-built_in, .hljs-literal {
+        color: var(--color-primary);
+        font-weight: 600;
+    }
+
+    .hljs-string, .hljs-regexp {
+        color: var(--color-error);
+    }
+
+    .hljs-variable, .hljs-number, .hljs-attr, .hljs-params {
+        color: color-mix(in srgb, var(--color-primary) 55%, var(--color-base-content));
+    }
+
+    .hljs-title {
+        font-weight: 600;
+    }
+
+    .hljs-template-tag, .hljs-template-variable, .hljs-tag {
+        color: color-mix(in srgb, var(--color-base-content) 70%, transparent);
+    }
+}

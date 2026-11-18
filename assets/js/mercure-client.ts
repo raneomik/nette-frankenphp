@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	mercureUrl = mercureUrlHolder.dataset.mercureUrl as string;
 
 	const eventSource = new EventSource(mercureUrl, {
-        withCredentials: true
-    });
+		withCredentials: true
+	});
 
 	const placeholders = document.querySelectorAll("[data-mercure]");
 	eventSource.onmessage = event => {
