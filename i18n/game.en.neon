@@ -77,3 +77,4 @@ soloHint: Pick a hand to play against the computer while you wait.
 
 notYet: Your opponent hasn't played yet.
 moveIn: Your move is in.
+roomGone: "This game no longer exists: start a new one or join a waiting player."

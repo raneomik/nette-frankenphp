@@ -67,6 +67,18 @@ final readonly class GameFacade
     }
 
     /**
+     * a room exists while someone is in it (room_players): once the last presence is gone
+     * (leave beacon, cleanRooms), its link no longer opens it; the move history stays
+     */
+    public function exists(string $room): bool
+    {
+        return 0 < $this->database
+            ->table('room_players')
+            ->where('room', $room)
+            ->count();
+    }
+
+    /**
      * shortcut: opponent = last other player who entered the room; a departure is not detected and 3+ players are not handled — switch to the Mercure subscriptions API for that
      */
     public function opponent(string $room, string $userId): ?Nette\Database\Table\ActiveRow

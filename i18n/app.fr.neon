@@ -18,6 +18,9 @@ error:
     4xx:
         title: Oups...
         text: Votre navigateur a envoyé une requête que ce serveur n'a pas pu comprendre ou traiter.
+    429:
+        title: Doucement
+        text: "Trop de requêtes en peu de temps. Patientez un instant, puis réessayez."
     403:
         title: Accès refusé
         text: "Vous n'avez pas la permission de voir cette page. Contactez l'administrateur du site si vous pensez que vous devriez y avoir accès."

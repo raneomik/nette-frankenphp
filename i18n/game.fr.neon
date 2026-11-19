@@ -77,3 +77,4 @@ soloHint: Choisissez une main pour jouer contre l'ordinateur en attendant.
 
 notYet: Votre adversaire n'a pas encore joué.
 moveIn: Votre coup est enregistré.
+roomGone: "Cette partie n'existe plus\u202F: lancez-en une nouvelle ou rejoignez un joueur en attente."

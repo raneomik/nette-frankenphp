@@ -18,6 +18,9 @@ error:
     4xx:
         title: Oops...
         text: Your browser sent a request that this server could not understand or process.
+    429:
+        title: Slow down
+        text: "Too many requests in a short time. Wait a moment, then try again."
     403:
         title: Access Denied
         text: "You do not have permission to view this page. Please try contact the web site administrator if you believe you should be able to view this page."
