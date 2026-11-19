@@ -29,6 +29,7 @@ beats:
     spock:
         scissors: {verb: "smashes", hand: "scissors"}
         rock: {verb: "vaporizes", hand: "rock"}
+
 beatenBy:
     rock:
         paper: {verb: "covered\u00A0by", hand: "paper"}
@@ -65,7 +66,6 @@ hiddenHand: hidden hand
 draw: Draw! You both played the same hand.
 win: You win!
 lose: You lose.
-# these follow the player's name
 hasPlayed: has played.
 thinking: is thinking…
 joined: joined.

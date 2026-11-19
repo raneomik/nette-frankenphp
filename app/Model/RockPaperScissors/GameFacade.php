@@ -52,10 +52,15 @@ final readonly class GameFacade
             ->where('userId', $userId)
             ->count();
 
-        $this->database->query(
-            'INSERT INTO room_players (room, userId, username, joinedAt, pageId) VALUES (?, ?, ?, ?, ?)
-             ON CONFLICT (room, userId) DO UPDATE SET username = excluded.username, joinedAt = excluded.joinedAt,
-                pageId = COALESCE(excluded.pageId, room_players.pageId)',
+        $this->database->query(<<<'SQL'
+            INSERT INTO room_players (room, userId, username, joinedAt, pageId)
+            VALUES (?, ?, ?, ?, ?)
+            ON CONFLICT (room, userId)
+            DO UPDATE SET
+                username = excluded.username,
+                joinedAt = excluded.joinedAt,
+                pageId = COALESCE(excluded.pageId, room_players.pageId)
+            SQL,
             $room,
             $userId,
             $username,

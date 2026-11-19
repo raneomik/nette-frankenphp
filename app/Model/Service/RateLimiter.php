@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Service;
 
-use Nette\Application\BadRequestException;
+use App\Model\Exception\TooManyRequestsException;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 
@@ -25,7 +25,7 @@ final readonly class RateLimiter
 
     /**
      * @param string|null $key null = the client (IP)
-     * @throws BadRequestException 429 with Retry-After, rendered by the 4xx error presenter
+     * @throws TooManyRequestsException 429 with Retry-After, rendered by the 4xx error presenter
      */
     public function enforce(string $bucket, int $limit, int $window, ?string $key = null): void
     {
@@ -36,7 +36,7 @@ final readonly class RateLimiter
 
         $this->response->setHeader('Retry-After', (string) $retryAfter);
 
-        throw new BadRequestException('Too many requests', IResponse::S429_TooManyRequests);
+        throw new TooManyRequestsException($retryAfter);
     }
 
     /**

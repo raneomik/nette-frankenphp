@@ -10,8 +10,8 @@
 {block update}
     <turbo-stream n:ifset="$availableHands" action="update" target="snippet--opponent" data-sender={$sender}>
         <template>{include '_opponent.latte',
-            state: $state,
-            availableHands: $availableHands
+                state: $state,
+                availableHands: $availableHands
             }</template>
     </turbo-stream>
 {/block}

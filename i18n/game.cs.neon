@@ -55,22 +55,21 @@ cleanAll: Vymazat vše
 playAgainst: Hrát proti hráči %player%
 
 copyInvite: 📋 Zkopírovat odkaz s pozvánkou
-copied: Odkaz zkopírován!
 backToLobby: ← Zpět do lobby
 playHand: "Zahrát: %hand%"
 previous: Předchozí
 next: Další
 
 waiting: Čekání na soupeře…
-ready: připraven(a)
+ready: 'připraven(a)'
 hiddenHand: skrytý tah
 draw: Remíza! Oba jste zahráli totéž.
 win: Vyhráváš!
 lose: Prohráváš.
-hasPlayed: zahrál(a).
+hasPlayed: 'zahrál(a).'
 thinking: přemýšlí…
-joined: se připojil(a).
-playerJoined: %username% se připojil(a) do místnosti
+joined: 'se připojil(a).'
+playerJoined: '%username% se připojil(a) do místnosti'
 notification: 'Tvůj soupeř je tu, zahrajte si!'
 left: je pryč.
 nextRound: Vyber gesto a zahraj další kolo.

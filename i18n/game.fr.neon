@@ -29,6 +29,7 @@ beats:
     spock:
         scissors: {verb: "écrabouille", hand: "les ciseaux"}
         rock: {verb: "vaporise", hand: "la pierre"}
+
 beatenBy:
     rock:
         paper: {verb: "recouverte\u00A0par", hand: "le papier"}
@@ -54,7 +55,6 @@ cleanAll: Tout nettoyer
 playAgainst: Jouer contre %player%
 
 copyInvite: 📋 Copier le lien d'invitation
-copied: "Lien copié\u202F!"
 backToLobby: ← Retour au salon
 playHand: "Jouer\u00A0: %hand%"
 previous: Précédent

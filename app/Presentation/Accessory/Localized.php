@@ -55,7 +55,6 @@ trait Localized
         ?string $domain = null,
         ?string $locale = null,
     ): string {
-        // count first: the array-first signature of contributte rejects a null domain
-        return $this->translator->translate($id, null, $parameters, $domain, $locale);
+        return $this->translator->translate($id, $parameters, $domain, $locale);
     }
 }

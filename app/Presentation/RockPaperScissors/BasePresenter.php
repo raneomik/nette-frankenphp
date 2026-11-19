@@ -10,8 +10,8 @@ use App\Model\RockPaperScissors\Value\DuelState;
 use App\Model\RockPaperScissors\Value\GameRecord;
 use App\Model\RockPaperScissors\Value\WaitingRoom;
 use App\Model\Service\Messenger;
-use App\Model\Service\RateLimiter;
 use App\Model\Service\Randomiser;
+use App\Model\Service\RateLimiter;
 use App\Presentation\Accessory\Localized;
 use App\Presentation\RockPaperScissors\TemplateData\GameTemplate;
 use Nette;
@@ -50,10 +50,14 @@ final class BasePresenter extends Nette\Application\UI\Presenter
      */
     private const string NewRoomsSection = 'rps.newRooms';
 
-    /** rooms a visitor may have pending at once (lobby open in several tabs), the oldest are dropped */
+    /**
+     * rooms a visitor may have pending at once (lobby open in several tabs), the oldest are dropped
+     */
     private const int NewRoomsKept = 5;
 
-    /** an issued id stays valid that long: its creator can come back to it while it is empty */
+    /**
+     * an issued id stays valid that long: its creator can come back to it while it is empty
+     */
     private const string NewRoomTtl = '1 hour';
 
     /**
@@ -134,7 +138,9 @@ final class BasePresenter extends Nette\Application\UI\Presenter
 
             if (! $this->mayCreate($room)) {
                 $this->flashMessage($this->translate('game.roomGone'), 'warning');
-                $this->redirect('default', ['room' => null]);
+                $this->redirect('default', [
+                    'room' => null,
+                ]);
             }
         }
 
@@ -188,6 +194,8 @@ final class BasePresenter extends Nette\Application\UI\Presenter
     #[Requires(methods: 'POST')]
     public function handlePlay(string $hand, string $room): void
     {
+        $this->rateLimiter->enforce('play', 60, 60); // every move is a row: two sessions alternating could fill the database
+
         $this->room = $room;
         $move = Hand::tryFrom($hand) ?? $this->error('Unknown hand');
         $me = $this->getUser();
@@ -293,7 +301,7 @@ final class BasePresenter extends Nette\Application\UI\Presenter
 
         /** @var array<string, int> $rooms id => expiry */
         $rooms = array_filter((array) $section->get('rooms'), static fn (mixed $expiry): bool => \is_int($expiry) && time() < $expiry);
-        $rooms[$room] = (new \DateTimeImmutable('+' . self::NewRoomTtl))->getTimestamp();
+        $rooms[$room] = new \DateTimeImmutable('+' . self::NewRoomTtl)->getTimestamp();
 
         $section->set('rooms', \array_slice($rooms, -self::NewRoomsKept, preserve_keys: true));
 

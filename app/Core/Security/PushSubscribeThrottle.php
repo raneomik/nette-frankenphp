@@ -17,7 +17,9 @@ use Raneomik\NettePWA\Action\SubscribeAction;
  */
 final readonly class PushSubscribeThrottle
 {
-    /** subscribe, unsubscribe and browser rotations together, per client */
+    /**
+     * subscribe, unsubscribe and browser rotations together, per client
+     */
     private const int Limit = 20;
 
     private const int Window = 600;
@@ -31,7 +33,7 @@ final readonly class PushSubscribeThrottle
     public function __invoke(Application $application, Request $request): void
     {
         if ('Nette:Micro' !== $request->getPresenterName()
-            || trim($this->httpRequest->getUrl()->getPathInfo(), '/') !== SubscribeAction::DefaultPath // shortcut: assumes pwa.push.subscribeAtPath keeps its default
+            || SubscribeAction::DefaultPath !== trim($this->httpRequest->getUrl()->getPathInfo(), '/') // shortcut: assumes pwa.push.subscribeAtPath keeps its default
         ) {
             return;
         }
