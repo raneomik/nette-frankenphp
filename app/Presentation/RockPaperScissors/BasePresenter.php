@@ -40,9 +40,20 @@ final class BasePresenter extends Nette\Application\UI\Presenter
     #[Inject]
     public PushSender $push;
 
+    /**
+     * same shape as the router mask and TopicAccess (room/<id>): the generic route
+     * (/rock-paper-scissors.base/game?room=…) and signal parameters bypass the router mask
+     */
+    private const string RoomId = '~^[A-Za-z0-9-]{1,64}$~D';
+
     protected function startup(): void
     {
         parent::startup();
+
+        $room = $this->getParameter('room');
+        if (null !== $room && (! \is_string($room) || 1 !== preg_match(self::RoomId, $room))) {
+            $this->error('Unknown room');
+        }
 
         if (! $this->getUser()->isLoggedIn()) {
             $this->getUser()->login(new SimpleIdentity(
