@@ -41,7 +41,7 @@ trait Localized
     {
         $seen = $this->getHttpRequest()->getCookie('locale');
 
-        return in_array($seen, $this->translator->getLocalesWhitelist() ?? [], true)
+        return in_array($seen, $this->translator->getLocalesWhitelist() ?? [], strict: true)
             ? $seen
             : new Header($this->getHttpRequest())->resolve($this->translator) ?? $this->translator->getDefaultLocale();
     }

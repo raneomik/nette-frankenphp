@@ -14,9 +14,11 @@ final readonly class FrankenphpRunner
 
     public function run(): void
     {
-        ignore_user_abort(true);
+        ignore_user_abort(enable: true);
 
-        Debugger::$onFatalError[] = static fn (\Throwable $e) => Debugger::$productionMode ?: Debugger::log($e, Debugger::EXCEPTION);
+        Debugger::$onFatalError[] = static fn (
+            \Throwable $e
+        ): mixed => Debugger::$productionMode ?: Debugger::log($e, Debugger::EXCEPTION);
 
         try {
             $bootstrap = new Bootstrap();

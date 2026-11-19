@@ -112,7 +112,7 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         // rendered before the leave beacon of the game page just left: never list my own room(s)
         $this->template->rooms = array_values(array_filter(
             $this->template->rooms,
-            fn(WaitingRoom $waitingRoom) => $waitingRoom->userId !== (string) $this->me->id,
+            fn(WaitingRoom $waitingRoom): bool => $waitingRoom->userId !== (string) $this->me->id,
         ));
     }
 
@@ -267,7 +267,7 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         try {
             $failures = $this->push->send(
                 "player/{$playerId}",
-                fn (string $locale) => new Notification(
+                fn (string $locale): Notification => new Notification(
                     $this->translate(
                         'game.playerJoined',
                         [

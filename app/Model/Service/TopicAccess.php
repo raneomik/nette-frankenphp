@@ -30,7 +30,7 @@ final readonly class TopicAccess implements TopicAuthorizer
 
     public function isAllowed(string $topic): bool
     {
-        return \in_array($topic, self::PublicTopics, true)
+        return \in_array($topic, self::PublicTopics, strict: true)
             || 1 === preg_match(self::RoomTopic, $topic)
             || ($this->user->isLoggedIn() && $topic === 'player/' . $this->user->getId());
     }

@@ -25,7 +25,7 @@ final class Error4xxPresenter extends Nette\Application\UI\Presenter
 		// count: picks the plural form
 		$this->template->transOptions = $exception instanceof TooManyRequestsException
 			? [
-				'count' => $exception->retryAfter,
+			    'count' => $exception->retryAfter,
 			]
 			: [];
 		$this->template->setFile($file);

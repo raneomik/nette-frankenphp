@@ -52,7 +52,8 @@ final readonly class GameFacade
             ->where('userId', $userId)
             ->count();
 
-        $this->database->query(<<<'SQL'
+        $this->database->query(
+            <<<'SQL'
             INSERT INTO room_players (room, userId, username, joinedAt, pageId)
             VALUES (?, ?, ?, ?, ?)
             ON CONFLICT (room, userId)
@@ -60,7 +61,8 @@ final readonly class GameFacade
                 username = excluded.username,
                 joinedAt = excluded.joinedAt,
                 pageId = COALESCE(excluded.pageId, room_players.pageId)
-            SQL,
+            SQL
+,
             $room,
             $userId,
             $username,
@@ -146,7 +148,7 @@ final readonly class GameFacade
     public function waitingRooms(): array
     {
         return array_map(
-            fn($row) => new WaitingRoom($row['room'], $row['username'], $row['userId']),
+            fn($row): WaitingRoom => new WaitingRoom($row['room'], $row['username'], $row['userId']),
             array_values(
                 $this->database
                     ->table('room_players')

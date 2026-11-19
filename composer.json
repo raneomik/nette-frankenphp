@@ -14,7 +14,7 @@
     "GPL-3.0-only"
   ],
   "require": {
-    "php": "8.4 - 8.5",
+    "php": ">= 8.5",
     "nette/application": "^3.3",
     "nette/assets": "^1.0",
     "nette/bootstrap": "^3.3",
@@ -50,7 +50,7 @@
       "App\\": "app"
     }
   },
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "config": {
     "allow-plugins": {
       "symfony/thanks": true,
