@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Presentation\Error\Error4xx;
 
+use App\Model\Exception\TooManyRequestsException;
 use Nette;
 use Nette\Application\Attributes\Requires;
 
@@ -21,6 +22,12 @@ final class Error4xxPresenter extends Nette\Application\UI\Presenter
 			? $file
 			: __DIR__ . '/4xx.latte';
 		$this->template->httpCode = $code;
+		// count: picks the plural form
+		$this->template->transOptions = $exception instanceof TooManyRequestsException
+			? [
+			    'count' => $exception->retryAfter,
+			]
+			: [];
 		$this->template->setFile($file);
 	}
 }

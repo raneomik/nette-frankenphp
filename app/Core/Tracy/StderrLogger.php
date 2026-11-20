@@ -36,7 +36,7 @@ final readonly class StderrLogger implements Tracy\ILogger
 
         file_put_contents('php://stderr', json_encode([
             'level' => self::Levels[$level] ?? $level,
-            'ts' => microtime(true),
+            'ts' => microtime(as_float: true),
             'logger' => 'php.tracy',
             'msg' => Tracy\Logger::formatMessage($value),
             'exception' => $value instanceof \Throwable ? $value::class : null,

@@ -29,6 +29,7 @@ beats:
     spock:
         scissors: {verb: "smashes", hand: "scissors"}
         rock: {verb: "vaporizes", hand: "rock"}
+
 beatenBy:
     rock:
         paper: {verb: "covered\u00A0by", hand: "paper"}
@@ -65,7 +66,6 @@ hiddenHand: hidden hand
 draw: Draw! You both played the same hand.
 win: You win!
 lose: You lose.
-# these follow the player's name
 hasPlayed: has played.
 thinking: is thinking…
 joined: joined.
@@ -77,3 +77,4 @@ soloHint: Pick a hand to play against the computer while you wait.
 
 notYet: Your opponent hasn't played yet.
 moveIn: Your move is in.
+roomGone: "This game no longer exists: start a new one or join a waiting player."

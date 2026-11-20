@@ -22,12 +22,12 @@
                (a departure can go unnoticed: crashed tab, lost beacon); the push switch stays, to turn it off mid-duel *}
             <div class="flex flex-col items-center gap-2 px-6 pb-8">
                 <x-clipboard type="button" data-clipboard-text="{link Base:join $room, locale: null|absoluteUrl}"
-                             data-copied="{_'game.copied'}"
+                             data-copied="{_'app.copied'}"
                         class="clipboard tooltip btn btn-primary hidden group-has-[[data-waiting]]:inline-flex">
                     {_'game.copyInvite'}
                 </x-clipboard>
                 <x-clipboard type="button" data-clipboard-text="{link Base:join $room, locale: null|absoluteUrl}"
-                             data-copied="{_'game.copied'}"
+                             data-copied="{_'app.copied'}"
                         class="clipboard tooltip link link-hover text-sm opacity-70 group-has-[[data-waiting]]:hidden">
                     {_'game.copyInvite'}
                 </x-clipboard>

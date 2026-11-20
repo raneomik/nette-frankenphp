@@ -41,7 +41,7 @@ trait Localized
     {
         $seen = $this->getHttpRequest()->getCookie('locale');
 
-        return in_array($seen, $this->translator->getLocalesWhitelist() ?? [], true)
+        return in_array($seen, $this->translator->getLocalesWhitelist() ?? [], strict: true)
             ? $seen
             : new Header($this->getHttpRequest())->resolve($this->translator) ?? $this->translator->getDefaultLocale();
     }
@@ -55,7 +55,6 @@ trait Localized
         ?string $domain = null,
         ?string $locale = null,
     ): string {
-        // count first: the array-first signature of contributte rejects a null domain
-        return $this->translator->translate($id, null, $parameters, $domain, $locale);
+        return $this->translator->translate($id, $parameters, $domain, $locale);
     }
 }

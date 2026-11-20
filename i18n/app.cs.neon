@@ -17,6 +17,9 @@ error:
     4xx:
         title: Jejda...
         text: "Váš prohlížeč odeslal požadavek, kterému server nerozumí nebo jej nedokáže zpracovat."
+    429:
+        title: Zpomalte
+        text: "Příliš mnoho požadavků v krátké době. Počkejte %count% sekundu a zkuste to znovu.|Příliš mnoho požadavků v krátké době. Počkejte %count% sekundy a zkuste to znovu.|Příliš mnoho požadavků v krátké době. Počkejte %count% sekund a zkuste to znovu."
     403:
         title: Přístup odepřen
         text: "Nemáte oprávnění k zobrazení této stránky. Pokud se domníváte, že byste ji měli vidět, kontaktujte správce webu."

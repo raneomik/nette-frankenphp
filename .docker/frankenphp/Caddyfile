@@ -24,6 +24,23 @@
     root /srv/www
     encode zstd br gzip
 
+    # security headers (HSTS is set on the edge Caddy only, see .docker/deploy/compose.yaml:
+    # on https://localhost it would stick to every local project)
+    header {
+        -Server
+        X-Content-Type-Options nosniff
+        # CSP below starts in Report-Only, where frame-ancestors is not enforced: this one is
+        X-Frame-Options DENY
+        Referrer-Policy strict-origin-when-cross-origin
+        Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+        Cross-Origin-Opener-Policy same-origin
+        # Report-Only first (violations in the browser console): once clean, set
+        # CSP_HEADER=Content-Security-Policy to enforce it, no rebuild needed.
+        # sha256: the theme script inlined in app/Presentation/@layout.latte (recompute if it changes:
+        # printf '%s' "<script body>" | openssl dgst -sha256 -binary | base64)
+        {$CSP_HEADER:Content-Security-Policy-Report-Only} "default-src 'self'; script-src 'self' 'sha256-lPKygQAghhlzI+DppV06MjI5u6ZtDM6HKHlcWxeHWXU='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+    }
+
     mercure {
         # must match the JWT "iss" claim (= https://<public domain>), regardless
         # of SERVER_NAME, which is ":80" behind a reverse proxy

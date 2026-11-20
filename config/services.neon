@@ -1,6 +1,11 @@
 services:
 	- App\Core\RouterFactory::createRouter
 	- App\Core\Database\SqliteConfigurator
+	- App\Core\Security\PushSubscribeThrottle
+
+	application.application:
+		setup:
+			- '$onRequest[]' = @App\Core\Security\PushSubscribeThrottle
 
 	database.default.connection:
 		setup:

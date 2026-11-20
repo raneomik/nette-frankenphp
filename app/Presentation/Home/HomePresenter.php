@@ -1,9 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Presentation\Home;
 
+use App\Model\Exception\TooManyRequestsException;
+use App\Model\Service\RateLimiter;
 use App\Presentation\Accessory\Localized;
 use Nette;
 use Raneomik\NetteMercure\BroadcasterInterface;
@@ -17,6 +17,7 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	public function __construct(
 	    private readonly BroadcasterInterface $broadcaster,
 	    private readonly AuthorizationInterface $authorization,
+	    private readonly RateLimiter $rateLimiter,
 	) {
     }
 
@@ -48,6 +49,24 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 
 	public function handleDispatch(string $type = 'plain'): void
 	{
+        // every visitor gets the toast: a few per client, and a global cap against many clients at once
+        try {
+            $this->rateLimiter->enforce('dispatch', 5, 10);
+            $this->rateLimiter->enforce('dispatch-all', 30, 10, key: 'all');
+        } catch (TooManyRequestsException $exception) {
+            $this->flashMessage(
+                $this->translate('app.error.429.text', [
+                    'count' => $exception->retryAfter,
+                ]),
+                'error',
+            );
+            $this->redrawControl('toasts');
+
+            $this->isAjax() || $this->redirect('this');
+
+            return;
+        }
+
         if ('turbo' === $type) {
             $this->broadcaster->broadcast(
                 topics: ['turbo-test-topic'],

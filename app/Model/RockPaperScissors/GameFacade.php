@@ -53,9 +53,16 @@ final readonly class GameFacade
             ->count();
 
         $this->database->query(
-            'INSERT INTO room_players (room, userId, username, joinedAt, pageId) VALUES (?, ?, ?, ?, ?)
-             ON CONFLICT (room, userId) DO UPDATE SET username = excluded.username, joinedAt = excluded.joinedAt,
-                pageId = COALESCE(excluded.pageId, room_players.pageId)',
+            <<<'SQL'
+            INSERT INTO room_players (room, userId, username, joinedAt, pageId)
+            VALUES (?, ?, ?, ?, ?)
+            ON CONFLICT (room, userId)
+            DO UPDATE SET
+                username = excluded.username,
+                joinedAt = excluded.joinedAt,
+                pageId = COALESCE(excluded.pageId, room_players.pageId)
+            SQL
+,
             $room,
             $userId,
             $username,
@@ -64,6 +71,18 @@ final readonly class GameFacade
         );
 
         return false === $present;
+    }
+
+    /**
+     * a room exists while someone is in it (room_players): once the last presence is gone
+     * (leave beacon, cleanRooms), its link no longer opens it; the move history stays
+     */
+    public function exists(string $room): bool
+    {
+        return 0 < $this->database
+            ->table('room_players')
+            ->where('room', $room)
+            ->count();
     }
 
     /**
@@ -129,7 +148,7 @@ final readonly class GameFacade
     public function waitingRooms(): array
     {
         return array_map(
-            fn($row) => new WaitingRoom($row['room'], $row['username'], $row['userId']),
+            fn($row): WaitingRoom => new WaitingRoom($row['room'], $row['username'], $row['userId']),
             array_values(
                 $this->database
                     ->table('room_players')

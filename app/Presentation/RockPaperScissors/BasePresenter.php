@@ -11,6 +11,7 @@ use App\Model\RockPaperScissors\Value\GameRecord;
 use App\Model\RockPaperScissors\Value\WaitingRoom;
 use App\Model\Service\Messenger;
 use App\Model\Service\Randomiser;
+use App\Model\Service\RateLimiter;
 use App\Presentation\Accessory\Localized;
 use App\Presentation\RockPaperScissors\TemplateData\GameTemplate;
 use Nette;
@@ -40,9 +41,39 @@ final class BasePresenter extends Nette\Application\UI\Presenter
     #[Inject]
     public PushSender $push;
 
+    #[Inject]
+    public RateLimiter $rateLimiter;
+
+    /**
+     * new room ids handed out by the lobby to this visitor, kept in the session: only those can
+     * create a room, any other unknown id is refused (no made-up rooms, no rooms resurrected from an old link)
+     */
+    private const string NewRoomsSection = 'rps.newRooms';
+
+    /**
+     * rooms a visitor may have pending at once (lobby open in several tabs), the oldest are dropped
+     */
+    private const int NewRoomsKept = 5;
+
+    /**
+     * an issued id stays valid that long: its creator can come back to it while it is empty
+     */
+    private const string NewRoomTtl = '1 hour';
+
+    /**
+     * same shape as the router mask and TopicAccess (room/<id>): the generic route
+     * (/rock-paper-scissors.base/game?room=…) and signal parameters bypass the router mask
+     */
+    private const string RoomId = '~^[A-Za-z0-9-]{1,64}$~D';
+
     protected function startup(): void
     {
         parent::startup();
+
+        $room = $this->getParameter('room');
+        if (null !== $room && (! \is_string($room) || 1 !== preg_match(self::RoomId, $room))) {
+            $this->error('Unknown room');
+        }
 
         if (! $this->getUser()->isLoggedIn()) {
             $this->getUser()->login(new SimpleIdentity(
@@ -70,7 +101,7 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         $this->refreshWaitingRoomList();
 
         $this->room = $room;
-        $this->template->newRoom = $this->randomiser->id();
+        $this->template->newRoom = $this->issueNewRoom();
     }
 
     public function renderDefault(): void
@@ -81,7 +112,7 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         // rendered before the leave beacon of the game page just left: never list my own room(s)
         $this->template->rooms = array_values(array_filter(
             $this->template->rooms,
-            fn(WaitingRoom $waitingRoom) => $waitingRoom->userId !== (string) $this->me->id,
+            fn(WaitingRoom $waitingRoom): bool => $waitingRoom->userId !== (string) $this->me->id,
         ));
     }
 
@@ -100,6 +131,17 @@ final class BasePresenter extends Nette\Application\UI\Presenter
     {
         if (null !== $this->getSignal()) { // signals (play! via ajax or not, leave! via beacon) come through here too: only opening the page counts as an arrival
             return;
+        }
+
+        if (! $this->game->exists($room)) {
+            $this->rateLimiter->enforce('new-room', 10, 600); // before anything is written
+
+            if (! $this->mayCreate($room)) {
+                $this->flashMessage($this->translate('game.roomGone'), 'warning');
+                $this->redirect('default', [
+                    'room' => null,
+                ]);
+            }
         }
 
         $this->room = $room;
@@ -152,6 +194,8 @@ final class BasePresenter extends Nette\Application\UI\Presenter
     #[Requires(methods: 'POST')]
     public function handlePlay(string $hand, string $room): void
     {
+        $this->rateLimiter->enforce('play', 60, 60); // every move is a row: two sessions alternating could fill the database
+
         $this->room = $room;
         $move = Hand::tryFrom($hand) ?? $this->error('Unknown hand');
         $me = $this->getUser();
@@ -223,7 +267,7 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         try {
             $failures = $this->push->send(
                 "player/{$playerId}",
-                fn (string $locale) => new Notification(
+                fn (string $locale): Notification => new Notification(
                     $this->translate(
                         'game.playerJoined',
                         [
@@ -248,6 +292,31 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         } catch (\Throwable $e) {
             Debugger::log($e, Debugger::EXCEPTION);
         }
+    }
+
+    private function issueNewRoom(): string
+    {
+        $room = $this->randomiser->id();
+        $section = $this->getSession(self::NewRoomsSection);
+
+        /** @var array<string, int> $rooms id => expiry */
+        $rooms = array_filter((array) $section->get('rooms'), static fn (mixed $expiry): bool => \is_int($expiry) && time() < $expiry);
+        $rooms[$room] = new \DateTimeImmutable('+' . self::NewRoomTtl)->getTimestamp();
+
+        $section->set('rooms', \array_slice($rooms, -self::NewRoomsKept, preserve_keys: true));
+
+        return $room;
+    }
+
+    /**
+     * the id was issued to this visitor by the lobby and has not expired; not consumed on use:
+     * the creator who left their room empty can still reopen it until it expires
+     */
+    private function mayCreate(string $room): bool
+    {
+        $expiry = ((array) $this->getSession(self::NewRoomsSection)->get('rooms'))[$room] ?? null;
+
+        return \is_int($expiry) && time() < $expiry;
     }
 
     private function username(): string

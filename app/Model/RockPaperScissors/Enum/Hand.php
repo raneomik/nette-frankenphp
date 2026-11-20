@@ -18,7 +18,7 @@ enum Hand: string
             self::Scissors => [self::Paper, self::Lizard],
             self::Lizard => [self::Paper, self::Spock],
             self::Spock => [self::Scissors, self::Rock],
-        }, true);
+        }, strict: true);
     }
 
     public function emoji(): string

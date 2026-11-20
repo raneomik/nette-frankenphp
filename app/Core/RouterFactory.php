@@ -16,9 +16,11 @@ final class RouterFactory
 
 		$router = new RouteList();
 		$router->addRoute('health', 'Health:default');
+		// room ids: same shape as the Mercure topics TopicAccess allows (room/<id>);
+		// anything else is a 404, so no arbitrary string ends up as a row in SQLite
 		$router
 		    ->withModule('RockPaperScissors') // adds the module's list to $router
-		    ->addRoute($locale . 'rock-paper-scissors[/<room>]/<action>', 'Base:default')
+		    ->addRoute($locale . 'rock-paper-scissors[/<room [A-Za-z0-9-]{1,64}>]/<action>', 'Base:default')
 		    ->end();
 		$router->addRoute($locale . '<presenter>/<action>[/<id>]', 'Home:default');
 
