@@ -30,7 +30,7 @@
         {ifset description}<meta property="og:description" content="{include description|stripHtml|trim}">{/ifset}
         <meta property="og:url" content="{link //this}">
         <meta property="og:locale" content="{ogLangForLocale(locale())}">
-        <meta n:foreach="locales() as $l" n:if="$l !== locale()" property="og:locale:alternate" content="{ogLangForLocale(locale())}">
+        <meta n:foreach="locales() as $l" n:if="$l !== locale()" property="og:locale:alternate" content="{ogLangForLocale($l)}">
         <meta property="og:image" content="{$ogImage}">
         <meta property="og:image:width" content="1200">
         <meta property="og:image:height" content="630">

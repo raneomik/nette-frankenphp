@@ -16,6 +16,7 @@ services:
           trusted_proxies static private_ranges
         }
       CADDY_SERVER_LOG_OPTIONS: level ERROR
+      CSP_HEADER: Content-Security-Policy
       # If you limit the container memory, align Go's GC with it:
       # GOMEMLIMIT: 450MiB
     # Only capability kept: listening on port 80 without being root

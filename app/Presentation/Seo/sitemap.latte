@@ -1,13 +1,14 @@
 {layout none}
+{* "//$page" quoted: unquoted, // followed by a variable does not compile *}
 {contentType application/xml}
 {='<?xml version="1.0" encoding="UTF-8"?>'|noescape}
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 {foreach $pages as $page}
     {* one <url> per language, each listing all the translations (same as the hreflang links of the pages) *}
     <url n:foreach="$locales as $locale">
-        <loc>{link //$page, locale: $locale}</loc>
-        <xhtml:link n:foreach="$locales as $alternate" rel="alternate" hreflang="{$alternate}" href="{link //$page, locale: $alternate}"/>
-        <xhtml:link rel="alternate" hreflang="x-default" href="{link //$page, locale: null}"/>
+        <loc>{link "//$page", locale: $locale}</loc>
+        <xhtml:link n:foreach="$locales as $alternate" rel="alternate" hreflang="{$alternate}" href="{link "//$page", locale: $alternate}"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="{link "//$page", locale: null}"/>
     </url>
 {/foreach}
 </urlset>
