@@ -30,3 +30,4 @@ error:
     410:
         title: Page removed
         text: The page you requested has been taken off the site. We apologize for the inconvenience.
+ogImageAlt: "frankenette: Nette, FrankenPHP and Mercure"

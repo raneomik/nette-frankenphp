@@ -1,8 +1,11 @@
 {block title}{_'game.title'}{/block}
+{* shown by link previews of the invite link *}
+{block description}{_'game.inviteDescription'}{/block}
 {* rooms have random addresses: nothing to index *}
 {block seo}<meta name="robots" content="noindex">{/block}
 
 {block content}
+    <h1 class="sr-only">{_'game.title'}</h1>
     {* read by app.js: leave! signal sent when the page closes (outside the snippet, so it does not depend on a redraw) *}
     <div class="grid gap-6 lg:grid-cols-2" data-leave-url="{link leave!, $room, $pageId}">
         <section class="card stitched min-w-0 bg-base-200">

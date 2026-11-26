@@ -1,0 +1,10 @@
+{layout none}
+{contentType text/plain}
+User-agent: *
+# signals (?do=...) act on the app, e.g. a toast sent to every visitor: not for crawlers
+Disallow: /*?do=
+Disallow: /*&do=
+Disallow: /pwa/
+Disallow: /health
+
+Sitemap: {link //sitemap}

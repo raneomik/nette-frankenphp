@@ -1,9 +1,11 @@
+{block title}{_'home.title'}{/block}
 {block description}{_'home.intro'}{/block}
 
 {block content}
     <div class="hero">
         <div class="hero-content text-center">
             <div class="max-w-xxl">
+                <h1 class="font-display m-3 text-3xl font-extrabold sm:text-4xl">{_'home.title'}</h1>
                 <p class="m-3">
                     {_'home.intro'}
                 </p>
@@ -102,12 +104,12 @@
                 {_'home.newTab'}
             </a>
 
-            <a n:href="dispatch!" class="btn btn-dash ajax">
+            <a n:href="dispatch!" rel="nofollow" class="btn btn-dash ajax">
                 {_'home.toastAll'}
             </a>
 
 
-            <a n:href="dispatch! 'turbo'" class="btn btn-dash ajax">
+            <a n:href="dispatch! 'turbo'" rel="nofollow" class="btn btn-dash ajax">
                 {_'home.toastTurbo'}
             </a>
         </div>

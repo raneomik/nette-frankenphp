@@ -147,6 +147,13 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         $this->room = $room;
         $myId = (string) $this->me->id;
         $this->template->pageId = $this->randomiser->id();
+
+        // an invite link pasted in a chat app is fetched by its preview bot: it gets the page (Open Graph tags)
+        // without joining, or it would take the seat and never leave (no JS, no leave! beacon)
+        if ($this->isLinkPreview()) {
+            return;
+        }
+
         $arrived = $this->game->join($room, $myId, $this->username(), $this->template->pageId);
         if (! $arrived) { // reload: already in the room, nothing new for the opponent
             return;
@@ -292,6 +299,18 @@ final class BasePresenter extends Nette\Application\UI\Presenter
         } catch (\Throwable $e) {
             Debugger::log($e, Debugger::EXCEPTION);
         }
+    }
+
+    /**
+     * shortcut: by User-Agent, the bots that fetch shared links (chat apps, social networks, search engines);
+     * a bot that hides behind a browser User-Agent still joins, and is cleaned up with the stale presences
+     */
+    private function isLinkPreview(): bool
+    {
+        return 1 === preg_match(
+            '~bot\b|crawl|spider|slurp|preview|facebookexternalhit|whatsapp|slack|discord|telegram|skype|embedly|iframely|vkshare|pinterest|linkedin|mastodon|bluesky|headless~i',
+            (string) $this->getHttpRequest()->getHeader('User-Agent'),
+        );
     }
 
     private function issueNewRoom(): string
