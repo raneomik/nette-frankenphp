@@ -30,7 +30,7 @@ final readonly class SqliteConfigurator
         // a transaction takes the write lock at BEGIN, not at its first write: two
         // "read the game state, then write a move" transactions queue up instead of
         // reading the same state and failing at the write (SQLITE_BUSY, never retried)
-        if (\defined('Pdo\Sqlite::ATTR_TRANSACTION_MODE')) { // PHP >= 8.5
+        if (\defined(\Pdo\Sqlite::class . '::ATTR_TRANSACTION_MODE')) { // PHP >= 8.5
             $pdo->setAttribute(\Pdo\Sqlite::ATTR_TRANSACTION_MODE, \Pdo\Sqlite::TRANSACTION_MODE_IMMEDIATE);
         }
 

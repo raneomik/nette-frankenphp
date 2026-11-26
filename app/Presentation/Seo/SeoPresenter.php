@@ -13,7 +13,9 @@ use Nette;
  */
 final class SeoPresenter extends Nette\Application\UI\Presenter
 {
-    /** the indexable pages; game rooms are noindex (random, short-lived addresses) */
+    /**
+     * the indexable pages; game rooms are noindex (random, short-lived addresses)
+     */
     private const array Pages = [':Home:default', ':RockPaperScissors:Base:default'];
 
     public function __construct(

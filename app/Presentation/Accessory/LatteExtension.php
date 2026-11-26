@@ -25,6 +25,12 @@ final class LatteExtension extends Extension
 		    'locale' => $this->translator->getLocale(...),
 		    'locales' => fn(): array => $this->translator->getLocalesWhitelist() ?? [],
 		    'tRoot' => fn(string $layout): string => dirname(__DIR__) . '/' . $layout,
+		    'ogLangForLocale' => fn(string $locale): string => match ($locale) {
+		        'cs' => 'cs_CZ',
+		        'en' => 'en_US',
+		        'fr' => 'fr_FR',
+		        default => $locale,
+		    },
 		];
 	}
 }

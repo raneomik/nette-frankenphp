@@ -1,7 +1,6 @@
 # see https://doc.nette.org/en/configuring
 parameters:
 
-
 extensions:
     mercure: Raneomik\NetteMercure\Bridge\DI\MercureExtension(%debugMode%)
     pwa: Raneomik\NettePWA\Bridge\DI\PWAExtension

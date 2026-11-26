@@ -1,7 +1,7 @@
 #syntax=docker/dockerfile:1
 
 # Debian (glibc) over Alpine (musl) :  https://frankenphp.dev/docs/performance/
-FROM dunglas/frankenphp:1-php8.5-trixie AS frankenphp_upstream
+FROM dunglas/frankenphp:1-php8.6-trixie AS frankenphp_upstream
 
 # ---------- Base (dev / prod) ----------
 FROM frankenphp_upstream AS base
@@ -13,7 +13,14 @@ WORKDIR /srv
 
 RUN <<-EOF
 	set -eux
-	install-php-extensions apcu gmp intl opcache zip zlib
+	install-php-extensions gmp intl opcache zip zlib
+
+	# shortcut: APCu built from a master commit, its PECL release does not compile on PHP 8.6
+	# (and pecl rejects master's "-dev" version); back to install-php-extensions apcu once 5.1.29 is out
+	mkdir /tmp/apcu
+	curl -fsSL https://codeload.github.com/krakjoe/apcu/tar.gz/fb2c942552a3f5dab7f4dea4afb5cf0831222c57 | tar xz --strip-components=1 -C /tmp/apcu
+	docker-php-ext-install /tmp/apcu
+	rm -rf /tmp/apcu
 
 	groupadd --gid "${GROUP_ID}" app
 	useradd --uid "${USER_ID}" --gid app --create-home --shell /usr/sbin/nologin app
@@ -51,7 +58,12 @@ RUN <<-EOF
 	apt-get install -y --no-install-recommends file git sqlite3 unzip
 	rm -rf /var/lib/apt/lists/*
 	mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
-	install-php-extensions xdebug
+	# shortcut: Xdebug built from a master commit (3.6.0alpha1), PECL's 3.5.x stops at PHP 8.5;
+	# back to install-php-extensions xdebug once 3.6 is released
+	mkdir /tmp/xdebug
+	curl -fsSL https://codeload.github.com/xdebug/xdebug/tar.gz/5e19866c1766e38c527f9f94faa170370dc4209f | tar xz --strip-components=1 -C /tmp/xdebug
+	docker-php-ext-install /tmp/xdebug
+	rm -rf /tmp/xdebug
 	git config --system --add safe.directory /srv
 	chown app:app /srv
 EOF
