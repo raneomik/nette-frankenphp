@@ -13,7 +13,7 @@ WORKDIR /srv
 
 RUN <<-EOF
 	set -eux
-	install-php-extensions gmp intl opcache zip zlib
+	install-php-extensions gmp mbstring intl opcache zip zlib
 
 	# shortcut: APCu built from a master commit, its PECL release does not compile on PHP 8.6
 	# (and pecl rejects master's "-dev" version); back to install-php-extensions apcu once 5.1.29 is out

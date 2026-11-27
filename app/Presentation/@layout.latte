@@ -23,7 +23,6 @@
     {/block}
     {* link previews (chat apps, social networks): a shared or invite link shows a title, a text and an image *}
     {block og}
-        {var $ogImage = $presenter->getHttpRequest()->getUrl()->resolve(asset('img:og')->url)}
         <meta property="og:type" content="website">
         <meta property="og:site_name" content="frankenette">
         <meta property="og:title" content="{ifset title}{include title|stripHtml|trim}{else}frankenette{/ifset}">
@@ -31,7 +30,7 @@
         <meta property="og:url" content="{link //this}">
         <meta property="og:locale" content="{ogLangForLocale(locale())}">
         <meta n:foreach="locales() as $l" n:if="$l !== locale()" property="og:locale:alternate" content="{ogLangForLocale($l)}">
-        <meta property="og:image" content="{$ogImage}">
+        <meta property="og:image" content="{asset('img:og')->url}">
         <meta property="og:image:width" content="1200">
         <meta property="og:image:height" content="630">
         <meta property="og:image:alt" content="{_'app.ogImageAlt'}">
