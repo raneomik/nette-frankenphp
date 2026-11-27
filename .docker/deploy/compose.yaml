@@ -45,7 +45,7 @@ services:
       caddy.reverse_proxy.health_interval: 10s
       # edge headers: HSTS (here only, not on localhost) and no "Server: Caddy" from the edge either
       # (deletions are deferred by Caddy: they apply to the proxied response too)
-      caddy.header.Strict-Transport-Security: "max-age=31536000; includeSubDomains"
+      caddy.header.Strict-Transport-Security: '"max-age=31536000; includeSubDomains"'
       caddy.header.-Server: ""
 
   # Continuous replication of the database to an external storage: point-in-time restore
